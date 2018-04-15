@@ -8,7 +8,17 @@
 *:not(i) {
 	font-family: "Source Sans Pro", sans-serif !important;
 }
-
+.hidden-xs {
+	@media screen and (max-width: 768px) {
+	    display: none !important;
+	}
+}
+.visible-xs {
+	display: none !important;
+	@media screen and (max-width: 768px) {
+	    display: inline-block !important;
+	}
+}
 #mainMenu {
 	@include border-radius(0);
 }
