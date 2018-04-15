@@ -1,0 +1,9 @@
+{
+	"version": 3,
+	"file": "universal.css",
+	"sources": [
+		"universal.scss"
+	],
+	"mappings": "AAOA,AAAO,CAAN,AAAA,IAAK,CAAA,AAAA,CAAC,EAAE;EACR,WAAW,EAAE,wCAAyC,GACtD;;AAED,AAAA,SAAS,CAAC;EAVR,qBAAqB,EAWC,CAAC;EAVvB,kBAAkB,EAUI,CAAC;EATvB,aAAa,EASS,CAAC;EARvB,eAAe,EAAE,WAAY,GAS9B",
+	"names": []
+}

@@ -1,6 +1,3 @@
 node_modules
-public/vendors
-public/stylesheets/*.css
-public/stylesheets/*.css.map
 *~
 .DS_Store

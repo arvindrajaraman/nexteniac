@@ -1,0 +1,10 @@
+*:not(i) {
+  font-family: "Source Sans Pro", sans-serif !important; }
+
+#mainMenu {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  background-clip: padding-box; }
+
+/*# sourceMappingURL=universal.css.map */
