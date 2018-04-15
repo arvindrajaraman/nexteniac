@@ -1,0 +1,14 @@
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+  background-clip: padding-box;
+}
+
+*:not(i) {
+	font-family: "Source Sans Pro", sans-serif !important;
+}
+
+#mainMenu {
+	@include border-radius(0);
+}
