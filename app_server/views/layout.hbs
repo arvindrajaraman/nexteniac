@@ -11,7 +11,7 @@
     {{/each}}
   </head>
   <body>
-    <div class="ui inverted red menu" id="mainMenu">
+    <div class="ui fixed inverted red menu" id="mainMenu">
       <div class="ui container">
         <div class="active item">
           <img src="/images/logo/icon_64.png">
@@ -59,7 +59,9 @@
         </div>
       </div>
     </div>
-    {{{body}}}
+    <div id="content">
+      {{{body}}}
+    </div>
     <script src="/vendors/jquery/jquery-3.3.1.min.js"></script>
     <script src="/vendors/semantic-ui/semantic.min.js"></script>
     <script src="/javascripts/universal.js"></script>
