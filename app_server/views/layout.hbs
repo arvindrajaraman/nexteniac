@@ -2,30 +2,30 @@
 <html>
   <head>
   	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>{{title}}</title>
+    <title>{{title}} | Literate</title>
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
     <link rel='stylesheet' href='/vendors/semantic-ui/semantic.min.css' />
     <link rel='stylesheet' href='/stylesheets/universal.css' />
     {{#each styles}}
-        <link rel="stylesheet" href="/stylesheets/{{this}}" />
+        <link rel="stylesheet" href="/stylesheets/{{this}}.css" />
     {{/each}}
   </head>
   <body>
     <div class="ui fixed inverted red menu" id="mainMenu">
       <div class="ui container">
-        <div class="active item">
+        <a class="link item" href="/home">
           <img src="/images/logo/icon_64.png">
           &nbsp;<b> &nbsp; Literate</b>
-        </div>
+        </a>
         <div class="right menu">
-          <div class="item">
+          <div class="link item">
             <i class="plus icon"></i>
             <span class="hidden-xs">Create</span>
           </div>
-          <div class="item">
+          <a class="link item" href="/classes">
             <i class="book icon"></i>
             <span class="hidden-xs">Classes</span>
-          </div>
+          </a>
           <div class="ui icon dropdown item" id="settingsDropdown">
             <span class="hidden-xs">&nbsp; Settings &nbsp;</span>
             <i class="caret down icon hidden-xs"></i>
@@ -54,6 +54,26 @@
                 <i class="font icon"></i>
                 Change Name
               </div>
+              <div class="divider"></div>
+              <div class="header">
+                Share
+              </div>
+              <div class="item">
+                <i class="share icon"></i>
+                Share Link
+              </div>
+              <div class="item">
+                <i class="facebook f icon"></i>
+                Facebook
+              </div>
+              <div class="item">
+                <i class="twitter icon"></i>
+                Twitter
+              </div>
+              <div class="item">
+                <i class="instagram icon"></i>
+                Instagram
+              </div>
             </div>
           </div>
         </div>
@@ -62,11 +82,12 @@
     <div id="content">
       {{{body}}}
     </div>
+    <script src="/vendors/angular/angular.min.js"></script>
     <script src="/vendors/jquery/jquery-3.3.1.min.js"></script>
     <script src="/vendors/semantic-ui/semantic.min.js"></script>
     <script src="/javascripts/universal.js"></script>
     {{#each scripts}}
-    	<script src="/javascripts/{{this}}"></script>
+    	<script src="/javascripts/{{this}}.js"></script>
     {{/each}}
   </body>
 </html>
