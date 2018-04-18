@@ -11,6 +11,10 @@
     .visible-xs {
       display: inline-block !important; } }
 
+@media screen and (max-width: 992px) {
+  .hidden-sm {
+    display: none !important; } }
+
 #mainMenu {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -21,6 +25,6 @@
   margin-top: 53px; }
 
 .headerSegment {
-  padding: 10px !important; }
+  padding: 12.5px !important; }
 
 /*# sourceMappingURL=universal.css.map */

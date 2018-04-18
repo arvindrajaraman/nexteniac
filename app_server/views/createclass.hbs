@@ -1,10 +1,22 @@
 <div class="ui container" ng-app="literate-createclass" ng-controller="MainController">
 	<br>
 	<div class="ui stackable grid">
-		<div class="sixteen wide column">
+		<div class="twelve wide column">
 			<div class="ui center aligned segment headerSegment">
 				<h1>Create Class</h1>
 			</div>
+		</div>
+		<div class="four wide column">
+			<!--<div class="ui inverted red center aligned segment actionSegment">
+				<h2>
+					<i class="book icon"></i>
+					Create
+				</h2>
+			</div>-->
+			<button class="ui massive fluid red labeled icon button" ng-click="createClass()">
+				<i class="book icon"></i>
+				Create
+			</button>
 		</div>
 		<div class="eight wide column">
 			<div class="ui segments">
@@ -16,16 +28,16 @@
 				<div class="ui form segment">
 					<div class="field">
 						<label>Class Name</label>
-    					<input type="text" name="classname" placeholder="Class Name">
+    					<input type="text" name="classname" placeholder="Class Name" ng-model="class.name">
 					</div>
 					<div class="two fields">
 						<div class="field">
 							<label>Credits</label>
-	    					<input type="number" name="classname" placeholder="Credits" min="0" max="10" step="0.25">
+	    					<input type="number" name="classname" placeholder="Credits" min="0" max="10" step="0.25" ng-model="class.credits">
 						</div>
 						<div class="field">
 							<label>Class Level</label>
-	    					<select class="ui fluid search dropdown" name="classtype">
+	    					<select class="ui fluid search dropdown" name="classtype" ng-model="class.type">
 								<option value="">Class Level</option>
 								<option value="2">Level 2</option>
 								<option value="1">Level 1</option>
@@ -35,8 +47,103 @@
 					</div>
 				</div>
 			</div>
+			<div class="ui segments">
+				<div class="ui red segment">
+					<span class="ui header">Personalization</span>
+					<br>
+					<span>Your experience with this class</span>
+				</div>
+				<div class="ui form segment">
+					<div class="two fields">
+						<div class="field">
+							<label>Priority</label>
+	    					<select class="ui fluid search dropdown" name="priority" ng-model="class.priority">
+								<option value="">Priority</option>
+								<option value="5">Very High</option>
+								<option value="4">High</option>
+								<option value="3">Medium</option>
+								<option value="2">Low</option>
+								<option value="1">Very Low</option>
+					        </select>
+						</div>
+						<div class="field">
+							<label>Difficulty</label>
+	    					<select class="ui fluid search dropdown" name="difficulty" ng-model="class.difficulty">
+								<option value="">Difficulty</option>
+								<option value="1">Very Easy</option>
+								<option value="2">Easy</option>
+								<option value="3">Medium</option>
+								<option value="4">Hard</option>
+								<option value="5">Very Hard</option>
+					        </select>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>Grade</label>
+	    					<select class="ui fluid search dropdown" name="grade" ng-model="class.grade">
+	    						<option value="">Grade</option>
+	    						<option value="12">Grade 12</option>
+	    						<option value="11">Grade 11</option>
+	    						<option value="10">Grade 10</option>
+	    						<option value="9">Grade 9</option>
+	    						<option value="8">Grade 8</option>
+	    						<option value="7">Grade 7</option>
+	    						<option value="6">Grade 6</option>
+	    						<option value="5">Grade 5</option>
+	    						<option value="4">Grade 4</option>
+	    						<option value="3">Grade 3</option>
+	    						<option value="2">Grade 2</option>
+	    						<option value="1">Grade 1</option>
+	    						<option value="0">Kindergarten</option>
+    						</select>
+						</div>
+						<div class="field">
+							<label>Goal Average</label>
+	    					<select class="ui fluid search dropdown" name="goalaverage" ng-model="class.goalaverage">
+								<option value="">Goal Average</option>
+								<option value="10">A+</option>
+								<option value="9">A</option>
+								<option value="8">A-</option>
+								<option value="7">B+</option>
+								<option value="6">B</option>
+								<option value="5">B-</option>
+								<option value="4">C+</option>
+								<option value="3">C</option>
+								<option value="2">C-</option>
+								<option value="1">D</option>
+					        </select>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<div class="eight wide column">
+			<div class="ui segments">
+				<div class="ui red segment">
+					<span class="ui header">
+						Marking Periods
+					</span>
+					<br>
+					<span>Select which marking periods this class is active</span>
+				</div>
+				<div class="ui form segment">
+					<div class="four fields">
+						<div class="field">
+							<button class="ui fluid toggle button" ng-class="{'green': mpactive[0]}" ng-click="toggleMP(1)">MP1</button>
+						</div>
+						<div class="field">
+							<button class="ui fluid toggle button" ng-class="{'green': mpactive[1]}" ng-click="toggleMP(2)">MP2</button>
+						</div>
+						<div class="field">
+							<button class="ui fluid toggle button" ng-class="{'green': mpactive[2]}" ng-click="toggleMP(3)">MP3</button>
+						</div>
+						<div class="field">
+							<button class="ui fluid toggle button" ng-class="{'green': mpactive[3]}" ng-click="toggleMP(4)">MP4</button>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="ui segments">
 				<div class="ui red segment">
 					<span class="ui header">
@@ -49,16 +156,26 @@
 					<div class="fields" ng-repeat="category in categories">
 						<div class="seven wide tablet eight wide small screen nine wide large screen field">
 							<label ng-show="$index === 0">Category Name</label>
-							<input type="text" placeholder="Category Name" value="{[category.name]}">
+							<input type="text" placeholder="Category Name" ng-model="category.name">
 						</div>
 						<div class="six wide field">
 							<label ng-show="$index === 0">Weight</label>
-							<input type="number" placeholder="Weight" value="{[category.weight]}">
+							<input type="number" placeholder="Weight" ng-model="category.weight">
 						</div>
 						<div class="three wide tablet two wide small screen one wide large screen field">
 							<label ng-show="$index === 0" style="visibility: hidden;">Delete</label>
-							<button class="ui fluid red icon button" ng-class="{'disabled': categories.length === 1}" ng-click="deleteCategory($index)"><i class="trash icon"></i></button>
+							<button class="ui fluid inverted red icon button" ng-class="{'disabled': categories.length === 1}" ng-click="deleteCategory($index)"><i class="trash icon"></i></button>
 						</div>
+					</div>
+					<div class="fields">
+						<div class="five wide field"></div>
+						<div class="six wide field">
+							<button class="ui fluid inverted red button" ng-click="addCategory()">
+								<i class="plus icon"></i>
+								Add <span class="hidden-sm">Category</span>
+							</button>
+						</div>
+						<div class="five wide field"></div>
 					</div>
 				</div>
 			</div>
