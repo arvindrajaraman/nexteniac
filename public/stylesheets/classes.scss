@@ -1,0 +1,15 @@
+#classesTable {
+	tr {
+		cursor: pointer;
+		transition: 0.2s ease all;
+
+		&:hover {
+			background: #f9d2d3;
+			border-color: #f9d2d3;
+
+			td {
+				border-color: #f9d2d3;
+			}
+		}
+	}
+}

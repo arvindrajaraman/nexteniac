@@ -1,0 +1,67 @@
+<div class="ui container" ng-app="literate-createclass" ng-controller="MainController">
+	<br>
+	<div class="ui stackable grid">
+		<div class="sixteen wide column">
+			<div class="ui center aligned segment headerSegment">
+				<h1>Create Class</h1>
+			</div>
+		</div>
+		<div class="eight wide column">
+			<div class="ui segments">
+				<div class="ui red segment">
+					<span class="ui header">Basic Information</span>
+					<br>
+					<span>Basic information about this class</span>
+				</div>
+				<div class="ui form segment">
+					<div class="field">
+						<label>Class Name</label>
+    					<input type="text" name="classname" placeholder="Class Name">
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label>Credits</label>
+	    					<input type="number" name="classname" placeholder="Credits" min="0" max="10" step="0.25">
+						</div>
+						<div class="field">
+							<label>Class Level</label>
+	    					<select class="ui fluid search dropdown" name="classtype">
+								<option value="">Class Level</option>
+								<option value="2">Level 2</option>
+								<option value="1">Level 1</option>
+								<option value="0">Honors</option>
+					        </select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="eight wide column">
+			<div class="ui segments">
+				<div class="ui red segment">
+					<span class="ui header">
+						Assignment Categories
+					</span>
+					<br>
+					<span>Types of assignments in your class and their weights</span>
+				</div>
+				<div class="ui form segment">
+					<div class="fields" ng-repeat="category in categories">
+						<div class="seven wide tablet eight wide small screen nine wide large screen field">
+							<label ng-show="$index === 0">Category Name</label>
+							<input type="text" placeholder="Category Name" value="{[category.name]}">
+						</div>
+						<div class="six wide field">
+							<label ng-show="$index === 0">Weight</label>
+							<input type="number" placeholder="Weight" value="{[category.weight]}">
+						</div>
+						<div class="three wide tablet two wide small screen one wide large screen field">
+							<label ng-show="$index === 0" style="visibility: hidden;">Delete</label>
+							<button class="ui fluid red icon button" ng-class="{'disabled': categories.length === 1}" ng-click="deleteCategory($index)"><i class="trash icon"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

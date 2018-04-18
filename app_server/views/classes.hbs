@@ -79,7 +79,7 @@
 			</div>
 		</div>
 		<div class="sixteen wide column">
-			<table class="ui center aligned celled table">
+			<table class="ui center aligned celled table" id="classesTable">
 				<thead>
 					<tr>
 						<th colspan="2">Grade</th>
@@ -93,7 +93,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="class in classes">
+					<tr ng-repeat="class in classes" data-redirectto="/classes/{[class.id]}">
 						<td><h2 class="ui header">{[class.lettergrade]}</h2></td>
 						<td><h2 class="ui header">{[class.numbergrade | number:2]}%</h2></td>
 						<td><h3 class="ui header">{[class.name]}</h3></td>

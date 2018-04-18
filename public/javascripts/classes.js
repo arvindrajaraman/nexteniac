@@ -17,6 +17,7 @@ app.controller('MainController', function ($scope) {
 	$scope.average = 'A';
 
 	$scope.classes = [{
+		id: '1524002151976',
 		lettergrade: 'A',
 		numbergrade: 95.21,
 		name: 'Intro to Business',
@@ -27,6 +28,7 @@ app.controller('MainController', function ($scope) {
 		mp3: true,
 		mp4: true
 	}, {
+		id: '1524002173524',
 		lettergrade: 'B',
 		numbergrade: 87.12,
 		name: 'US History-1',
@@ -37,6 +39,7 @@ app.controller('MainController', function ($scope) {
 		mp3: true,
 		mp4: true
 	}, {
+		id: '1524002178492',
 		lettergrade: 'A-',
 		numbergrade: 91.12,
 		name: 'AP Environmental Science',
@@ -47,6 +50,7 @@ app.controller('MainController', function ($scope) {
 		mp3: true,
 		mp4: true
 	}, {
+		id: '1524002183474',
 		lettergrade: 'C',
 		numbergrade: 74.47,
 		name: 'English 9-1',
@@ -57,6 +61,7 @@ app.controller('MainController', function ($scope) {
 		mp3: true,
 		mp4: true
 	}, {
+		id: '1524002187495',
 		lettergrade: 'B+',
 		numbergrade: 85.43,
 		name: 'Physical Education',
@@ -71,4 +76,8 @@ app.controller('MainController', function ($scope) {
 
 $(document).ready(function () {
 	$('.dropdown').dropdown();
+
+	$('#classesTable tr').click(function () {
+		window.location.href = $(this).attr('data-redirectto');
+	});
 });

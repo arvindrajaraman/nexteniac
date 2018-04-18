@@ -1,2 +1,10 @@
+#classesTable tr {
+  cursor: pointer;
+  transition: 0.2s ease all; }
+  #classesTable tr:hover {
+    background: #f9d2d3;
+    border-color: #f9d2d3; }
+    #classesTable tr:hover td {
+      border-color: #f9d2d3; }
 
 /*# sourceMappingURL=classes.css.map */
