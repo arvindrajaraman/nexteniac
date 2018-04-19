@@ -5,6 +5,7 @@
 			<div class="ui center aligned segment headerSegment">
 				<h1>Classes</h1>
 			</div>
+			<span>{[shownclasses]}</span>
 		</div>
 		<div class="four wide column">
 			<div class="ui center aligned segment">
@@ -48,38 +49,43 @@
 			</div>
 		</div>
 		<div class="two wide column">
-			<select class="ui fluid dropdown">
-				<option value="">School Year</option>
-				<option value="1">2016-17</option>
-				<option value="1" selected>2017-18</option>
-				<option value="1">2018-19</option>
-				<option value="1">2019-20</option>
+			<select class="ui fluid dropdown" id="gradeSelectionDropdown" ng-model="search.grade">
+				<option value="">Grade</option>
+				<option value="12">Grade 12</option>
+				<option value="11">Grade 11</option>
+				<option value="10">Grade 10</option>
+				<option value="9">Grade 9</option>
+				<option value="8">Grade 8</option>
+				<option value="7">Grade 7</option>
+				<option value="6">Grade 6</option>
+				<option value="5">Grade 5</option>
+				<option value="4">Grade 4</option>
+				<option value="3">Grade 3</option>
+				<option value="2">Grade 2</option>
+				<option value="1">Grade 1</option>
+				<option value="0">Kindergarten</option>
 			</select>
 		</div>
 		<div class="two wide column">
-			<select class="ui fluid dropdown">
+			<select class="ui fluid dropdown" id="mpSelectionDropdown" ng-model="search.mp">
 				<option value="">Marking Period</option>
 				<option value="1">MP1</option>
-				<option value="2" selected>MP2</option>
+				<option value="2">MP2</option>
 				<option value="3">MP3</option>
 				<option value="4">MP4</option>
 			</select>
 		</div>
 		<div class="three wide column">
-			<div class="ui fluid dropdown selection">
-				<input type="hidden" name="sortby">
-				<i class="dropdown icon"></i>
-				<div class="default text">Sort By</div>
-				<div class="menu">
-					<div class="item" data-value="1"><i class="sort numeric up icon"></i> Grade High to Low</div>
-					<div class="item" data-value="2"><i class="sort numeric down icon"></i> Grade Low to High</div>
-					<div class="item" data-value="3"><i class="sort alphabet down icon"></i> Name A-Z</div>
-					<div class="item" data-value="4"><i class="sort alphabet up icon"></i> Name Z-A</div>
-				</div>
-			</div>
+			<select class="ui fluid dropdown" id="sortByDropdown" ng-model="search.sortby">
+				<option value="">Sort Dropdown</option>
+				<option value="1" selected>Grade High to Low</option>
+				<option value="2">Grade Low to High</option>
+				<option value="3">Name A-Z</option>
+				<option value="4">Name Z-A</option>
+			</select>
 		</div>
 		<div class="sixteen wide column">
-			<table class="ui center aligned celled table" id="classesTable">
+			<table class="ui center aligned celled table" id="classesTable" ng-hide="shownclasses.length === 0">
 				<thead>
 					<tr>
 						<th colspan="2">Grade</th>
@@ -94,11 +100,17 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="class in classes" data-redirectto="/classes/{[class.id]}">
-						<td><h2 class="ui header">{[class.lettergrade]}</h2></td>
-						<td><h2 class="ui header">{[class.numbergrade | number:2]}%</h2></td>
+						<td>
+							<span class="ui header" ng-show="class.lettergrade">{[class.lettergrade]}</span>
+							<span class="ui header" ng-hide="class.lettergrade">-</span>
+						</td>
+						<td>
+							<span class="ui header" ng-show="class.numbergrade">{[class.numbergrade | number:2]}%</span>
+							<span class="ui header" ng-hide="class.numbergrade">-</span>
+						</td>
 						<td><h3 class="ui header">{[class.name]}</h3></td>
 						<td><h2 class="ui header">{[class.credits | number:2]}</h2></td>
-						<td><h3 class="ui header">{[class.type]}</h3></td>
+						<td><h3 class="ui header">{[class.type | type]}</h3></td>
 						<td><i class="large {[class.mp1 | check]} icon"></i></td>
 						<td><i class="large {[class.mp2 | check]} icon"></i></td>
 						<td><i class="large {[class.mp3 | check]} icon"></i></td>
@@ -106,6 +118,12 @@
 					</tr>
 				</tbody>
 			</table>
+			<div class="ui secondary center aligned segment" ng-show="shownclasses.length === 0">
+				<h2>
+					<i class="frown icon"></i>
+					No classes matched these criteria
+				</h2>
+			</div>
 		</div>
 	</div>
 </div>

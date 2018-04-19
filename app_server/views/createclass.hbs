@@ -7,12 +7,6 @@
 			</div>
 		</div>
 		<div class="four wide column">
-			<!--<div class="ui inverted red center aligned segment actionSegment">
-				<h2>
-					<i class="book icon"></i>
-					Create
-				</h2>
-			</div>-->
 			<button class="ui massive fluid red labeled icon button" ng-click="createClass()">
 				<i class="book icon"></i>
 				Create
@@ -81,7 +75,7 @@
 					<div class="two fields">
 						<div class="field">
 							<label>Grade</label>
-	    					<select class="ui fluid search dropdown" name="grade" ng-model="class.grade">
+	    					<select class="ui fluid search dropdown" name="grade" ng-model="class.grade" id="gradeDropdown">
 	    						<option value="">Grade</option>
 	    						<option value="12">Grade 12</option>
 	    						<option value="11">Grade 11</option>

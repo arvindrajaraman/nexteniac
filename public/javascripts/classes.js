@@ -5,9 +5,26 @@ app.config(function($interpolateProvider) {
 	$interpolateProvider.endSymbol(']}');
 });
 
-app.filter('check', function () {
-	return function(val){
+app.filter('check', function() {
+	return function(val) {
 		return (val) ? 'green check' : 'red x';
+	}
+});
+
+app.filter('type', function() {
+	return function(val) {
+		switch (val) {
+			case 0:
+			case '0':
+				return 'Honors';
+			case 1:
+			case '1':
+			case 2:
+			case '2':
+				return 'Level ' + val;
+			default:
+				return val;
+		}
 	}
 });
 
@@ -16,66 +33,32 @@ app.controller('MainController', function ($scope) {
 	$scope.weightedgpa = 5.519;
 	$scope.average = 'A';
 
-	$scope.classes = [{
-		id: '1524002151976',
-		lettergrade: 'A',
-		numbergrade: 95.21,
-		name: 'Intro to Business',
-		credits: 5,
-		type: 'Level 2',
-		mp1: true,
-		mp2: true,
-		mp3: true,
-		mp4: true
-	}, {
-		id: '1524002173524',
-		lettergrade: 'B',
-		numbergrade: 87.12,
-		name: 'US History-1',
-		credits: 5,
-		type: 'Level 1',
-		mp1: true,
-		mp2: true,
-		mp3: true,
-		mp4: true
-	}, {
-		id: '1524002178492',
-		lettergrade: 'A-',
-		numbergrade: 91.12,
-		name: 'AP Environmental Science',
-		credits: 5,
-		type: 'Honors',
-		mp1: true,
-		mp2: true,
-		mp3: true,
-		mp4: true
-	}, {
-		id: '1524002183474',
-		lettergrade: 'C',
-		numbergrade: 74.47,
-		name: 'English 9-1',
-		credits: 5,
-		type: 'Level 1',
-		mp1: true,
-		mp2: true,
-		mp3: true,
-		mp4: true
-	}, {
-		id: '1524002187495',
-		lettergrade: 'B+',
-		numbergrade: 85.43,
-		name: 'Physical Education',
-		credits: 5,
-		type: 'Level 2',
-		mp1: true,
-		mp2: true,
-		mp3: false,
-		mp4: true
-	}];
+	$scope.search = {};
+	$scope.classes = [];
+	for (var i = 1; i <= window.localStorage.getItem('classcount'); i++) {
+		$scope.classes.push(JSON.parse(window.localStorage.getItem('c' + i)));
+	}
+
+	$scope.shownclasses = [{'red': 1}];
+	$scope.searchClasses = function() {
+		for (var _class of $scope.classes) {
+			if (_class.grade === $scope.search.grade && _class['mp' + $scope.search.mp]) {
+				$scope.classes.push(_class);
+			}
+		}
+	};
+
+	$(document).ready(function () {
+		$scope.searchClasses();
+	});
 });
 
 $(document).ready(function () {
 	$('.dropdown').dropdown();
+	if (window.localStorage.getItem('currentgrade')) $('#gradeSelectionDropdown').dropdown('set selected', window.localStorage.getItem('currentgrade'));
+	else $('#gradeSelectionDropdown').dropdown('set selected', '9');
+	if (window.localStorage.getItem('currentmp')) $('#mpSelectionDropdown').dropdown('set selected', window.localStorage.getItem('currentmp'));
+	else $('#mpSelectionDropdown').dropdown('set selected', '1');
 
 	$('#classesTable tr').click(function () {
 		window.location.href = $(this).attr('data-redirectto');

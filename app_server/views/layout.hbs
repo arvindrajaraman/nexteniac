@@ -47,12 +47,16 @@
                 Preferences
               </div>
               <div class="item">
-                <i class="graduation cap icon"></i>
-                Change School Type
-              </div>
-              <div class="item">
                 <i class="font icon"></i>
                 Change Name
+              </div>
+              <div class="item" id="currentGradeLink">
+                <i class="calendar outline icon"></i>
+                Current Grade
+              </div>
+              <div class="item" id="currentMPLink">
+                <i class="percent icon"></i>
+                Current MP
               </div>
               <div class="divider"></div>
               <div class="header">
@@ -81,6 +85,53 @@
     </div>
     <div id="content">
       {{{body}}}
+    </div>
+    <div class="ui mini modal" id="currentGradeModal">
+      <div class="header">Change Current Grade</div>
+      <div class="ui form content">
+        <div class="field">
+          <labeL>Current Grade</labeL>
+          <select class="ui fluid dropdown" id="currentGradeDropdown">
+            <option value="">School Year</option>
+            <option value="12">Grade 12</option>
+            <option value="11">Grade 11</option>
+            <option value="10">Grade 10</option>
+            <option value="9">Grade 9</option>
+            <option value="8">Grade 8</option>
+            <option value="7">Grade 7</option>
+            <option value="6">Grade 6</option>
+            <option value="5">Grade 5</option>
+            <option value="4">Grade 4</option>
+            <option value="3">Grade 3</option>
+            <option value="2">Grade 2</option>
+            <option value="1">Grade 1</option>
+            <option value="0">Kindergarten</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="ui green approve button">Change</div>
+        <div class="ui red cancel button">Cancel</div>
+      </div>
+    </div>
+    <div class="ui mini modal" id="currentMPModal">
+      <div class="header">Change Current MP</div>
+      <div class="ui form content">
+        <div class="field">
+          <labeL>Current MP</labeL>
+          <select class="ui fluid dropdown" id="currentMPDropdown">
+            <option value="">Current MP</option>
+            <option value="1">MP1</option>
+            <option value="2">MP2</option>
+            <option value="3">MP3</option>
+            <option value="4">MP4</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="ui green approve button">Change</div>
+        <div class="ui red cancel button">Cancel</div>
+      </div>
     </div>
     <script src="/vendors/angular/angular.min.js"></script>
     <script src="/vendors/jquery/jquery-3.3.1.min.js"></script>

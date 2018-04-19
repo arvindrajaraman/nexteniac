@@ -50,4 +50,5 @@ app.controller('MainController', function($scope) {
 
 $(document).ready(function() {
 	$('.dropdown').dropdown();
+	if (window.localStorage.getItem('currentgrade')) $('#gradeDropdown').dropdown('set selected', window.localStorage.getItem('currentgrade'));
 });
