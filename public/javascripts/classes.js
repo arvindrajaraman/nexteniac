@@ -60,7 +60,7 @@ $(document).ready(function () {
 	if (window.localStorage.getItem('currentmp')) $('#mpSelectionDropdown').dropdown('set selected', window.localStorage.getItem('currentmp'));
 	else $('#mpSelectionDropdown').dropdown('set selected', '1');
 
-	$('#classesTable tr').click(function () {
+	$('#classesTable tbody tr').click(function () {
 		window.location.href = $(this).attr('data-redirectto');
 	});
 });
