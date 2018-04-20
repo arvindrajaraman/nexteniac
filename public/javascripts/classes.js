@@ -39,18 +39,18 @@ app.controller('MainController', function ($scope) {
 		$scope.classes.push(JSON.parse(window.localStorage.getItem('c' + i)));
 	}
 
-	$scope.shownclasses = [{'red': 1}];
-	$scope.searchClasses = function() {
+	//$scope.shownclasses = [{'red': 1}];
+	/*$scope.searchClasses = function() {
 		for (var _class of $scope.classes) {
 			if (_class.grade === $scope.search.grade && _class['mp' + $scope.search.mp]) {
-				$scope.classes.push(_class);
+				$scope.shownclasses.push(_class);
 			}
 		}
 	};
 
 	$(document).ready(function () {
 		$scope.searchClasses();
-	});
+	});*/
 });
 
 $(document).ready(function () {
