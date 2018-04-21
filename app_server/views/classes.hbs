@@ -49,25 +49,16 @@
 			</div>
 		</div>
 		<div class="two wide column">
-			<select class="ui fluid dropdown" id="gradeSelectionDropdown" ng-model="search.grade">
+			<select class="ui fluid dropdown" id="gradeSelectionDropdown" ng-model="search.grade" ng-change="searchClasses()">
 				<option value="">Grade</option>
 				<option value="12">Grade 12</option>
 				<option value="11">Grade 11</option>
 				<option value="10">Grade 10</option>
 				<option value="9">Grade 9</option>
-				<option value="8">Grade 8</option>
-				<option value="7">Grade 7</option>
-				<option value="6">Grade 6</option>
-				<option value="5">Grade 5</option>
-				<option value="4">Grade 4</option>
-				<option value="3">Grade 3</option>
-				<option value="2">Grade 2</option>
-				<option value="1">Grade 1</option>
-				<option value="0">Kindergarten</option>
 			</select>
 		</div>
 		<div class="two wide column">
-			<select class="ui fluid dropdown" id="mpSelectionDropdown" ng-model="search.mp">
+			<select class="ui fluid dropdown" id="mpSelectionDropdown" ng-model="search.mp" ng-change="searchClasses()">
 				<option value="">Marking Period</option>
 				<option value="1">MP1</option>
 				<option value="2">MP2</option>
@@ -78,14 +69,14 @@
 		<div class="three wide column">
 			<select class="ui fluid dropdown" id="sortByDropdown" ng-model="search.sortby">
 				<option value="">Sort Dropdown</option>
-				<option value="1" selected>Grade High to Low</option>
+				<option value="1">Grade High to Low</option>
 				<option value="2">Grade Low to High</option>
-				<option value="3">Name A-Z</option>
+				<option value="3" selected>Name A-Z</option>
 				<option value="4">Name Z-A</option>
 			</select>
 		</div>
 		<div class="sixteen wide column">
-			<table class="ui center aligned celled table" id="classesTable" ng-hide="classes.length === 0">
+			<table class="ui center aligned celled table" id="classesTable" ng-hide="classes.length === 0" ng-init="searchClasses()">
 				<thead>
 					<tr>
 						<th colspan="2">Grade</th>

@@ -37,7 +37,7 @@ app.controller('MainController', function($scope) {
 
 		var ls = window.localStorage;
 		if (!ls.getItem('classcount')) ls.setItem('classcount', 1);
-		else ls.setItem('classcount', ls.getItem('classcount') + 1);
+		else ls.setItem('classcount', parseInt(ls.getItem('classcount')) + 1);
 		ls.setItem('c' + ls.getItem('classcount'), JSON.stringify($scope.class));
 		ls.setItem('c' + ls.getItem('classcount') + '-catcount', $scope.categories.length);
 		for (var i = 1; i <= $scope.categories.length; i++) {

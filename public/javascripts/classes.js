@@ -33,12 +33,37 @@ app.controller('MainController', function ($scope) {
 	$scope.weightedgpa = 5.519;
 	$scope.average = 'A';
 
-	$scope.search = {};
+	$scope.search = {
+		grade: window.localStorage.getItem('currentgrade'),
+		mp: window.localStorage.getItem('currentmp'),
+		sortby: '3'
+	};
 	$scope.classes = [];
-	for (var i = 1; i <= window.localStorage.getItem('classcount'); i++) {
-		$scope.classes.push(JSON.parse(window.localStorage.getItem('c' + i)));
-	}
-
+	$scope.searchClasses = function() {
+		$scope.classes = [];
+		for (var i = 1; i <= window.localStorage.getItem('classcount'); i++) {
+			var _class = JSON.parse(window.localStorage.getItem('c' + i));
+			if (_class.grade === $scope.search.grade.toString() && _class['mp' + $scope.search.mp]) $scope.classes.push(_class);
+		}
+		switch ($scope.search.sortby) {
+			case '3':
+				$scope.classes.sort(function (a,b) {
+					if (a.name < b.name) return -1;
+					else if (a.name > b.name) return 1;
+					else return 0;
+				});
+				break;
+		}
+	};
+	
+	/*$(document).ready(function () {
+		$(window).resize(function () {
+			console.log('Resized');
+			//alert('Resized');
+			//$scope.screenwidth = $(window).width();
+		});
+	});*/
+	
 	//$scope.shownclasses = [{'red': 1}];
 	/*$scope.searchClasses = function() {
 		for (var _class of $scope.classes) {
@@ -55,6 +80,7 @@ app.controller('MainController', function ($scope) {
 
 $(document).ready(function () {
 	$('.dropdown').dropdown();
+	
 	if (window.localStorage.getItem('currentgrade')) $('#gradeSelectionDropdown').dropdown('set selected', window.localStorage.getItem('currentgrade'));
 	else $('#gradeSelectionDropdown').dropdown('set selected', '9');
 	if (window.localStorage.getItem('currentmp')) $('#mpSelectionDropdown').dropdown('set selected', window.localStorage.getItem('currentmp'));
