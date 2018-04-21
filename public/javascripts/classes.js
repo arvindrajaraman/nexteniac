@@ -43,7 +43,10 @@ app.controller('MainController', function ($scope) {
 		$scope.classes = [];
 		for (var i = 1; i <= window.localStorage.getItem('classcount'); i++) {
 			var _class = JSON.parse(window.localStorage.getItem('c' + i));
-			if (_class.grade === $scope.search.grade.toString() && _class['mp' + $scope.search.mp]) $scope.classes.push(_class);
+			if (_class.grade === $scope.search.grade.toString() && _class['mp' + $scope.search.mp]) {
+				_class.lsid = 'c' + i;
+				$scope.classes.push(_class);
+			}
 		}
 		switch ($scope.search.sortby) {
 			case '3':
@@ -55,6 +58,9 @@ app.controller('MainController', function ($scope) {
 				break;
 		}
 	};
+	$scope.redirect = function(link) {
+		window.location.href = '/classes/' + $scope.classes[link].name;
+	}
 });
 
 $(document).ready(function () {
@@ -65,7 +71,8 @@ $(document).ready(function () {
 	if (window.localStorage.getItem('currentmp')) $('#mpSelectionDropdown').dropdown('set selected', window.localStorage.getItem('currentmp'));
 	else $('#mpSelectionDropdown').dropdown('set selected', '1');
 
-	$('#classesTable tbody tr').click(function () {
+	/*$('#classesTable tbody tr').click(function () {
+		alert('Going to redirect!');
 		window.location.href = $(this).attr('data-redirectto');
-	});
+	});*/
 });

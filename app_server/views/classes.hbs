@@ -1,11 +1,10 @@
-<div class="ui container" ng-app="literate-classes" ng-controller="MainController">
+<div class="ui container" ng-app="literate-classes" ng-controller="MainController" ng-init="searchClasses()">
 	<br>
 	<div class="ui stackable grid">
 		<div class="sixteen wide column">
 			<div class="ui center aligned segment headerSegment">
 				<h1>Classes</h1>
 			</div>
-			<span>{[shownclasses]}</span>
 		</div>
 		<div class="four wide column">
 			<div class="ui center aligned segment">
@@ -76,7 +75,7 @@
 			</select>
 		</div>
 		<div class="sixteen wide column">
-			<table class="ui center aligned celled table" id="classesTable" ng-hide="classes.length === 0" ng-init="searchClasses()">
+			<table class="ui center aligned celled table" id="classesTable" ng-hide="classes.length === 0">
 				<thead>
 					<tr>
 						<th colspan="2">Grade</th>
@@ -90,7 +89,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="class in classes" data-redirectto="/classes/{[class.id]}">
+					<tr ng-repeat="class in classes" ng-click="redirect($index)">
 						<td>
 							<span class="ui header" ng-show="class.lettergrade">{[class.lettergrade]}</span>
 							<span class="ui header" ng-hide="class.lettergrade">-</span>

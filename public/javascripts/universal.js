@@ -36,6 +36,7 @@ $(document).ready(function () {
 	$('#clearModal').modal({
 		onApprove: function() {
 			window.localStorage.clear();
+			window.location.href = '/home';
 		}
 	});
 	$('#clearLink').click(function() {
@@ -48,7 +49,7 @@ $(document).ready(function () {
 			for (var key in data) {
 				if (data.hasOwnProperty(key)) window.localStorage.setItem(key, data[key]);
 			}
-			$('#importText').val('');
+			window.location.href = '/classes';
 		}
 	});
 	$('#importLink').click(function() {

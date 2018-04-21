@@ -1,1 +1,21 @@
-<h2>View Class: {{classname}}</h2>
+<div class="ui container" ng-app="literate-viewclass" ng-controller="MainController" ng-init="getClass()">
+	<br>
+	<div class="ui grid">
+		<div class="sixteen wide column">
+			<div class="ui center aligned segment headerSegment">
+				<h1>{{classname}}</h1>
+			</div>
+		</div>
+		<div class="twelve wide column">
+			
+		</div>
+		<div class="four wide column">
+			<div class="ui center aligned segments">
+				<div class="ui segment" ng-repeat="category in categories">
+					<h3>{[category.name]}</h3>
+					<h4>{[category.weight]}</h4>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
