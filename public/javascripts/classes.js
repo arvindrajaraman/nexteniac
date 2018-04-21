@@ -55,27 +55,6 @@ app.controller('MainController', function ($scope) {
 				break;
 		}
 	};
-	
-	/*$(document).ready(function () {
-		$(window).resize(function () {
-			console.log('Resized');
-			//alert('Resized');
-			//$scope.screenwidth = $(window).width();
-		});
-	});*/
-	
-	//$scope.shownclasses = [{'red': 1}];
-	/*$scope.searchClasses = function() {
-		for (var _class of $scope.classes) {
-			if (_class.grade === $scope.search.grade && _class['mp' + $scope.search.mp]) {
-				$scope.shownclasses.push(_class);
-			}
-		}
-	};
-
-	$(document).ready(function () {
-		$scope.searchClasses();
-	});*/
 });
 
 $(document).ready(function () {

@@ -22,4 +22,24 @@ $(document).ready(function () {
 	$('#currentMPLink').click(function() {
 		$('#currentMPModal').modal('show');
 	});
+	$('#exportLink').click(function() {
+		var data = {
+			currentmp: window.localStorage.getItem('currentmp'),
+			currentgrade: window.localStorage.getItem('currentgrade'),
+			classcount: window.localStorage.getItem('classcount')
+		};
+		for (var c = 1; c <= parseInt(data.classcount); c++) {
+			data['c' + c] = window.localStorage.getItem('c' + c);
+			data['c' + c + '-assignmentcount'] = window.localStorage.getItem('c' + c + '-assignmentcount');
+			data['c' + c + '-catcount'] = window.localStorage.getItem('c' + c + '-catcount');
+			for (var cat = 1; cat <= parseInt(data['c' + c + '-catcount']); cat++) {
+				data['c' + c + '-cat' + cat] = window.localStorage.getItem('c' + c + '-cat' + cat);
+			}
+		}
+		$('#exportText').val(window.btoa(JSON.stringify(data)));
+		$('#exportModal').modal('show');
+	});
+	$('#exportText').on('click', function () {
+		$(this).select();
+	});
 });

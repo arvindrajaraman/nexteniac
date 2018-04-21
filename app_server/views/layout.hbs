@@ -9,136 +9,156 @@
     {{#each styles}}
         <link rel="stylesheet" href="/stylesheets/{{this}}.css" />
     {{/each}}
+    <noscript>
+      <style>
+        #scriptedContent {
+          display: none !important;
+        }
+      </style>
+    </noscript>
   </head>
   <body>
-    <div class="ui fixed inverted red menu" id="mainMenu">
-      <div class="ui container">
-        <a class="link item" href="/home">
-          <img src="/images/logo/icon_64.png">
-          &nbsp;<b> &nbsp; Literate</b>
-        </a>
-        <div class="right menu">
-          <a class="link item" href="/createclass">
-            <i class="plus icon"></i>
-            <span class="hidden-xs">Create Class</span>
+    <div id="scriptedContent">
+      <div class="ui fixed inverted red menu" id="mainMenu">
+        <div class="ui container">
+          <a class="link item" href="/home">
+            <img src="/images/logo/icon_64.png">
+            &nbsp;<b> &nbsp; Literate</b>
           </a>
-          <a class="link item" href="/classes">
-            <i class="book icon"></i>
-            <span class="hidden-xs">Classes</span>
-          </a>
-          <div class="ui icon dropdown item" id="settingsDropdown">
-            <span class="hidden-xs">&nbsp; Settings &nbsp;</span>
-            <i class="caret down icon hidden-xs"></i>
-            <i class="setting icon visible-xs"></i>
-            <div class="menu">
-              <div class="header">
-                Data
-              </div>
-              <div class="item">
-                <i class="upload icon"></i>
-                Import
-              </div>
-              <div class="item">
-                <i class="download icon"></i>
-                Export
-              </div>
-              <div class="divider"></div>
-              <div class="header">
-                Preferences
-              </div>
-              <div class="item">
-                <i class="font icon"></i>
-                Change Name
-              </div>
-              <div class="item" id="currentGradeLink">
-                <i class="calendar outline icon"></i>
-                Current Grade
-              </div>
-              <div class="item" id="currentMPLink">
-                <i class="percent icon"></i>
-                Current MP
-              </div>
-              <div class="divider"></div>
-              <div class="header">
-                Share
-              </div>
-              <div class="item">
-                <i class="share icon"></i>
-                Share Link
-              </div>
-              <div class="item">
-                <i class="facebook f icon"></i>
-                Facebook
-              </div>
-              <div class="item">
-                <i class="twitter icon"></i>
-                Twitter
-              </div>
-              <div class="item">
-                <i class="instagram icon"></i>
-                Instagram
+          <div class="right menu">
+            <a class="link item" href="/createclass">
+              <i class="plus icon"></i>
+              <span class="hidden-xs">Create Class</span>
+            </a>
+            <a class="link item" href="/classes">
+              <i class="book icon"></i>
+              <span class="hidden-xs">Classes</span>
+            </a>
+            <div class="ui icon dropdown item" id="settingsDropdown">
+              <span class="hidden-xs">&nbsp; Settings &nbsp;</span>
+              <i class="caret down icon hidden-xs"></i>
+              <i class="setting icon visible-xs"></i>
+              <div class="menu">
+                <div class="header">
+                  Data
+                </div>
+                <div class="item">
+                  <i class="upload icon"></i>
+                  Import
+                </div>
+                <div class="item" id="exportLink">
+                  <i class="download icon"></i>
+                  Export
+                </div>
+                <div class="divider"></div>
+                <div class="header">
+                  Preferences
+                </div>
+                <div class="item">
+                  <i class="font icon"></i>
+                  Change Name
+                </div>
+                <div class="item" id="currentGradeLink">
+                  <i class="calendar outline icon"></i>
+                  Current Grade
+                </div>
+                <div class="item" id="currentMPLink">
+                  <i class="percent icon"></i>
+                  Current MP
+                </div>
+                <div class="divider"></div>
+                <div class="header">
+                  Share
+                </div>
+                <div class="item">
+                  <i class="share icon"></i>
+                  Share Link
+                </div>
+                <div class="item">
+                  <i class="facebook f icon"></i>
+                  Facebook
+                </div>
+                <div class="item">
+                  <i class="twitter icon"></i>
+                  Twitter
+                </div>
+                <div class="item">
+                  <i class="instagram icon"></i>
+                  Instagram
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div id="content">
-      {{{body}}}
-    </div>
-    <div class="ui mini modal" id="currentGradeModal">
-      <div class="header">Change Current Grade</div>
-      <div class="ui form content">
-        <div class="field">
-          <labeL>Current Grade</labeL>
-          <select class="ui fluid dropdown" id="currentGradeDropdown">
-            <option value="">School Year</option>
-            <option value="12">Grade 12</option>
-            <option value="11">Grade 11</option>
-            <option value="10">Grade 10</option>
-            <option value="9">Grade 9</option>
-            <option value="8">Grade 8</option>
-            <option value="7">Grade 7</option>
-            <option value="6">Grade 6</option>
-            <option value="5">Grade 5</option>
-            <option value="4">Grade 4</option>
-            <option value="3">Grade 3</option>
-            <option value="2">Grade 2</option>
-            <option value="1">Grade 1</option>
-            <option value="0">Kindergarten</option>
-          </select>
+      <div id="content">
+        {{{body}}}
+      </div>
+      <div class="ui mini modal" id="currentGradeModal">
+        <div class="header">Change Current Grade</div>
+        <div class="ui form content">
+          <div class="field">
+            <labeL>Current Grade</labeL>
+            <select class="ui fluid dropdown" id="currentGradeDropdown">
+              <option value="">School Year</option>
+              <option value="12">Grade 12</option>
+              <option value="11">Grade 11</option>
+              <option value="10">Grade 10</option>
+              <option value="9">Grade 9</option>
+            </select>
+          </div>
+        </div>
+        <div class="actions">
+          <div class="ui green approve button">Change</div>
+          <div class="ui red cancel button">Cancel</div>
         </div>
       </div>
-      <div class="actions">
-        <div class="ui green approve button">Change</div>
-        <div class="ui red cancel button">Cancel</div>
-      </div>
-    </div>
-    <div class="ui mini modal" id="currentMPModal">
-      <div class="header">Change Current MP</div>
-      <div class="ui form content">
-        <div class="field">
-          <labeL>Current MP</labeL>
-          <select class="ui fluid dropdown" id="currentMPDropdown">
-            <option value="">Current MP</option>
-            <option value="1">MP1</option>
-            <option value="2">MP2</option>
-            <option value="3">MP3</option>
-            <option value="4">MP4</option>
-          </select>
+      <div class="ui mini modal" id="currentMPModal">
+        <div class="header">Change Current MP</div>
+        <div class="ui form content">
+          <div class="field">
+            <labeL>Current MP</labeL>
+            <select class="ui fluid dropdown" id="currentMPDropdown">
+              <option value="">Current MP</option>
+              <option value="1">MP1</option>
+              <option value="2">MP2</option>
+              <option value="3">MP3</option>
+              <option value="4">MP4</option>
+            </select>
+          </div>
+        </div>
+        <div class="actions">
+          <div class="ui green approve button">Change</div>
+          <div class="ui red cancel button">Cancel</div>
         </div>
       </div>
-      <div class="actions">
-        <div class="ui green approve button">Change</div>
-        <div class="ui red cancel button">Cancel</div>
+      <div class="ui tiny modal" id="exportModal">
+        <div class="header">Export Data</div>
+        <div class="ui form content">
+          <span>Copy this text and save it to a file. You can use this to import the data back in on another device or the same device.</span>
+          <br><br>
+          <textarea id="exportText" readonly="readonly"></textarea>
+        </div>
+        <div class="actions">
+          <div class="ui red cancel button">Cancel</div>
+        </div>
       </div>
+      <script src="/vendors/angular/angular.min.js"></script>
+      <script src="/vendors/jquery/jquery-3.3.1.min.js"></script>
+      <script src="/vendors/semantic-ui/semantic.min.js"></script>
+      <script src="/javascripts/universal.js"></script>
+      {{#each scripts}}
+        <script src="/javascripts/{{this}}.js"></script>
+      {{/each}}
     </div>
-    <script src="/vendors/angular/angular.min.js"></script>
-    <script src="/vendors/jquery/jquery-3.3.1.min.js"></script>
-    <script src="/vendors/semantic-ui/semantic.min.js"></script>
-    <script src="/javascripts/universal.js"></script>
-    {{#each scripts}}
-    	<script src="/javascripts/{{this}}.js"></script>
-    {{/each}}
+    <noscript>
+      <div id="nonScriptedContent">
+        <div class="ui container">
+          <div class="ui center aligned red tertiary segment">
+            <h2><i class="frown icon"></i> Literate needs Javascript enabled to run! Re-enable Javascript and reload the page.</h2>
+          </div>
+        </div>
+      </div>
+    </noscript>
   </body>
 </html>
