@@ -42,13 +42,17 @@
                 <div class="header">
                   Data
                 </div>
-                <div class="item">
+                <div class="item" id="importLink">
                   <i class="upload icon"></i>
                   Import
                 </div>
                 <div class="item" id="exportLink">
                   <i class="download icon"></i>
                   Export
+                </div>
+                <div class="item" id="clearLink">
+                  <i class="eraser icon"></i>
+                  Clear
                 </div>
                 <div class="divider"></div>
                 <div class="header">
@@ -132,6 +136,18 @@
           <div class="ui red cancel button">Cancel</div>
         </div>
       </div>
+      <div class="ui tiny modal" id="importModal">
+        <div class="header">Import Data</div>
+        <div class="ui form content">
+          <span>Copy the data you got from exporting earlier. (Any data already stored will be erased, so make sure you export that before you import this!)</span>
+          <br><br>
+          <textarea id="importText"></textarea>
+        </div>
+        <div class="actions">
+          <div class="ui green approve button">Import</div>
+          <div class="ui red cancel button">Cancel</div>
+        </div>
+      </div>
       <div class="ui tiny modal" id="exportModal">
         <div class="header">Export Data</div>
         <div class="ui form content">
@@ -141,6 +157,25 @@
         </div>
         <div class="actions">
           <div class="ui red cancel button">Cancel</div>
+        </div>
+      </div>
+      <div class="ui basic modal" id="clearModal">
+        <div class="ui icon header">
+          <i class="trash icon"></i>
+          Clear Data
+        </div>
+        <div class="content">
+          <p>Are you sure you want to clear all the data on this website? This action cannot be undone! If you want to reuse this data (on the same device or a different device), make sure you export the data first!</p>
+        </div>
+        <div class="actions">
+          <div class="ui red basic cancel inverted button">
+            <i class="x icon"></i>
+            Cancel
+          </div>
+          <div class="ui green ok inverted button">
+            <i class="eraser icon"></i>
+            Clear
+          </div>
         </div>
       </div>
       <script src="/vendors/angular/angular.min.js"></script>

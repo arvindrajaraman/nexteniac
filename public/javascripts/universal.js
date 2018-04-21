@@ -23,23 +23,35 @@ $(document).ready(function () {
 		$('#currentMPModal').modal('show');
 	});
 	$('#exportLink').click(function() {
-		var data = {
-			currentmp: window.localStorage.getItem('currentmp'),
-			currentgrade: window.localStorage.getItem('currentgrade'),
-			classcount: window.localStorage.getItem('classcount')
-		};
-		for (var c = 1; c <= parseInt(data.classcount); c++) {
-			data['c' + c] = window.localStorage.getItem('c' + c);
-			data['c' + c + '-assignmentcount'] = window.localStorage.getItem('c' + c + '-assignmentcount');
-			data['c' + c + '-catcount'] = window.localStorage.getItem('c' + c + '-catcount');
-			for (var cat = 1; cat <= parseInt(data['c' + c + '-catcount']); cat++) {
-				data['c' + c + '-cat' + cat] = window.localStorage.getItem('c' + c + '-cat' + cat);
-			}
+		var data = {};
+		for (var i = 0; i <= localStorage.length - 1; i++) {
+			data[window.localStorage.key(i)] = window.localStorage.getItem(window.localStorage.key(i));
 		}
 		$('#exportText').val(window.btoa(JSON.stringify(data)));
 		$('#exportModal').modal('show');
 	});
 	$('#exportText').on('click', function () {
 		$(this).select();
+	});
+	$('#clearModal').modal({
+		onApprove: function() {
+			window.localStorage.clear();
+		}
+	});
+	$('#clearLink').click(function() {
+		$('#clearModal').modal('show');
+	});
+	$('#importModal').modal({
+		onApprove: function() {
+			var data = JSON.parse(window.atob($('#importText').val()));
+			window.localStorage.clear();
+			for (var key in data) {
+				if (data.hasOwnProperty(key)) window.localStorage.setItem(key, data[key]);
+			}
+			$('#importText').val('');
+		}
+	});
+	$('#importLink').click(function() {
+		$('#importModal').modal('show');
 	});
 });
