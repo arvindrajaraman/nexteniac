@@ -139,23 +139,32 @@
       <div class="ui tiny modal" id="importModal">
         <div class="header">Import Data</div>
         <div class="ui form content">
-          <span>Copy the data you got from exporting earlier. (Any data already stored will be erased, so make sure you export that before you import this!)</span>
+          <span>Upload the data file that you downloaded earlier. Make sure it is the most recent one you downloaded.</span>
           <br><br>
-          <textarea id="importText"></textarea>
+          <div class="ui fluid action input">
+            <input type="text" placeholder="Select File" readonly="readonly" id="selectFileText">
+            <button class="ui red right labeled icon button" id="selectFileButton">
+              <i class="file icon"></i>
+              Select File
+            </button>
+          </div>
+          <input type="file" id="importDataFile" style="display: none;">
         </div>
         <div class="actions">
-          <div class="ui green approve button">Import</div>
+          <div class="ui green approve button" id="importDataButton">Import</div>
           <div class="ui red cancel button">Cancel</div>
         </div>
       </div>
       <div class="ui tiny modal" id="exportModal">
         <div class="header">Export Data</div>
         <div class="ui form content">
-          <span>Copy this text and save it to a file. You can use this to import the data back in on another device or the same device.</span>
-          <br><br>
-          <textarea id="exportText" readonly="readonly"></textarea>
+          <span>Click "Download" to download the data file. Keep this file in a safe place. When you want to import the data, just upload this file to Literate.</span>
         </div>
         <div class="actions">
+          <div class="ui green ok labeled icon button" id="downloadDataButton">
+            <i class="file icon"></i>
+            Download
+          </div>
           <div class="ui red cancel button">Cancel</div>
         </div>
       </div>
