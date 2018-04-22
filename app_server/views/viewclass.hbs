@@ -1,4 +1,4 @@
-<div class="ui container" ng-app="literate-viewclass" ng-controller="MainController" ng-init="getClass()">
+<div class="ui container" ng-app="literate-viewclass" ng-controller="MainController" ng-init="initViewClass()">
 	<br>
 	<div class="ui grid">
 		<div class="sixteen wide column">
@@ -31,11 +31,46 @@
 			</div>
 			<div id="viewClassTabs">
 				<div class="tab" ng-show="tab === 1">
-					<button class="ui fluid large inverted red button">
-						<i class="plus icon"></i>
-						Add Grade
-					</button>
-					<h3>Grades</h3>
+					<table class="ui compact center aligned table" ng-hide="showngrades === 0">
+						<thead>
+							<th>Date</th>
+							<th>Letter</th>
+							<th>Percent</th>
+							<th>Points</th>
+							<th>Category</th>
+							<th>Assignment Name</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="grade in grades" ng-show="grade.mp === search.mp" ng-class="{'gradeshown': grade.mp === search.mp}">
+								<td>
+									{[grade.date | date:'EEE M/d/yy']}
+								</td>
+								<td>
+									<h2 class="ui center aligned header">
+										{[grade.ptsearned / grade.ptstotal | lettergrade]}
+									</h2>
+								</td>
+								<td>
+									<b style="font-size: 16px !important;">{[grade.ptsearned * 100 / grade.ptstotal | number:2]}%</b>
+								</td>
+								<td style="font-size: 16px !important;">
+									{[grade.ptsearned]} of {[grade.ptstotal]}
+								</td>
+								<td style="font-size: 16px !important;">
+									<span>{[grade.category]}</span>
+								</td style="font-size: 16px !important;">
+								<td style="font-size: 16px !important;">
+									<span>{[grade.name]}</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="ui secondary center aligned segment" ng-show="showngrades === 0">
+						<h2>
+							<i class="frown icon"></i>
+							No grades in this marking period yet!
+						</h2>
+					</div>
 				</div>
 				<div class="tab" ng-show="tab === 2">
 					<h3>Basic Stats</h3>
@@ -52,7 +87,12 @@
 			</div>
 		</div>
 		<div class="four wide center aligned column">
-			<select class="ui fluid dropdown" id="mpSelectionDropdown">
+			<button class="ui large fluid red labeled icon button" id="addGradeButton">
+				<i class="table icon"></i>
+				Add Grade
+			</button>
+			<br>
+			<select class="ui fluid dropdown" id="mpSelectionDropdown" ng-model="search.mp" ng-change="refreshShownGradeCount()">
 				<option value="">Marking Period</option>
 				<option value="1">MP1</option>
 				<option value="2">MP2</option>
@@ -75,22 +115,83 @@
 				<div class="ui secondary segment">
 					<h3>{[class.type | type]} Course</h3>
 				</div>
+				<div class="ui secondary segment">
+					<h3>Taken in Grade {[class.grade]}</h3>
+				</div>
 			</div>
 			<table class="ui center aligned celled table">
 				<thead>
-					<th>MP1</th>
-					<th>MP2</th>
-					<th>MP3</th>
-					<th>MP4</th>
+					<tr>
+						<th>MP1</th>
+						<th>MP2</th>
+						<th>MP3</th>
+						<th>MP4</th>
+					</tr>
 				</thead>
 				<tbody>
-					<td><i class="large {[class.mp1 | check]} icon"></i></td>
-					<td><i class="large {[class.mp2 | check]} icon"></i></td>
-					<td><i class="large {[class.mp3 | check]} icon"></i></td>
-					<td><i class="large {[class.mp4 | check]} icon"></i></td>
+					<tr>
+						<td><i class="large {[class.mp1 | check]} icon"></i></td>
+						<td><i class="large {[class.mp2 | check]} icon"></i></td>
+						<td><i class="large {[class.mp3 | check]} icon"></i></td>
+						<td><i class="large {[class.mp4 | check]} icon"></i></td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
 	</div>
+	<div class="ui tiny modal" id="addGradeModal">
+		<div class="header">Add Grade</div>
+		<div class="ui form content">
+			<div class="two fields">
+				<div class="field">
+					<label>Date</label>
+					<input type="date" placeholder="Date" ng-model="newgrade.date">
+				</div>
+				<div class="field">
+					<label>Category</label>
+					<div class="ui selection dropdown">
+						<input type="hidden" id="addGradeCategoryDropdown">
+						<i class="dropdown icon"></i>
+						<div class="default text">Category</div>
+						<div class="menu">
+							<div class="item" ng-repeat="category in categories" data-value="{[category.name]}">{[category.name]}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="two fields">
+				<div class="field">
+					<label>Assignment Name</label>
+					<input type="text" placeholder="Assignment Name" ng-model="newgrade.name">
+				</div>
+				<div class="field">
+					<label>Marking Period</label>
+					<select class="ui fluid dropdown" ng-model="newgrade.mp" id="newgradeMPSelectionDropdown">
+						<option value="">Marking Period</option>
+						<option value="1">MP1</option>
+						<option value="2">MP2</option>
+						<option value="3">MP3</option>
+						<option value="4">MP4</option>
+					</select>
+				</div>
+			</div>
+			<div class="two fields">
+				<div class="field">
+					<label>Points Earned</label>
+					<input type="number" placeholder="Points Earned" ng-model="newgrade.ptsearned" min="0">
+				</div>
+				<div class="field">
+					<label>Points Total</label>
+					<input type="number" placeholder="Points Total" ng-model="newgrade.ptstotal" min="0">
+				</div>
+			</div>
+		</div>
+		<div class="actions">
+			<div class="ui positive labeled icon button" ng-click="addGrade()">
+		    	<i class="plus icon"></i>
+		    	Add Grade
+		    </div>
+			<div class="ui red deny button">Cancel</div>
+		</div>
+	</div>
 </div>
-<script src="https://npmcdn.com/chart.js@latest/dist/Chart.bundle.min.js"></script>

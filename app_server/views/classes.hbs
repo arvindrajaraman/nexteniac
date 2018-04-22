@@ -1,4 +1,4 @@
-<div class="ui container" ng-app="literate-classes" ng-controller="MainController" ng-init="searchClasses()">
+<div class="ui container" ng-app="literate-classes" ng-controller="MainController" ng-init="initClasses()">
 	<br>
 	<div class="ui stackable grid">
 		<div class="sixteen wide column">
@@ -48,7 +48,7 @@
 			</div>
 		</div>
 		<div class="two wide column">
-			<select class="ui fluid dropdown" id="gradeSelectionDropdown" ng-model="search.grade" ng-change="searchClasses()">
+			<select class="ui fluid dropdown" id="gradeSelectionDropdown" ng-model="search.grade" ng-change="refreshShownClassCount()">
 				<option value="">Grade</option>
 				<option value="12">Grade 12</option>
 				<option value="11">Grade 11</option>
@@ -57,7 +57,7 @@
 			</select>
 		</div>
 		<div class="two wide column">
-			<select class="ui fluid dropdown" id="mpSelectionDropdown" ng-model="search.mp" ng-change="searchClasses()">
+			<select class="ui fluid dropdown" id="mpSelectionDropdown" ng-model="search.mp" ng-change="refreshShownClassCount()">
 				<option value="">Marking Period</option>
 				<option value="1">MP1</option>
 				<option value="2">MP2</option>
@@ -75,7 +75,7 @@
 			</select>
 		</div>
 		<div class="sixteen wide column">
-			<table class="ui center aligned celled table" id="classesTable" ng-hide="classes.length === 0">
+			<table class="ui center aligned celled table" id="classesTable" ng-hide="shownclasses === 0">
 				<thead>
 					<tr>
 						<th colspan="2">Grade</th>
@@ -89,7 +89,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="class in classes" ng-click="redirect($index)">
+					<tr ng-repeat="class in classes" ng-click="redirect($index)" ng-show="class.grade === search.grade && class['mp' + search.mp]">
 						<td>
 							<span class="ui header" ng-show="class.lettergrade">{[class.lettergrade]}</span>
 							<span class="ui header" ng-hide="class.lettergrade">-</span>
@@ -108,10 +108,10 @@
 					</tr>
 				</tbody>
 			</table>
-			<div class="ui secondary center aligned segment" ng-show="classes.length === 0">
+			<div class="ui secondary center aligned segment" ng-show="shownclasses === 0">
 				<h2>
 					<i class="frown icon"></i>
-					No classes matched these criteria
+					No classes matched these criteria!
 				</h2>
 			</div>
 		</div>

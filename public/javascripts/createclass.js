@@ -41,7 +41,9 @@ app.controller('MainController', function($scope) {
 		ls.setItem('c' + ls.getItem('classcount'), JSON.stringify($scope.class));
 		ls.setItem('c' + ls.getItem('classcount') + '-catcount', $scope.categories.length);
 		for (var i = 1; i <= $scope.categories.length; i++) {
-			ls.setItem('c' + ls.getItem('classcount') + '-cat' + i, JSON.stringify($scope.categories[i-1]));
+			var category = JSON.stringify($scope.categories[i-1]);
+			delete category.$$hashKey;
+			ls.setItem('c' + ls.getItem('classcount') + '-cat' + i, category);
 		}
 		ls.setItem('c' + ls.getItem('classcount') + '-assignmentcount', 0);
 		window.location.href = '/classes/' + $scope.class.id;

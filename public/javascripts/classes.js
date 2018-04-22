@@ -29,6 +29,7 @@ app.controller('MainController', function ($scope) {
 	$scope.unweightedgpa = 3.801;
 	$scope.weightedgpa = 5.519;
 	$scope.average = 'A';
+	$scope.shownclasses = 0;
 
 	$scope.search = {
 		grade: window.localStorage.getItem('currentgrade'),
@@ -37,26 +38,26 @@ app.controller('MainController', function ($scope) {
 	};
 	$scope.classes = [];
 	$scope.searchClasses = function() {
-		$scope.classes = [];
 		for (var i = 1; i <= window.localStorage.getItem('classcount'); i++) {
 			var _class = JSON.parse(window.localStorage.getItem('c' + i));
-			if (_class.grade === $scope.search.grade.toString() && _class['mp' + $scope.search.mp]) {
-				_class.lsid = 'c' + i;
-				$scope.classes.push(_class);
-			}
-		}
-		switch ($scope.search.sortby) {
-			case '3':
-				$scope.classes.sort(function (a,b) {
-					if (a.name < b.name) return -1;
-					else if (a.name > b.name) return 1;
-					else return 0;
-				});
-				break;
+			_class.lsid = 'c' + i;
+			$scope.classes.push(_class);
 		}
 	};
 	$scope.redirect = function(link) {
 		window.location.href = '/classes/' + $scope.classes[link].name;
+	}
+
+	$scope.refreshShownClassCount = function() {
+		$scope.shownclasses = 0;
+		for (var _class of $scope.classes) {
+			if (_class.grade === $scope.search.grade && _class['mp' + $scope.search.mp]) $scope.shownclasses++;
+		}
+	};
+
+	$scope.initClasses = function() {
+		$scope.searchClasses();
+		$scope.refreshShownClassCount();
 	}
 });
 
@@ -67,9 +68,4 @@ $(document).ready(function () {
 	else $('#gradeSelectionDropdown').dropdown('set selected', '9');
 	if (window.localStorage.getItem('currentmp')) $('#mpSelectionDropdown').dropdown('set selected', window.localStorage.getItem('currentmp'));
 	else $('#mpSelectionDropdown').dropdown('set selected', '1');
-
-	/*$('#classesTable tbody tr').click(function () {
-		alert('Going to redirect!');
-		window.location.href = $(this).attr('data-redirectto');
-	});*/
 });
