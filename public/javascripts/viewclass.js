@@ -5,8 +5,32 @@ app.config(function($interpolateProvider) {
 	$interpolateProvider.endSymbol(']}');
 });
 
+app.filter('check', function() {
+	return function(val) {
+		return (val) ? 'green check' : 'red x';
+	}
+});
+
+app.filter('type', function() {
+	return function(val) {
+		switch (parseInt(val)) {
+			case 0:
+				return 'Honors';
+			case 1:
+			case 2:
+				return 'Level ' + val;
+			default:
+				return val;
+		}
+	}
+});
+
 app.controller('MainController', function ($scope) {
 	$scope.categories = [];
+	$scope.tab = 1;
+	$scope.changeTab = function(t) {
+		$scope.tab = t;
+	};
 
 	$scope.getClass = function() {
 		var classname = window.location.href.split('/');
@@ -27,5 +51,7 @@ app.controller('MainController', function ($scope) {
 });
 
 $(document).ready(function () {
-
+	$('.dropdown').dropdown();
+	if (window.localStorage.getItem('currentmp')) $('#mpSelectionDropdown').dropdown('set selected', window.localStorage.getItem('currentmp'));
+	else $('#mpSelectionDropdown').dropdown('set selected', '1');
 });

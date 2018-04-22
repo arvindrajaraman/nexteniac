@@ -7,15 +7,90 @@
 			</div>
 		</div>
 		<div class="twelve wide column">
-			
-		</div>
-		<div class="four wide column">
-			<div class="ui center aligned segments">
-				<div class="ui segment" ng-repeat="category in categories">
-					<h3>{[category.name]}</h3>
-					<h4>{[category.weight]}</h4>
+			<div class="ui five item labeled icon menu">
+				<a class="red item" ng-class="{'active': tab === 1}" ng-click="changeTab(1)">
+					<i class="table icon"></i>
+					Grades
+				</a>
+				<a class="red item" ng-class="{'active': tab === 2}" ng-click="changeTab(2)">
+					<i class="chart pie icon"></i>
+					Basic Stats
+				</a>
+				<a class="red item" ng-class="{'active': tab === 3}" ng-click="changeTab(3)">
+					<i class="chart line icon"></i>
+					Average Stats
+				</a>
+				<a class="red item" ng-class="{'active': tab === 4}" ng-click="changeTab(4)">
+					<i class="lightbulb icon"></i>
+					Insights
+				</a>
+				<a class="red item" ng-class="{'active': tab === 5}" ng-click="changeTab(5)">
+					<i class="quidditch icon"></i>
+					Goals
+				</a>
+			</div>
+			<div id="viewClassTabs">
+				<div class="tab" ng-show="tab === 1">
+					<button class="ui fluid large inverted red button">
+						<i class="plus icon"></i>
+						Add Grade
+					</button>
+					<h3>Grades</h3>
+				</div>
+				<div class="tab" ng-show="tab === 2">
+					<h3>Basic Stats</h3>
+				</div>
+				<div class="tab" ng-show="tab === 3">
+					<h3>Average Stats</h3>
+				</div>
+				<div class="tab" ng-show="tab === 4">
+					<h3>Insights</h3>
+				</div>
+				<div class="tab" ng-show="tab === 5">
+					<h3>Goals</h3>
 				</div>
 			</div>
 		</div>
+		<div class="four wide center aligned column">
+			<select class="ui fluid dropdown" id="mpSelectionDropdown">
+				<option value="">Marking Period</option>
+				<option value="1">MP1</option>
+				<option value="2">MP2</option>
+				<option value="3">MP3</option>
+				<option value="4">MP4</option>
+			</select>
+			<div class="ui segments">
+				<div class="ui red segment">
+					<h3>Grade Categories</h3>
+				</div>
+				<div class="ui segment" ng-repeat="category in categories">
+					<b>{[category.name]} </b>
+					<span> {[category.weight]}%</span>
+				</div>
+			</div>
+			<div class="ui segments">
+				<div class="ui secondary segment">
+					<h3>{[class.credits | number:2]} Credits</h3>
+				</div>
+				<div class="ui secondary segment">
+					<h3>{[class.type | type]} Course</h3>
+				</div>
+			</div>
+			<table class="ui center aligned celled table">
+				<thead>
+					<th>MP1</th>
+					<th>MP2</th>
+					<th>MP3</th>
+					<th>MP4</th>
+				</thead>
+				<tbody>
+					<td><i class="large {[class.mp1 | check]} icon"></i></td>
+					<td><i class="large {[class.mp2 | check]} icon"></i></td>
+					<td><i class="large {[class.mp3 | check]} icon"></i></td>
+					<td><i class="large {[class.mp4 | check]} icon"></i></td>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
+<script src="https://npmcdn.com/chart.js@latest/dist/Chart.bundle.min.js"></script>

@@ -13,14 +13,11 @@ app.filter('check', function() {
 
 app.filter('type', function() {
 	return function(val) {
-		switch (val) {
+		switch (parseInt(val)) {
 			case 0:
-			case '0':
 				return 'Honors';
 			case 1:
-			case '1':
 			case 2:
-			case '2':
 				return 'Level ' + val;
 			default:
 				return val;
