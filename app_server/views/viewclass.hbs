@@ -3,45 +3,49 @@
 	<div class="ui grid">
 		<div class="sixteen wide column">
 			<div class="ui center aligned segment headerSegment">
-				<h1>{{classname}}</h1>
+				<h1>{[class.name]}</h1>
 			</div>
 		</div>
 		<div class="twelve wide column">
-			<div class="ui five item labeled icon menu">
+			<div class="ui six item labeled icon menu">
 				<a class="red item" ng-class="{'active': tab === 1}" ng-click="changeTab(1)">
 					<i class="table icon"></i>
 					Grades
 				</a>
 				<a class="red item" ng-class="{'active': tab === 2}" ng-click="changeTab(2)">
-					<i class="chart pie icon"></i>
-					Basic Stats
+					<i class="chart area icon"></i>
+					Category Stats
 				</a>
 				<a class="red item" ng-class="{'active': tab === 3}" ng-click="changeTab(3)">
 					<i class="chart line icon"></i>
-					Average Stats
+					MP Stats
 				</a>
 				<a class="red item" ng-class="{'active': tab === 4}" ng-click="changeTab(4)">
+					<i class="chart pie icon"></i>
+					Average Stats
+				</a>
+				<a class="red item" ng-class="{'active': tab === 5}" ng-click="changeTab(5)">
 					<i class="lightbulb icon"></i>
 					Insights
 				</a>
-				<a class="red item" ng-class="{'active': tab === 5}" ng-click="changeTab(5)">
+				<a class="red item" ng-class="{'active': tab === 6}" ng-click="changeTab(6)">
 					<i class="quidditch icon"></i>
 					Goals
 				</a>
 			</div>
 			<div id="viewClassTabs">
 				<div class="tab" ng-show="tab === 1">
-					<table class="ui compact center aligned table" ng-hide="showngrades === 0">
-						<thead>
-							<th>Date</th>
-							<th>Letter</th>
-							<th>Percent</th>
-							<th>Points</th>
-							<th>Category</th>
-							<th>Assignment Name</th>
+					<table class="ui compact center aligned table" ng-hide="mpGrades[search.mp-1].length === 0">
+						<thead id="viewClassGradesHeader">
+							<th ng-click="changeSort(1)">Date <i class="caret icon" ng-show="sort.by === 1" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+							<th ng-click="changeSort(2)">Letter <i class="caret icon" ng-show="sort.by === 2" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+							<th ng-click="changeSort(3)">Percent <i class="caret icon" ng-show="sort.by === 3" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+							<th ng-click="changeSort(4)">Points <i class="caret icon" ng-show="sort.by === 4" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+							<th ng-click="changeSort(5)">Category <i class="caret icon" ng-show="sort.by === 5" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+							<th ng-click="changeSort(6)">Assignment Name <i class="caret icon" ng-show="sort.by === 6" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
 						</thead>
 						<tbody>
-							<tr ng-repeat="grade in grades" ng-show="grade.mp === search.mp" ng-class="{'gradeshown': grade.mp === search.mp}">
+							<tr ng-repeat="grade in mpGrades[search.mp-1]" ng-show="grade.mp === search.mp" ng-class="{'gradeshown': grade.mp === search.mp}">
 								<td>
 									{[grade.date | date:'EEE M/d/yy']}
 								</td>
@@ -65,7 +69,7 @@
 							</tr>
 						</tbody>
 					</table>
-					<div class="ui secondary center aligned segment" ng-show="showngrades === 0">
+					<div class="ui secondary center aligned segment" ng-show="mpGrades[search.mp-1].length === 0">
 						<h2>
 							<i class="frown icon"></i>
 							No grades in this marking period yet!
@@ -73,15 +77,62 @@
 					</div>
 				</div>
 				<div class="tab" ng-show="tab === 2">
-					<h3>Basic Stats</h3>
+					<h3>Category Stats</h3>
 				</div>
 				<div class="tab" ng-show="tab === 3">
-					<h3>Average Stats</h3>
+					<div style="width: 100% !important; height: 200px !important;" ng-hide="mpGrades[search.mp-1].length === 0">
+						<canvas id="averageProgressionChart" height="150"></canvas>
+					</div>
 				</div>
 				<div class="tab" ng-show="tab === 4">
-					<h3>Insights</h3>
+					<table class="ui center aligned table" id="averageStatsTable">
+						<thead>
+							<th>Category</th>
+							<th>MP1</th>
+							<th>MP2</th>
+							<th>MP3</th>
+							<th>MP4</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="category in categories">
+								<td class="categorycell">{[category.name]}</td>
+								<td>{[gradeBrackets[0][category.name].averageLetter | valueordefault]} &nbsp; {[gradeBrackets[0][category.name].averagePercent | number:2]}<span ng-show="gradeBrackets[0][category.name].averagePercent !== null">%</span></td>
+								<td>{[gradeBrackets[1][category.name].averageLetter | valueordefault]} &nbsp; {[gradeBrackets[1][category.name].averagePercent | number:2]}<span ng-show="gradeBrackets[1][category.name].averagePercent !== null">%</span></td>
+								<td>{[gradeBrackets[2][category.name].averageLetter | valueordefault]} &nbsp; {[gradeBrackets[2][category.name].averagePercent | number:2]}<span ng-show="gradeBrackets[2][category.name].averagePercent !== null">%</span></td>
+								<td>{[gradeBrackets[3][category.name].averageLetter | valueordefault]} &nbsp; {[gradeBrackets[3][category.name].averagePercent | number:2]}<span ng-show="gradeBrackets[3][category.name].averagePercent !== null">%</span></td>
+							</tr>
+							<tr style="background-color: #F9FAFB;">
+								<td class="categorycell">Total</td>
+								<td>{[mpAverages[0].averageLetter | valueordefault]} &nbsp; {[mpAverages[0].averagePercent | number:2]}<span ng-show="mpAverages[0].averagePercent !== null">%</span></td>
+								<td>{[mpAverages[1].averageLetter | valueordefault]} &nbsp; {[mpAverages[1].averagePercent | number:2]}<span ng-show="mpAverages[1].averagePercent !== null">%</span></td>
+								<td>{[mpAverages[2].averageLetter | valueordefault]} &nbsp; {[mpAverages[2].averagePercent | number:2]}<span ng-show="mpAverages[2].averagePercent !== null">%</span></td>
+								<td>{[mpAverages[3].averageLetter | valueordefault]} &nbsp; {[mpAverages[3].averagePercent | number:2]}<span ng-show="mpAverages[3].averagePercent !== null">%</span></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="ui center aligned five column grid">
+						<div class="column" ng-repeat="mp in [0,1,2,3]">
+							<div class="ui segment">
+								<div class="ui red statistic">
+				 		 			<div class="value">{[mpAverages[mp].averageLetter | valueordefault]}</div>
+				 		 			<div class="label">MP{[mp+1]} AVERAGE</div>
+								</div>
+							</div>
+						</div>
+						<div class="column">
+							<div class="ui inverted red segment">
+								<div class="ui inverted statistic">
+				 		 			<div class="value">{[yearAverageLetter | valueordefault]}</div>
+				 		 			<div class="label">YEAR AVERAGE</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="tab" ng-show="tab === 5">
+					<h3>Insights</h3>
+				</div>
+				<div class="tab" ng-show="tab === 6">
 					<h3>Goals</h3>
 				</div>
 			</div>

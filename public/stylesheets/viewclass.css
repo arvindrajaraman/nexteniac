@@ -1,2 +1,15 @@
+#viewClassGradesHeader th {
+  cursor: pointer;
+  transition: 0.2s ease all; }
+  #viewClassGradesHeader th:hover {
+    background-color: gainsboro; }
+
+#averageStatsTable td {
+  font-weight: bold;
+  font-size: 18px; }
+
+#averageStatsTable td.categorycell {
+  font-weight: normal;
+  font-size: 16px; }
 
 /*# sourceMappingURL=viewclass.css.map */

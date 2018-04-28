@@ -1,0 +1,17 @@
+#viewClassGradesHeader th {
+	cursor: pointer;
+	transition: 0.2s ease all;
+
+	&:hover {
+		background-color: rgb(220,220,220);
+	}
+}
+
+#averageStatsTable td {
+	font-weight: bold;
+	font-size: 18px;
+}
+#averageStatsTable td.categorycell {
+	font-weight: normal;
+	font-size: 16px;
+}
