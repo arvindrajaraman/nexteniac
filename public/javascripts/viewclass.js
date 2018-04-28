@@ -238,6 +238,7 @@ app.controller('MainController', function ($scope) {
 
 	// Presets
 	$scope.tab = 1;
+	$scope.newgrades = [{}, {}];
 	$scope.search = {
 		mp: 2
 	};
@@ -587,22 +588,20 @@ app.controller('MainController', function ($scope) {
 		}
 	};
 
-	$scope.addGrade = function() {
-		var grade = {
-			date: $scope.newgrade.date,
-			mp: $scope.newgrade.mp,
-			name: $scope.newgrade.name,
-			ptsearned: $scope.newgrade.ptsearned,
-			ptstotal: $scope.newgrade.ptstotal,
-			category: $('#addGradeCategoryDropdown').val()
-		};
-		LS.incItem('c' + $scope.classlsid + '-assignmentcount');
-		LS.setItem('c' + $scope.classlsid + '-a' + ls.getItem('c' + $scope.classlsid + '-assignmentcount'), JSON.stringify(grade));
+	$scope.addGrades = function() {
+		for (var newgrade in $scope.newgrades) {
+			LS.incItem('c' + $scope.classlsid + '-assignmentcount');
+			LS.setItem("c" + $scope.classlsid + "-a" + LS.getItem("c" + $scope.classlsid + "-assignmentcount"), JSON.stringify(newgrade));
+		}
 		location.reload();
 	};
 
 	$scope.changeTab = function(t) {
 		$scope.tab = t;
+	};
+
+	$scope.createRow = function() {
+		$scope.newgrades.push({});
 	};
 
 	$scope.deleteClass = function() {
@@ -635,11 +634,10 @@ app.controller('MainController', function ($scope) {
 });
 
 $(document).ready(function () {
-	$('.dropdown').dropdown();
+	$('#mpSelectionDropdown').dropdown();
+	$('#categorySelectionDropdown').dropdown();
 	if (window.localStorage.getItem('currentmp')) $('#mpSelectionDropdown').dropdown('set selected', window.localStorage.getItem('currentmp'));
 	else $('#mpSelectionDropdown').dropdown('set selected', '1');
-	if (window.localStorage.getItem('currentmp')) $('#newgradeMPSelectionDropdown').dropdown('set selected', window.localStorage.getItem('currentmp'));
-	else $('#newgradeMPSelectionDropdown').dropdown('set selected', '1');
 
 	$('#addGradeButton').click(function () {
 		$('#addGradeModal').modal('show');

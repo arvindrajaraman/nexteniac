@@ -394,12 +394,12 @@
 			</button>
 			<br>
 			<select class="ui fluid dropdown" id="mpSelectionDropdown" ng-model="search.mp">
-					<option value="">Marking Period</option>
-					<option value="1">MP1</option>
-					<option value="2">MP2</option>
-					<option value="3">MP3</option>
-					<option value="4">MP4</option>
-				</select>
+				<option value="">Marking Period</option>
+				<option value="1">MP1</option>
+				<option value="2">MP2</option>
+				<option value="3">MP3</option>
+				<option value="4">MP4</option>
+			</select>
 			<div ng-show="tab === 2">
 				<br>
 				<select class="ui fluid dropdown" id="categorySelectionDropdown" ng-model="search.category">
@@ -447,57 +447,48 @@
 			</table>
 		</div>
 	</div>
-	<div class="ui tiny modal" id="addGradeModal">
-		<div class="header">Add Grade</div>
-		<div class="ui form content">
-			<div class="two fields">
-				<div class="field">
-					<label>Date</label>
+	<div class="ui fullscreen modal" id="addGradeModal">
+		<div class="header">Add Grades</div>
+		<div class="ui scrolling form content">
+			<div class="fields" ng-repeat="newgrade in newgrades">
+				<div class="two wide field">
+					<label ng-show="$index === 0">Date</label>
 					<input type="date" placeholder="Date" ng-model="newgrade.date">
 				</div>
-				<div class="field">
-					<label>Category</label>
-					<div class="ui selection dropdown">
-						<input type="hidden" id="addGradeCategoryDropdown">
-						<i class="dropdown icon"></i>
-						<div class="default text">Category</div>
-						<div class="menu">
-							<div class="item" ng-repeat="category in categories" data-value="{[category.name]}">{[category.name]}</div>
-						</div>
-					</div>
+				<div class="two wide field">
+					<label ng-show="$index === 0">Category</label>
+					<select class="ui fluid noninit dropdown addGradeCategoryDropdown" ng-model="newgrade.category">
+						<option ng-repeat="category in categories" value="{[category.name]}">{[category.name]}</option>
+					</select>
 				</div>
-			</div>
-			<div class="two fields">
-				<div class="field">
-					<label>Assignment Name</label>
+				<div class="six wide field">
+					<label ng-show="$index === 0">Assignment Name</label>
 					<input type="text" placeholder="Assignment Name" ng-model="newgrade.name">
 				</div>
-				<div class="field">
-					<label>Marking Period</label>
-					<select class="ui fluid dropdown" ng-model="newgrade.mp" id="newgradeMPSelectionDropdown">
-						<option value="">Marking Period</option>
+				<div class="two wide field">
+					<label ng-show="$index === 0">Marking Period</label>
+					<select class="ui fluid noninit dropdown addGradeMPDropdown" ng-model="newgrade.mp">
 						<option value="1">MP1</option>
 						<option value="2">MP2</option>
 						<option value="3">MP3</option>
 						<option value="4">MP4</option>
 					</select>
 				</div>
-			</div>
-			<div class="two fields">
-				<div class="field">
-					<label>Points Earned</label>
+				<div class="two wide field">
+					<label ng-show="$index === 0">Points Earned</label>
 					<input type="number" placeholder="Points Earned" ng-model="newgrade.ptsearned" min="0">
 				</div>
-				<div class="field">
-					<label>Points Total</label>
+				<div class="two wide field">
+					<label ng-show="$index === 0">Points Total</label>
 					<input type="number" placeholder="Points Total" ng-model="newgrade.ptstotal" min="0">
 				</div>
 			</div>
 		</div>
 		<div class="actions">
-			<div class="ui positive labeled icon button" ng-click="addGrade()">
+			<button class="ui black button" ng-click="createRow()">Create Row</button>
+			<div class="ui positive labeled icon button" ng-click="addGrades()">
 		    	<i class="plus icon"></i>
-		    	Add Grade
+		    	Add Grades
 		    </div>
 			<div class="ui red deny button">Cancel</div>
 		</div>
