@@ -77,11 +77,246 @@
 					</div>
 				</div>
 				<div class="tab" ng-show="tab === 2">
-					<h3>Category Stats</h3>
+					<div class="ui secondary center aligned segment" ng-hide="search.category">
+						<h2>
+							<i class="mouse pointer icon"></i>
+							Select a category to view its statistics.
+						</h2>
+					</div>
+					<div class="ui secondary center aligned segment" ng-hide="gradeBrackets[search.mp-1][search.category].percents.length || !search.category">
+						<h2>
+							<i class="frown icon"></i>
+							There are no grades in this category and MP!
+						</h2>
+					</div>
+					<div ng-show="gradeBrackets[search.mp-1][search.category].percents.length && search.category">
+						<div class="ui fluid center aligned segment"/>
+							<h3>MP{[search.mp]} {[search.category]} Statistics</h3>
+						</div>
+						<div class="ui center aligned three column grid">
+							<div class="row">
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].averageLetter]}</div>
+											<div class="label">Category Letter</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].averagePercent | number:2]}</div>
+											<div class="label">Category Percent</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].weight]}</div>
+											<div class="label">Category Weight</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].ptsearned]}</div>
+											<div class="label">Points Earned</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].ptstotal]}</div>
+											<div class="label">Points Total</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].count]}</div>
+											<div class="label">Assignment Count</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].arithmeticmean | number:2]}</div>
+											<div class="label">Arithmetic Mean</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].geometricmean | number:2]}</div>
+											<div class="label">Geometric Mean</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].harmonicmean | number:2]}</div>
+											<div class="label">Harmonic Mean</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].high | number:2]}</div>
+											<div class="label">High</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].meandev | number:2]}</div>
+											<div class="label">Mean Deviation</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].stddev | number:2]}</div>
+											<div class="label">Standard Deviation</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].low | number:2]}</div>
+											<div class="label">Low</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].median | number:2]}</div>
+											<div class="label">Median</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].stdvar | number:2]}</div>
+											<div class="label">Standard Variance</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].firstqrt | number:2]}</div>
+											<div class="label">Lower Quartile</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].thirdqrt | number:2]}</div>
+											<div class="label">Upper Quartile</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].intqrt | number:2]}</div>
+											<div class="label">Interquartile Range</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].lofence | number:2]}</div>
+											<div class="label">Lower Outer Fence</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].lifence | number:2]}</div>
+											<div class="label">Lower Inner Fence</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].range | number:2]}</div>
+											<div class="label">Range</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].uifence | number:2]}</div>
+											<div class="label">Upper Inner Fence</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].uofence | number:2]}</div>
+											<div class="label">Upper Outer Fence</div>
+										</div>
+									</div>
+								</div>
+								<div class="column"> 
+									<div class="ui segment">
+										<div class="ui small statistic">
+											<div class="value">{[gradeBrackets[search.mp-1][search.category].quartdev | number:2]}</div>
+											<div class="label">Quartile Deviation</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="tab" ng-show="tab === 3">
-					<div style="width: 100% !important; height: 200px !important;" ng-hide="mpGrades[search.mp-1].length === 0">
+					<div class="ui segment" ng-hide="mpGrades[search.mp-1].length === 0">
 						<canvas id="averageProgressionChart" height="150"></canvas>
+					</div>
+					<div class="ui segment" ng-hide="mpGrades[search.mp-1].length === 0">
+						<canvas id="undecilesChart" height="150"></canvas>
+					</div>
+					<div class="ui secondary center aligned segment" ng-show="mpGrades[search.mp-1].length === 0">
+						<h2>
+							<i class="frown icon"></i>
+							No grades in this marking period yet!
+						</h2>
 					</div>
 				</div>
 				<div class="tab" ng-show="tab === 4">
@@ -143,13 +378,20 @@
 				Add Grade
 			</button>
 			<br>
-			<select class="ui fluid dropdown" id="mpSelectionDropdown" ng-model="search.mp" ng-change="refreshShownGradeCount()">
-				<option value="">Marking Period</option>
-				<option value="1">MP1</option>
-				<option value="2">MP2</option>
-				<option value="3">MP3</option>
-				<option value="4">MP4</option>
-			</select>
+			<select class="ui fluid dropdown" id="mpSelectionDropdown" ng-model="search.mp">
+					<option value="">Marking Period</option>
+					<option value="1">MP1</option>
+					<option value="2">MP2</option>
+					<option value="3">MP3</option>
+					<option value="4">MP4</option>
+				</select>
+			<div ng-show="tab === 2">
+				<br>
+				<select class="ui fluid dropdown" id="categorySelectionDropdown" ng-model="search.category">
+					<option value="">Category</option>
+					<option ng-repeat="category in categories" value="{[category.name]}">{[category.name]}</option>
+				</select>
+			</div>
 			<div class="ui segments">
 				<div class="ui red segment">
 					<h3>Grade Categories</h3>

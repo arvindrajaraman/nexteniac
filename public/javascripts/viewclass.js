@@ -160,6 +160,17 @@ function calcMode(numbers) {
     return modes;
 }
 
+function calcQuartile(data, q) {
+	var pos = ((data.length) - 1) * q;
+	var base = Math.floor(pos);
+	var rest = pos - base;
+	if( (data[base+1]!==undefined) ) {
+		return data[base] + rest * (data[base+1] - data[base]);
+	} else {
+		return data[base];
+	}
+}
+
 app.controller('MainController', function ($scope) {
 	/*$scope.categories = [];
 	$scope.grades = [];
@@ -220,31 +231,6 @@ app.controller('MainController', function ($scope) {
 			}
 		});
 	};
-	
-	$scope.getClass = function() {
-		var classname = window.location.href.split('/');
-		classname = decodeURI(classname[classname.length - 1]);
-		var i;
-		for (i = 1; i <= parseInt(window.localStorage.getItem('classcount')); i++) {
-			var _class = JSON.parse(window.localStorage.getItem('c' + i));
-			if (_class.name === classname) {
-				$scope.class = _class;
-				break;
-			}
-		}
-		for (var j = 1; j <= parseInt(window.localStorage.getItem('c' + i + '-catcount')); j++) {
-			$scope.categories.push(JSON.parse(window.localStorage.getItem('c' + i + '-cat' + j)));
-		}
-		$scope.lsid = i;
-	};
-
-	$scope.getAssignments = function() {
-		for (var i = 1; i <= parseInt(window.localStorage.getItem('c' + $scope.lsid + '-assignmentcount')); i++) {
-			var grade = JSON.parse(window.localStorage.getItem('c' + $scope.lsid + '-a' + i));
-			grade.lsid = i;
-			$scope.grades.push(grade);
-		}
-	};
 
 	$scope.addGrade = function() {
 		var ls = window.localStorage;
@@ -261,76 +247,6 @@ app.controller('MainController', function ($scope) {
 		ls.setItem('c' + $scope.lsid + '-a' + ls.getItem('c' + $scope.lsid + '-assignmentcount'), JSON.stringify(grade));
 		$scope.grades.push(grade);
 		$scope.refreshShownGradeCount();
-		$scope.recalculateAverages();
-	};
-
-	$scope.refreshShownGradeCount = function() {
-		$scope.showngrades = 0;
-		for (var grade of $scope.grades) {
-			if (grade.mp === $scope.search.mp) $scope.showngrades++;
-		}
-	};
-
-	$scope.calculateCategoryAverage = function(category, mp) {
-		var pointsearned = 0;
-		var pointstotal = 0;
-		for (var grade of $scope.grades) {
-			if (grade.category === category && grade.mp === mp) {
-				pointsearned += grade.ptsearned;
-				pointstotal += grade.ptstotal;
-			}
-		}
-		if (pointstotal === 0) return '-';
-		else return Math.round(pointsearned * 1000 / pointstotal) / 10;
-	};
-
-	$scope.calculateMPAverage = function(mp) {
-		var pointtotals = {};
-		var totalpoints = 0;
-		var totalweight = 0;
-		for (var category of $scope.categories) {
-			pointtotals[category.name] = {
-				ptsearned: 0,
-				ptstotal: 0,
-				weight: category.weight
-			};
-		}
-		for (var grade of $scope.grades) {
-			if (grade.mp === mp) {
-				pointtotals[grade.category].ptsearned += grade.ptsearned;
-				pointtotals[grade.category].ptstotal += grade.ptstotal;
-			}
-		}
-		for (var category in pointtotals) {
-			if (pointtotals.hasOwnProperty(category) && pointtotals[category].ptstotal !== 0) {
-				totalpoints += (pointtotals[category].ptsearned / pointtotals[category].ptstotal) * pointtotals[category].weight;
-				totalweight += pointtotals[category].weight;
-			}
-		}
-		if (totalweight === 0) return '-';
-		else return Math.round(totalpoints * 1000 / totalweight, 5) / 10;
-	};
-
-	$scope.recalculateAverages = function() {
-		$scope.averages = {
-			mp1: [],
-			mp2: [],
-			mp3: [],
-			mp4: []
-		};
-		for (var mp = 1; mp <= 4; mp++) {
-			for (var cat of $scope.categories) {
-				$scope.averages['mp' + mp.toString()].push($scope.calculateCategoryAverage(cat.name, mp.toString()));
-			}
-			$scope.averages['mp' + mp.toString()].push($scope.calculateMPAverage(mp.toString()));
-		}
-	};
-
-	$scope.initViewClass = function() {
-		$scope.getClass();
-		$scope.getAssignments();
-		$scope.refreshShownGradeCount();
-		$scope.changeSort(2);
 		$scope.recalculateAverages();
 	};*/
 
@@ -404,37 +320,77 @@ app.controller('MainController', function ($scope) {
 				var categoryGradeBracket = mpGradeBracket[category];
 				var count = categoryGradeBracket.percents.length;
 				if (count === 0) {
-					categoryGradeBracket.mean = null;
+					categoryGradeBracket.arithmeticmean = null;
+					categoryGradeBracket.geometricmean = null;
+					categoryGradeBracket.harmonicmean = null;
 					categoryGradeBracket.median = null;
+					categoryGradeBracket.mode = null;
 					categoryGradeBracket.high = null;
 					categoryGradeBracket.low = null;
+					categoryGradeBracket.firstqrt = null;
+					categoryGradeBracket.thirdqrt = null;
+					categoryGradeBracket.intqrt = null;
+					categoryGradeBracket.quartdev = null;
+					categoryGradeBracket.range = null;
+					categoryGradeBracket.lofence = null;
+					categoryGradeBracket.lifence = null;
+					categoryGradeBracket.uofence = null;
+					categoryGradeBracket.uifence = null;
 					categoryGradeBracket.stdvar = null;
 					categoryGradeBracket.stddev = null;
+					categoryGradeBracket.meandev = null;
 					categoryGradeBracket.count = 0;
 				}
 				else {
 					categoryGradeBracket.percents.sort((g1, g2) => g1 - g2);
-					var mean = 0, median, high = Number.MIN_VALUE, low = Number.MAX_VALUE, stdvar = 0, stddev, mode = calcMode(categoryGradeBracket.percents);
+					var arithmeticmean = 0, geometricmean = 1, harmonicmean = 0, median, high = Number.MIN_VALUE, low = Number.MAX_VALUE, stdvar = 0, stddev, meandev = 0, firstqrt, thirdqrt, intqrt, quartdev, range, lofence, lifence, uofence, uifence, mode = calcMode(categoryGradeBracket.percents);
 					for (var percent of categoryGradeBracket.percents) {
-						mean += percent;
+						arithmeticmean += percent;
+						geometricmean *= percent;
+						harmonicmean += (1/percent);
 						if (percent > high) high = percent;
 						if (percent < low) low = percent;
 					}
-					mean /= count;
+					arithmeticmean /= count;
+					geometricmean = Math.pow(geometricmean, 1/count);
+					harmonicmean = count / harmonicmean;
 					for (var percent of categoryGradeBracket.percents) {
-						stdvar += Math.pow(mean - percent, 2);
+						stdvar += Math.pow(arithmeticmean - percent, 2);
+						meandev += Math.abs(arithmeticmean - percent);
 					}
 					stdvar /= count;
 					stddev = Math.sqrt(stdvar);
+					meandev /= count;
 					if (count % 2 === 0) median = (categoryGradeBracket.percents[count/2] + categoryGradeBracket.percents[(count/2)-1])/2;
 					else median = categoryGradeBracket.percents[Math.floor(count/2)];
-					categoryGradeBracket.mean = mean;
+					firstqrt = calcQuartile(categoryGradeBracket.percents, 0.25);
+					thirdqrt = calcQuartile(categoryGradeBracket.percents, 0.75);
+					intqrt = Math.abs(thirdqrt - firstqrt);
+					quartdev = (thirdqrt-firstqrt)/2;
+					range = high - low;
+					lofence = firstqrt - (3 * intqrt);
+					lifence = firstqrt - (1.5 * intqrt);
+					uofence = thirdqrt + (3 * intqrt);
+					uifence = thirdqrt + (1.5 * intqrt);
+					categoryGradeBracket.arithmeticmean = arithmeticmean;
+					categoryGradeBracket.geometricmean = geometricmean;
+					categoryGradeBracket.harmonicmean = harmonicmean;
 					categoryGradeBracket.median = median;
 					categoryGradeBracket.mode = mode;
 					categoryGradeBracket.high = high;
 					categoryGradeBracket.low = low;
+					categoryGradeBracket.firstqrt = firstqrt;
+					categoryGradeBracket.thirdqrt = thirdqrt;
+					categoryGradeBracket.intqrt = intqrt;
+					categoryGradeBracket.quartdev = quartdev;
+					categoryGradeBracket.range = range;
+					categoryGradeBracket.lofence = lofence;
+					categoryGradeBracket.lifence = lifence;
+					categoryGradeBracket.uofence = uofence;
+					categoryGradeBracket.uifence = uifence;
 					categoryGradeBracket.stdvar = stdvar;
 					categoryGradeBracket.stddev = stddev;
+					categoryGradeBracket.meandev = meandev;
 					categoryGradeBracket.count = count;
 				}
 				if (categoryGradeBracket.ptstotal === 0) {
@@ -517,14 +473,8 @@ app.controller('MainController', function ($scope) {
 		console.log($scope);
 	};
 
-	// Presets
-	$scope.tab = 3;
-	$scope.search = {
-		mp: 3
-	};
-	
-	// Events
-	$scope.$watch('search.mp', function() {
+	// Reusable functions
+	function reinitAverageProgressionChart() {
 		var chart = new Chart("averageProgressionChart", {
 		    type: 'line',
 		    data: {
@@ -558,9 +508,66 @@ app.controller('MainController', function ($scope) {
 		                    callback: function(value, index, values) { return value + '%'; }
 		                }
 		            }]
+		        },
+		        tooltips: {
+		        	callbacks: {
+		        		label: function(tooltipItem, data) {
+		        			var label = data.datasets[tooltipItem.datasetIndex].label || '';
+		        			if (label) {
+		                        label += ': ';
+		                        label += GradeFactory.percentToLetter(tooltipItem.yLabel) + ' ';
+		                        label += tooltipItem.yLabel + '%';
+		                        return label;
+		                    }
+		        		}
+		        	}
 		        }
 		    }
 		});
+	}
+
+	function reinitUndecilesChart() {
+		var d = $scope.undeciles[$scope.search.mp-1];
+		var chart = new Chart("undecilesChart", {
+			type: 'bar',
+			data: {
+				labels: ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "F"],
+				datasets: [{
+					data: [d["A+"], d["A"], d["A-"], d["B+"], d["B"], d["B-"], d["C+"], d["C"], d["C-"], d["D"], d["F"]],
+					label: 'Number of Assignments',
+					fill: true,
+		    		borderColor: 'rgb(223,36,40)',
+		    		backgroundColor: 'rgba(223,36,40,0.3)',
+		            borderWidth: 1
+				}]
+			},
+			options: {
+				legend: { display: false },
+				title: {
+					display: true,
+					text: 'Grade Distribution'
+				},
+				scales: {
+		            yAxes: [{
+		                ticks: {
+		                    beginAtZero:true
+		                }
+		            }]
+		        }
+			}
+		});
+	}
+
+	// Presets
+	$scope.tab = 1;
+	$scope.search = {
+		mp: 3
+	};
+	
+	// Events
+	$scope.$watch('search.mp', function() {
+		reinitAverageProgressionChart();
+		reinitUndecilesChart();
 	}, true);
 
 	$scope.changeTab = function(t) {
