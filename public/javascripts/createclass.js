@@ -46,7 +46,7 @@ app.controller('MainController', function($scope) {
 			ls.setItem('c' + ls.getItem('classcount') + '-cat' + i, category);
 		}
 		ls.setItem('c' + ls.getItem('classcount') + '-assignmentcount', 0);
-		window.location.href = '/classes/' + $scope.class.id;
+		window.location.href = '/classes/' + $scope.class.name;
 	};
 });
 

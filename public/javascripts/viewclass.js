@@ -116,6 +116,10 @@ class LS {
 	static getItem(item, parse = false) {
 		return (parse) ? JSON.parse(ls.getItem(item)) : ls.getItem(item);
 	}
+	static setItem(item, data, parse = false) {
+		if (parse) ls.setItem(item, JSON.stringify(data));
+		else ls.setItem(item, data);
+	}
 	static incItem(item) {
 		ls.setItem(item, parseInt(ls.getItem(item)) + 1);
 	}
@@ -230,25 +234,15 @@ app.controller('MainController', function ($scope) {
 				else return 0;
 			}
 		});
-	};
-
-	$scope.addGrade = function() {
-		var ls = window.localStorage;
-		var grade = {
-			date: $scope.newgrade.date,
-			mp: $scope.newgrade.mp,
-			name: $scope.newgrade.name,
-			ptsearned: $scope.newgrade.ptsearned,
-			ptstotal: $scope.newgrade.ptstotal,
-			category: $('#addGradeCategoryDropdown').val()
-		};
-		if (!ls.getItem('c' + $scope.lsid + '-assignmentcount')) ls.setItem('c' + $scope.lsid + '-assignmentcount', 1);
-		else ls.setItem('c' + $scope.lsid + '-assignmentcount', parseInt(ls.getItem('c' + $scope.lsid + '-assignmentcount')) + 1);
-		ls.setItem('c' + $scope.lsid + '-a' + ls.getItem('c' + $scope.lsid + '-assignmentcount'), JSON.stringify(grade));
-		$scope.grades.push(grade);
-		$scope.refreshShownGradeCount();
-		$scope.recalculateAverages();
 	};*/
+
+	// Presets
+	$scope.tab = 1;
+	$scope.search = {
+		mp: 2
+	};
+	$scope.initializedAverageProgressionChart = false;
+	$scope.initializedUndecilesChart = false;
 
 	function initClass() {
 		var classname = decodeURIComponent(window.location.href.split("/").last());
@@ -301,8 +295,13 @@ app.controller('MainController', function ($scope) {
 			gradeBracket.ptstotal += grade.ptstotal;
 		}
 		$scope.grades.sort(function(g1, g2) {
-			return new Date(g2.date) - new Date(g1.date);
+			return new Date(g1.date) - new Date(g2.date);
 		});
+		for (var mp = 1; mp <= 4; mp++) {
+			$scope.mpGrades[mp-1].sort(function(g1, g2) {
+				return new Date(g1.date) - new Date(g2.date);
+			});
+		}
 	}
 	
 	function initBracketBasedStatsAndAverages() {
@@ -346,8 +345,8 @@ app.controller('MainController', function ($scope) {
 					var arithmeticmean = 0, geometricmean = 1, harmonicmean = 0, median, high = Number.MIN_VALUE, low = Number.MAX_VALUE, stdvar = 0, stddev, meandev = 0, firstqrt, thirdqrt, intqrt, quartdev, range, lofence, lifence, uofence, uifence, mode = calcMode(categoryGradeBracket.percents);
 					for (var percent of categoryGradeBracket.percents) {
 						arithmeticmean += percent;
-						geometricmean *= percent;
-						harmonicmean += (1/percent);
+						if (percent !== 0) geometricmean *= percent;
+						if (percent !== 0) harmonicmean += (1/percent);
 						if (percent > high) high = percent;
 						if (percent < low) low = percent;
 					}
@@ -431,6 +430,7 @@ app.controller('MainController', function ($scope) {
 		var pointTotals = [{}, {}, {}, {}];
 		$scope.graphPoints = [[], [], [], []];
 		$scope.graphDates = [[], [], [], []];
+		console.log($scope.mpGrades[1]);
 		for (var mp = 1; mp <= 4; mp++) {
 			for (var category of $scope.categories) {
 				pointTotals[mp-1][category.name] = {
@@ -443,6 +443,7 @@ app.controller('MainController', function ($scope) {
 		for (var mp = 1; mp <= 4; mp++) {
 			for (var g = 0; g <= $scope.mpGrades[mp-1].length - 1; g++) {
 				var grade = $scope.mpGrades[mp-1][g];
+				if (mp === 2) console.log(pointTotals[mp-1]);
 				pointTotals[mp-1][grade.category].ptsearned += grade.ptsearned;
 				pointTotals[mp-1][grade.category].ptstotal += grade.ptstotal;
 				if (g !== $scope.mpGrades[mp-1].length - 1) {
@@ -474,101 +475,131 @@ app.controller('MainController', function ($scope) {
 	};
 
 	// Reusable functions
-	function reinitAverageProgressionChart() {
-		var chart = new Chart("averageProgressionChart", {
-		    type: 'line',
-		    data: {
-		    	labels: $scope.graphDates[$scope.search.mp-1],
-		    	datasets: [{
-		    		data: $scope.graphPoints[$scope.search.mp-1],
-		    		label: 'Average',
-		    		fill: true,
-		    		borderColor: 'rgb(223,36,40)',
-		    		backgroundColor: 'rgba(223,36,40,0.3)',
-		    		pointRadius: 4
-		    	}]
-	    	},
-		    options: {
-		    	legend: { display: false },
-		    	title: {
-		            display: true,
-		            text: 'Average Progression'
-		        },
-		        scales: {
-		            xAxes: [{
-		            	type: 'time',
-		                time: {
-		                    unit: 'week',
-		                    displayFormats: { week: 'MMM D' },
-		                    tooltipFormat: 'MMMM DD, YYYY'
-		                }
-		            }],
-		            yAxes: [{
-		                ticks: {
-		                    callback: function(value, index, values) { return value + '%'; }
-		                }
-		            }]
-		        },
-		        tooltips: {
-		        	callbacks: {
-		        		label: function(tooltipItem, data) {
-		        			var label = data.datasets[tooltipItem.datasetIndex].label || '';
-		        			if (label) {
-		                        label += ': ';
-		                        label += GradeFactory.percentToLetter(tooltipItem.yLabel) + ' ';
-		                        label += tooltipItem.yLabel + '%';
-		                        return label;
-		                    }
-		        		}
-		        	}
-		        }
-		    }
-		});
-	}
+	
 
-	function reinitUndecilesChart() {
-		var d = $scope.undeciles[$scope.search.mp-1];
-		var chart = new Chart("undecilesChart", {
-			type: 'bar',
-			data: {
-				labels: ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "F"],
-				datasets: [{
-					data: [d["A+"], d["A"], d["A-"], d["B+"], d["B"], d["B-"], d["C+"], d["C"], d["C-"], d["D"], d["F"]],
-					label: 'Number of Assignments',
-					fill: true,
-		    		borderColor: 'rgb(223,36,40)',
-		    		backgroundColor: 'rgba(223,36,40,0.3)',
-		            borderWidth: 1
-				}]
-			},
-			options: {
-				legend: { display: false },
-				title: {
-					display: true,
-					text: 'Grade Distribution'
-				},
-				scales: {
-		            yAxes: [{
-		                ticks: {
-		                    beginAtZero:true
-		                }
-		            }]
-		        }
-			}
-		});
-	}
-
-	// Presets
-	$scope.tab = 1;
-	$scope.search = {
-		mp: 3
-	};
+	
 	
 	// Events
 	$scope.$watch('search.mp', function() {
-		reinitAverageProgressionChart();
-		reinitUndecilesChart();
+		$scope.reinitAverageProgressionChart();
+		$scope.reinitUndecilesChart();
 	}, true);
+
+	var averageProgressionChart;
+	$scope.reinitAverageProgressionChart = function() {
+		if ($scope.initializedAverageProgressionChart) {
+			averageProgressionChart.data.datasets[0].data = $scope.graphPoints[$scope.search.mp-1].slice(0);
+			averageProgressionChart.data.labels = $scope.graphDates[$scope.search.mp-1].slice(0);
+			averageProgressionChart.update();
+		}
+		else {
+			averageProgressionChart = new Chart("averageProgressionChart", {
+			    type: 'line',
+			    data: {
+			    	labels: $scope.graphDates[$scope.search.mp-1],
+			    	datasets: [{
+			    		data: $scope.graphPoints[$scope.search.mp-1],
+			    		label: 'Average',
+			    		fill: true,
+			    		borderColor: 'rgb(223,36,40)',
+			    		backgroundColor: 'rgba(223,36,40,0.3)',
+			    		pointRadius: 4
+			    	}]
+		    	},
+			    options: {
+			    	legend: { display: false },
+			    	title: {
+			            display: true,
+			            text: 'Average Progression'
+			        },
+			        scales: {
+			            xAxes: [{
+			            	type: 'time',
+			                time: {
+			                    unit: 'week',
+			                    displayFormats: { week: 'MMM D' },
+			                    tooltipFormat: 'MMMM DD, YYYY'
+			                }
+			            }],
+			            yAxes: [{
+			                ticks: {
+			                    callback: function(value, index, values) { return value + '%'; }
+			                }
+			            }]
+			        },
+			        tooltips: {
+			        	callbacks: {
+			        		label: function(tooltipItem, data) {
+			        			var label = data.datasets[tooltipItem.datasetIndex].label || '';
+			        			if (label) {
+			                        label += ': ';
+			                        label += GradeFactory.percentToLetter(tooltipItem.yLabel) + ' ';
+			                        label += tooltipItem.yLabel + '%';
+			                        return label;
+			                    }
+			        		}
+			        	}
+			        }
+			    }
+			});
+			$scope.initializedAverageProgressionChart = true;
+		}
+	};
+
+	var undecilesChart;
+	$scope.reinitUndecilesChart = function () {
+		if ($scope.initializedUndecilesChart) {
+			var d = $scope.undeciles[$scope.search.mp-1];
+			undecilesChart.data.datasets[0].data = [d["A+"], d["A"], d["A-"], d["B+"], d["B"], d["B-"], d["C+"], d["C"], d["C-"], d["D"], d["F"]].slice(0);
+			undecilesChart.update();
+		}
+		else {
+			var d = $scope.undeciles[$scope.search.mp-1];
+			undecilesChart = new Chart("undecilesChart", {
+				type: 'bar',
+				data: {
+					labels: ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "F"],
+					datasets: [{
+						data: [d["A+"], d["A"], d["A-"], d["B+"], d["B"], d["B-"], d["C+"], d["C"], d["C-"], d["D"], d["F"]],
+						label: 'Number of Assignments',
+						fill: true,
+			    		borderColor: 'rgb(223,36,40)',
+			    		backgroundColor: 'rgba(223,36,40,0.3)',
+			            borderWidth: 1
+					}]
+				},
+				options: {
+					legend: { display: false },
+					title: {
+						display: true,
+						text: 'Grade Distribution'
+					},
+					scales: {
+			            yAxes: [{
+			                ticks: {
+			                    beginAtZero: true
+			                }
+			            }]
+			        }
+				}
+			});
+			$scope.initializedUndecilesChart = true;
+		}
+	};
+
+	$scope.addGrade = function() {
+		var grade = {
+			date: $scope.newgrade.date,
+			mp: $scope.newgrade.mp,
+			name: $scope.newgrade.name,
+			ptsearned: $scope.newgrade.ptsearned,
+			ptstotal: $scope.newgrade.ptstotal,
+			category: $('#addGradeCategoryDropdown').val()
+		};
+		LS.incItem('c' + $scope.classlsid + '-assignmentcount');
+		LS.setItem('c' + $scope.classlsid + '-a' + ls.getItem('c' + $scope.classlsid + '-assignmentcount'), JSON.stringify(grade));
+		location.reload();
+	};
 
 	$scope.changeTab = function(t) {
 		$scope.tab = t;
@@ -613,4 +644,5 @@ $(document).ready(function () {
 	$('#addGradeButton').click(function () {
 		$('#addGradeModal').modal('show');
 	});
+	$('#categoryStatsGrid .info.icon').popup();
 });

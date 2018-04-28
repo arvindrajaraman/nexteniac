@@ -1,6 +1,12 @@
 <div class="ui container" ng-app="literate-viewclass" ng-controller="MainController" ng-init="initViewClass()">
 	<br>
-	<div class="ui grid">
+	<div class="ui secondary center aligned segment" ng-hide="classexists">
+		<h2>
+			<i class="frown icon"></i>
+			"{{classname}}" could not be found!
+		</h2>
+	</div>
+	<div class="ui grid" ng-show="classexists">
 		<div class="sixteen wide column">
 			<div class="ui center aligned segment headerSegment">
 				<h1>{[class.name]}</h1>
@@ -93,7 +99,7 @@
 						<div class="ui fluid center aligned segment"/>
 							<h3>MP{[search.mp]} {[search.category]} Statistics</h3>
 						</div>
-						<div class="ui center aligned three column grid">
+						<div class="ui center aligned three column grid" id="categoryStatsGrid">
 							<div class="row">
 								<div class="column"> 
 									<div class="ui segment">
@@ -151,7 +157,10 @@
 									<div class="ui segment">
 										<div class="ui small statistic">
 											<div class="value">{[gradeBrackets[search.mp-1][search.category].arithmeticmean | number:2]}</div>
-											<div class="label">Arithmetic Mean</div>
+											<div class="label">
+												Arithmetic Mean
+												<i class="info circle icon" data-variation="tiny" data-content="Arithmetic mean is the most commonly used average identifier, where the data is added. Use this mean when there are no extreme outliers and the grades are not interrelated."></i>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -159,7 +168,10 @@
 									<div class="ui segment">
 										<div class="ui small statistic">
 											<div class="value">{[gradeBrackets[search.mp-1][search.category].geometricmean | number:2]}</div>
-											<div class="label">Geometric Mean</div>
+											<div class="label">
+												Geometric Mean
+												<i class="info circle icon" data-variation="tiny" data-content="Geometric mean is also common, where the data is multiplied. Use this mean when your grades are skewed with some outliers."></i>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -167,7 +179,10 @@
 									<div class="ui segment">
 										<div class="ui small statistic">
 											<div class="value">{[gradeBrackets[search.mp-1][search.category].harmonicmean | number:2]}</div>
-											<div class="label">Harmonic Mean</div>
+											<div class="label">
+												Harmonic Mean
+												<i class="info circle icon" data-variation="tiny" data-content="The harmonic mean is calculated by using reciprocals of the data. Use this mean when your grades are fairly uniform but have a few outliers."></i>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -309,7 +324,7 @@
 					<div class="ui segment" ng-hide="mpGrades[search.mp-1].length === 0">
 						<canvas id="averageProgressionChart" height="150"></canvas>
 					</div>
-					<div class="ui segment" ng-hide="mpGrades[search.mp-1].length === 0">
+					<div class="ui segment" ng-hide="mpGrades[search.mp-1].length === 0" id="undecilesChartContainer">
 						<canvas id="undecilesChart" height="150"></canvas>
 					</div>
 					<div class="ui secondary center aligned segment" ng-show="mpGrades[search.mp-1].length === 0">
