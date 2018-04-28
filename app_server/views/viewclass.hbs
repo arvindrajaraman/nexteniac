@@ -43,12 +43,12 @@
 				<div class="tab" ng-show="tab === 1">
 					<table class="ui compact center aligned table" ng-hide="mpGrades[search.mp-1].length === 0">
 						<thead id="viewClassGradesHeader">
-							<th ng-click="changeSort(1)">Date <i class="caret icon" ng-show="sort.by === 1" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
-							<th ng-click="changeSort(2)">Letter <i class="caret icon" ng-show="sort.by === 2" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
-							<th ng-click="changeSort(3)">Percent <i class="caret icon" ng-show="sort.by === 3" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
-							<th ng-click="changeSort(4)">Points <i class="caret icon" ng-show="sort.by === 4" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
-							<th ng-click="changeSort(5)">Category <i class="caret icon" ng-show="sort.by === 5" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
-							<th ng-click="changeSort(6)">Assignment Name <i class="caret icon" ng-show="sort.by === 6" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+							<th ng-click="sortGrades(1)">Date <i class="caret icon" ng-show="sort.field === 1" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+							<th ng-click="sortGrades(2)">Letter <i class="caret icon" ng-show="sort.field === 2" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+							<th ng-click="sortGrades(3)">Percent <i class="caret icon" ng-show="sort.field === 3" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+							<th ng-click="sortGrades(4)">Points <i class="caret icon" ng-show="sort.field === 4" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+							<th ng-click="sortGrades(5)">Category <i class="caret icon" ng-show="sort.field === 5" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+							<th ng-click="sortGrades(6)">Assignment Name <i class="caret icon" ng-show="sort.field === 6" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
 						</thead>
 						<tbody>
 							<tr ng-repeat="grade in mpGrades[search.mp-1]" ng-show="grade.mp === search.mp" ng-class="{'gradeshown': grade.mp === search.mp}">

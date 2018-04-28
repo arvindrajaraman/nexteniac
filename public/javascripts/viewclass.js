@@ -242,6 +242,10 @@ app.controller('MainController', function ($scope) {
 	$scope.search = {
 		mp: 2
 	};
+	$scope.sort = {
+		dir: 1, // 1 = ascemdimg, -1 = descending
+		field: 1, // 1 = date, 2 = letter, ..., 6 = assignment name
+	};
 	$scope.initializedAverageProgressionChart = false;
 	$scope.initializedUndecilesChart = false;
 
@@ -284,6 +288,7 @@ app.controller('MainController', function ($scope) {
 		}
 		for (var g = 1; g <= parseInt(LS.getItem("c" + $scope.classlsid + "-assignmentcount")); g++) {
 			var grade = LS.getGrade($scope.classlsid, g);
+			delete grade.$$hashKey;
 			grade.percent = grade.ptsearned * 100 / grade.ptstotal;
 			grade.letter = GradeFactory.percentToLetter(grade.percent);
 			$scope.undeciles[grade.mp-1][grade.letter]++;
@@ -589,7 +594,7 @@ app.controller('MainController', function ($scope) {
 	};
 
 	$scope.addGrades = function() {
-		for (var newgrade in $scope.newgrades) {
+		for (var newgrade of $scope.newgrades) {
 			LS.incItem('c' + $scope.classlsid + '-assignmentcount');
 			LS.setItem("c" + $scope.classlsid + "-a" + LS.getItem("c" + $scope.classlsid + "-assignmentcount"), JSON.stringify(newgrade));
 		}
@@ -602,6 +607,83 @@ app.controller('MainController', function ($scope) {
 
 	$scope.createRow = function() {
 		$scope.newgrades.push({});
+	};
+
+	$scope.sortGrades = function(f) {
+		var dir;
+		if ($scope.sort.field === f) {
+			$scope.sort.dir = ($scope.sort.dir === 1) ? -1 : 1;
+		}
+		else {
+			$scope.sort.dir = 1;
+		}
+		dir = $scope.sort.dir;
+		$scope.sort.field = f;
+
+		if (f === 1 && dir === 1) {
+			for (var mp = 1; mp <= 4; mp++) {
+				$scope.mpGrades[mp-1].sort(function(g1, g2) {
+					return new Date(g1.date) - new Date(g2.date);
+				});
+			}
+		}
+		else if (f === 1 && dir === -1) {
+			for (var mp = 1; mp <= 4; mp++) {
+				$scope.mpGrades[mp-1].sort(function(g1, g2) {
+					return new Date(g2.date) - new Date(g1.date);
+				});
+			}
+		}
+		else if ((f === 2 || f === 3 || f === 4) && dir === 1) {
+			for (var mp = 1; mp <= 4; mp++) {
+				$scope.mpGrades[mp-1].sort(function(g1, g2) {
+					return new Date(g1.percent) - new Date(g2.percent);
+				});
+			}
+		}
+		else if ((f === 2 || f === 3 || f === 4) && dir === -1) {
+			for (var mp = 1; mp <= 4; mp++) {
+				$scope.mpGrades[mp-1].sort(function(g1, g2) {
+					return new Date(g2.percent) - new Date(g1.percent);
+				});
+			}
+		}
+		else if (f === 5 && dir === 1) {
+			for (var mp = 1; mp <= 4; mp++) {
+				$scope.mpGrades[mp-1].sort(function(g1, g2) {
+					if (g1.category < g2.category) return -1;
+				    if (g1.category > g2.category) return 1;
+				    return 0;
+				});
+			}
+		}
+		else if (f === 5 && dir === -1) {
+			for (var mp = 1; mp <= 4; mp++) {
+				$scope.mpGrades[mp-1].sort(function(g1, g2) {
+					if (g1.category > g2.category) return -1;
+				    if (g1.category < g2.category) return 1;
+				    return 0;
+				});
+			}
+		}
+		else if (f === 6 && dir === 1) {
+			for (var mp = 1; mp <= 4; mp++) {
+				$scope.mpGrades[mp-1].sort(function(g1, g2) {
+					if (g1.name < g2.name) return -1;
+				    if (g1.name > g2.name) return 1;
+				    return 0;
+				});
+			}
+		}
+		else if (f === 6 && dir === -1) {
+			for (var mp = 1; mp <= 4; mp++) {
+				$scope.mpGrades[mp-1].sort(function(g1, g2) {
+					if (g1.name > g2.name) return -1;
+				    if (g1.name < g2.name) return 1;
+				    return 0;
+				});
+			}
+		}
 	};
 
 	$scope.deleteClass = function() {
