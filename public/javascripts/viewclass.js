@@ -238,7 +238,7 @@ app.controller('MainController', function ($scope) {
 
 	// Presets
 	$scope.tab = 1;
-	$scope.newgrades = [{}, {}];
+	$scope.newgrades = [{}];
 	$scope.search = {
 		mp: 2
 	};

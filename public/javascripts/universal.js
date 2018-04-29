@@ -6,6 +6,7 @@ $(document).ready(function () {
 	$('#currentGradeModal').modal({
 		onApprove: function() {
 			window.localStorage.setItem('currentgrade', $('#currentGradeDropdown').dropdown('get value'));
+			location.reload();
 		}
 	});
 	$('#currentGradeLink').click(function() {
@@ -17,6 +18,7 @@ $(document).ready(function () {
 	$('#currentMPModal').modal({
 		onApprove: function() {
 			window.localStorage.setItem('currentmp', $('#currentMPDropdown').dropdown('get value'));
+			location.reload();
 		}
 	});
 	$('#currentMPLink').click(function() {
