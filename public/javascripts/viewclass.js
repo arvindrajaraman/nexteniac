@@ -188,6 +188,7 @@ app.controller('MainController', function ($scope) {
 	};
 	$scope.initializedAverageProgressionChart = false;
 	$scope.initializedUndecilesChart = false;
+	$scope.advancedmode = false;
 
 	function initClass() {
 		var classname = decodeURIComponent(window.location.href.split("/").last());
@@ -523,6 +524,10 @@ app.controller('MainController', function ($scope) {
 			});
 			$scope.initializedUndecilesChart = true;
 		}
+	};
+
+	$scope.toggleAdvancedMode = function() {
+		$scope.advancedmode = !$scope.advancedmode;
 	};
 
 	$scope.addGrades = function() {
