@@ -30,4 +30,10 @@
 #nonScriptedContent .container {
   margin-top: 20px; }
 
+.redText {
+  color: #DF2428 !important; }
+
+.greenText {
+  color: #07B953 !important; }
+
 /*# sourceMappingURL=universal.css.map */

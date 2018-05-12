@@ -49,6 +49,22 @@ app.filter('valueordefault', function() {
 	}
 });
 
+app.filter('changetype', function() {
+	return function(value) {
+		if (value > 0) return "Rise";
+		else if (value < 0) return "Drop";
+		else return "Stagnant";
+	}
+});
+
+app.filter('trendtype', function() {
+	return function(value) {
+		if (value > 0) return "Uptrend";
+		else if (value < 0) return "Downtrend";
+		else return "Stagnation";
+	}
+});
+
 /*function returnWithDir(v, d) {
 	if (d === 1) return v;
 	else return (v === 1) ? -1 : 1;
@@ -178,7 +194,7 @@ function calcQuartile(data, q) {
 app.controller('MainController', function ($scope) {
 	// Presets
 	$scope.tab = 5;
-	$scope.changesTab = 1;
+	$scope.changesTab = 3;
 	$scope.newgrades = [{}];
 	$scope.search = {
 		mp: 2
@@ -414,51 +430,61 @@ app.controller('MainController', function ($scope) {
 	function initInsights() {
 		$scope.insights = [{}, {}, {}, {}];
 		$scope.averageChanges = [[], [], [], []];
+		$scope.averageTrends = [[], [], [], []];
 		for (var mp = 1; mp <= 4; mp++) {
 			if ($scope.graphPoints[mp-1].length <= 1) continue;
 			for (var g = 1; g <= $scope.graphPoints[mp-1].length - 1; g++) {
-				$scope.averageChanges[mp-1].push($scope.graphPoints[mp-1][g].y - $scope.graphPoints[mp-1][g-1].y);
+				var change = {
+					startDate: $scope.graphDates[mp-1][g-1],
+					endDate: $scope.graphDates[mp-1][g],
+					change: $scope.graphPoints[mp-1][g].y - $scope.graphPoints[mp-1][g-1].y,
+				};
+				change.days = Math.abs((new Date(change.endDate).getTime() - new Date(change.startDate).getTime())/(24*60*60*1000));
+				$scope.averageChanges[mp-1].push(change);
 			}
 			var insights = {
-				biggestDrop: Math.min(...$scope.averageChanges[mp-1]),
-				biggestRise: Math.max(...$scope.averageChanges[mp-1])
+				biggestDrop: Math.min.apply(Math, $scope.averageChanges[mp-1].map(function(o) { return o.change; })),
+				biggestRise: Math.max.apply(Math, $scope.averageChanges[mp-1].map(function(o) { return o.change; }))
 			};
-			insights.biggestDropDate = $scope.graphPoints[mp-1][$scope.averageChanges[mp-1].indexOf(insights.biggestDrop) + 1].x;
-			insights.biggestRiseDate = $scope.graphPoints[mp-1][$scope.averageChanges[mp-1].indexOf(insights.biggestRise) + 1].x;
+			insights.biggestDropDate = $scope.graphDates[mp-1][$scope.averageChanges[mp-1].map(function(e) {return e.change;}).indexOf(insights.biggestDrop) + 1];
+			insights.biggestRiseDate = $scope.graphDates[mp-1][$scope.averageChanges[mp-1].map(function(e) {return e.change;}).indexOf(insights.biggestRise) + 1];
 			$scope.insights[mp-1] = insights;
-			$scope.averageTrends = [[], [], [], []];
-			var sign, days = 0, startindex = 0, net = 0; // -1 = negative (downtrend), 0 = zero (consolidation), 1 = positive (uptrend)
+			var sign, startindex = 0, net = 0;
 			for (var t = 0; t <= $scope.averageChanges[mp-1].length - 1; t++) {
-				var value = $scope.averageChanges[mp-1][t];
+				var value = $scope.averageChanges[mp-1][t].change;
 				if (t === 0) {
 					if (value > 0) sign = 1;
 					else if (value < 0) sign = -1;
 					else sign = 0;
-					days++;
 					net += value;
 				}
 				else {
 					if (sign * value > 0 || (sign === 0 && value === 0)) {
-						days++;
 						net += value;
 					}
 					else {
-						$scope.averageTrends[mp-1].push({
-							days: days,
-							type: sign,
+						var trend = {
 							net: net,
 							startDate: $scope.graphDates[mp-1][startindex],
 							endDate: $scope.graphDates[mp-1][t]
-						});
+						};
+						trend.days = Math.abs((new Date(trend.endDate).getTime() - new Date(trend.startDate).getTime())/(24*60*60*1000));
+						$scope.averageTrends[mp-1].push(trend);
 						if (value > 0) sign = 1;
 						else if (value < 0) sign = -1;
 						else sign = 0;
-						days = 1;
 						startindex = t;
 						net = value;
 					}
 				}
 			}
+			var trend = {
+				net: net,
+				startDate: $scope.graphDates[mp-1][startindex],
+				endDate: $scope.graphDates[mp-1][t]
+			};
+			trend.days = Math.abs((new Date(trend.endDate).getTime() - new Date(trend.startDate).getTime())/(24*60*60*1000));
+			$scope.averageTrends[mp-1].push(trend);
 		}
 	}
 	
@@ -469,6 +495,7 @@ app.controller('MainController', function ($scope) {
 		initBracketBasedStatsAndAverages();
 		initAverageProgression();
 		initInsights();
+		console.log($scope);
 	};
 	
 	// Events

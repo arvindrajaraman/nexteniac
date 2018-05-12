@@ -330,28 +330,80 @@
 				</div>
 				<div class="tab" ng-show="tab === 5">
 					<div class="ui top attached secondary pointing large menu">
-						<a class="red item" ng-class="{'active': changesTab === 1}" ng-click="changeChangesTab(1)">
-							<i class="table icon"></i>
-							Biggest Changes
+						<a class="green item" ng-class="{'active': changesTab === 3}" ng-click="changeChangesTab(3)">
+							<i class="chart line icon"></i>
+							Trends
 						</a>
 						<a class="blue item" ng-class="{'active': changesTab === 2}" ng-click="changeChangesTab(2)">
 							<i class="chart bar icon"></i>
 							All Changes
 						</a>
-						<a class="green item" ng-class="{'active': changesTab === 3}" ng-click="changeChangesTab(3)">
-							<i class="chart line icon"></i>
-							Trends
+						<a class="red item" ng-class="{'active': changesTab === 1}" ng-click="changeChangesTab(1)">
+							<i class="table icon"></i>
+							Greatest Changes
 						</a>
 					</div>
 					<div class="ui bottom attached segment">
 						<div ng-show="changesTab === 1">
-							Biggest Changes
+							<table class="ui center aligned celled compact definition table">
+								<thead>
+									<th></th>
+									<th>Greatest Rise</th>
+									<th>Greatest Drop</th>
+								</thead>
+								<tbody>
+									<tr>
+										<th>Change</th>
+										<td style="color: #07B953;"><i class="arrow up icon"></i> {[insights[search.mp - 1].biggestRise | number: 2]}%</td>
+										<td style="color: #DF2428;"><i class="arrow down icon"></i> {[insights[search.mp - 1].biggestDrop | number: 2]}%</td>
+									</tr>
+									<tr>
+										<th>Date Changed</th>
+										<td>{[insights[search.mp - 1].biggestRiseDate | date:'MMM d, yyyy']}</td>
+										<td>{[insights[search.mp - 1].biggestDropDate | date:'MMM d, yyyy']}</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
 						<div ng-show="changesTab === 2">
-							All Changes
+							<table class="ui center aligned celled compact table">
+								<thead>
+									<th>Days</th>
+									<th>Start Date</th>
+									<th>End Date</th>
+									<th>Type</th>
+									<th>Change</th>
+								</thead>
+								<tbody>
+									<tr ng-repeat="change in averageChanges[search.mp-1]">
+										<td>{[change.days | number: 0]}</td>
+										<td>{[change.startDate | date: 'MMM d, yyyy']}</td>
+										<td>{[change.endDate | date: 'MMM d, yyyy']}</td>
+										<td>{[change.change | changetype]}</td>
+										<td ng-class="{'redText': change.change < 0, 'greenText': change.change > 0}"><i class="icon" ng-class="{'down arrow': change.change < 0, 'up arrow': change.change > 0, 'minus': change.change === 0}"></i> {[change.change | number: 2]}%</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
 						<div ng-show="changesTab === 3">
-							Trends
+							<table class="ui center aligned celled compact table">
+								<thead>
+									<th>Days</th>
+									<th>Start Date</th>
+									<th>End Date</th>
+									<th>Trend</th>
+									<th>Net Change</th>
+								</thead>
+								<tbody>
+									<tr ng-repeat="trend in averageTrends[search.mp-1]">
+										<td>{[trend.days | number: 0]}</td>
+										<td>{[trend.startDate | date: 'MMM d, yyyy']}</td>
+										<td>{[trend.endDate | date: 'MMM d, yyyy']}</td>
+										<td>{[trend.net | trendtype]}</td>
+										<td ng-class="{'redText': trend.net < 0, 'greenText': trend.net > 0}"><i class="icon" ng-class="{'down arrow': trend.net < 0, 'up arrow': trend.net > 0, 'minus': trend.net === 0}"></i> {[trend.net | number: 2]}%</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>
