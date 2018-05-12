@@ -176,66 +176,6 @@ function calcQuartile(data, q) {
 }
 
 app.controller('MainController', function ($scope) {
-	/*$scope.categories = [];
-	$scope.grades = [];
-	$scope.tab = 3;
-	$scope.showngrades = 0;
-	$scope.sort = {
-		by: 2,
-		dir: 1 // 1 = ascending, -1 = descending
-	};
-	$scope.search = {
-		mp: window.localStorage.getItem('currentmp')
-	};
-	$scope.averages = {
-		mp1: [],
-		mp2: [],
-		mp3: [],
-		mp4: []
-	};
-	$scope.changeTab = function(t) {
-		$scope.tab = t;
-	};
-	$scope.changeSort = function(b) {
-		// Change $scope's sort
-		if ($scope.sort.by === b) $scope.sort.dir = ($scope.sort.dir === 1) ? -1 : 1;
-		else {
-			$scope.sort.by = b;
-			$scope.sort.dir = 1;
-		}
-		// Determine by which property to sort
-		var property;
-		switch ($scope.sort.by) {
-			case 1:
-				property = 'date';
-				break;
-			case 2:
-			case 3:
-			case 4:
-				property = null;
-				break;
-			case 5:
-				property = 'category';
-				break;
-			case 6:
-				property = 'name';
-				break;
-		}
-		// Actually sort
-		$scope.grades.sort(function(a, b) {
-			if (property === null) {
-				if (a.ptsearned / a.ptstotal < b.ptsearned / b.ptstotal) return returnWithDir(-1, $scope.sort.dir);
-				else if (a.ptsearned / a.ptstotal > b.ptsearned / b.ptstotal) return returnWithDir(1, $scope.sort.dir);
-				else return 0;
-			}
-			else {
-				if (a[property] < b[property]) return returnWithDir(-1, $scope.sort.dir);
-				else if (a[property] > b[property]) return returnWithDir(1, $scope.sort.dir);
-				else return 0;
-			}
-		});
-	};*/
-
 	// Presets
 	$scope.tab = 1;
 	$scope.newgrades = [{}];
@@ -436,7 +376,6 @@ app.controller('MainController', function ($scope) {
 		var pointTotals = [{}, {}, {}, {}];
 		$scope.graphPoints = [[], [], [], []];
 		$scope.graphDates = [[], [], [], []];
-		console.log($scope.mpGrades[1]);
 		for (var mp = 1; mp <= 4; mp++) {
 			for (var category of $scope.categories) {
 				pointTotals[mp-1][category.name] = {
@@ -449,7 +388,6 @@ app.controller('MainController', function ($scope) {
 		for (var mp = 1; mp <= 4; mp++) {
 			for (var g = 0; g <= $scope.mpGrades[mp-1].length - 1; g++) {
 				var grade = $scope.mpGrades[mp-1][g];
-				if (mp === 2) console.log(pointTotals[mp-1]);
 				pointTotals[mp-1][grade.category].ptsearned += grade.ptsearned;
 				pointTotals[mp-1][grade.category].ptstotal += grade.ptstotal;
 				if (g !== $scope.mpGrades[mp-1].length - 1) {
@@ -477,13 +415,7 @@ app.controller('MainController', function ($scope) {
 		initGrades();
 		initBracketBasedStatsAndAverages();
 		initAverageProgression();
-		console.log($scope);
 	};
-
-	// Reusable functions
-	
-
-	
 	
 	// Events
 	$scope.$watch('search.mp', function() {
@@ -594,11 +526,27 @@ app.controller('MainController', function ($scope) {
 	};
 
 	$scope.addGrades = function() {
-		for (var newgrade of $scope.newgrades) {
-			LS.incItem('c' + $scope.classlsid + '-assignmentcount');
-			LS.setItem("c" + $scope.classlsid + "-a" + LS.getItem("c" + $scope.classlsid + "-assignmentcount"), JSON.stringify(newgrade));
+		var fields = ["date", "category", "name", "mp", "ptsearned", "ptstotal"];
+		var valid = true;
+		for (var g = 0; g <= $scope.newgrades.length - 1; g++) {
+			for (var f = 0; f <= fields.length - 1; f++) {
+				var value = $scope.newgrades[g][fields[f]];
+				if (value !== undefined && value !== "") {
+					document.getElementById('AGM' + fields[f] + g).classList.remove('error');
+				}
+				else {
+					valid = false;
+					document.getElementById('AGM' + fields[f] + g).classList.add('error');
+				}
+			}
 		}
-		location.reload();
+		if (valid) {
+			for (var newgrade of $scope.newgrades) {
+				LS.incItem('c' + $scope.classlsid + '-assignmentcount');
+				LS.setItem("c" + $scope.classlsid + "-a" + LS.getItem("c" + $scope.classlsid + "-assignmentcount"), JSON.stringify(newgrade));
+			}
+			location.reload();
+		}
 	};
 
 	$scope.changeTab = function(t) {
@@ -712,6 +660,10 @@ app.controller('MainController', function ($scope) {
 		}
 		LS.decItem("c" + $scope.classlsid + "-assignmentcount");
 		location.reload();
+	};
+
+	$scope.deleteNewGrade = function(index) {
+		$scope.newgrades.splice(index, 1);
 	};
 });
 

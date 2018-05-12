@@ -451,21 +451,21 @@
 		<div class="header">Add Grades</div>
 		<div class="ui scrolling form content">
 			<div class="fields" ng-repeat="newgrade in newgrades">
-				<div class="two wide field">
+				<div class="two wide field" id="AGMdate{[$index]}">
 					<label ng-show="$index === 0">Date</label>
 					<input type="date" placeholder="Date" ng-model="newgrade.date">
 				</div>
-				<div class="two wide field">
+				<div class="two wide field" id="AGMcategory{[$index]}">
 					<label ng-show="$index === 0">Category</label>
 					<select class="ui fluid noninit dropdown addGradeCategoryDropdown" ng-model="newgrade.category">
 						<option ng-repeat="category in categories" value="{[category.name]}">{[category.name]}</option>
 					</select>
 				</div>
-				<div class="six wide field">
+				<div class="five wide field" id="AGMname{[$index]}">
 					<label ng-show="$index === 0">Assignment Name</label>
 					<input type="text" placeholder="Assignment Name" ng-model="newgrade.name">
 				</div>
-				<div class="two wide field">
+				<div class="two wide field" id="AGMmp{[$index]}">
 					<label ng-show="$index === 0">Marking Period</label>
 					<select class="ui fluid noninit dropdown addGradeMPDropdown" ng-model="newgrade.mp">
 						<option value="1">MP1</option>
@@ -474,19 +474,23 @@
 						<option value="4">MP4</option>
 					</select>
 				</div>
-				<div class="two wide field">
+				<div class="two wide field" id="AGMptsearned{[$index]}">
 					<label ng-show="$index === 0">Points Earned</label>
 					<input type="number" placeholder="Points Earned" ng-model="newgrade.ptsearned" min="0">
 				</div>
-				<div class="two wide field">
+				<div class="two wide field" id="AGMptstotal{[$index]}">
 					<label ng-show="$index === 0">Points Total</label>
 					<input type="number" placeholder="Points Total" ng-model="newgrade.ptstotal" min="0">
+				</div>
+				<div class="one wide field">
+					<label ng-show="$index === 0" style="visibility: hidden;">Delete</label>
+					<div class="ui fluid red inverted icon button" ng-class="{'disabled': newgrades.length === 1}" ng-click="deleteNewGrade($index)"><i class="trash icon"></i></div>
 				</div>
 			</div>
 		</div>
 		<div class="actions">
 			<button class="ui black button" ng-click="createRow()">Create Row</button>
-			<div class="ui positive labeled icon button" ng-click="addGrades()">
+			<div class="ui green labeled icon button" ng-click="addGrades()">
 		    	<i class="plus icon"></i>
 		    	Add Grades
 		    </div>
