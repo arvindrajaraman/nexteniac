@@ -177,7 +177,8 @@ function calcQuartile(data, q) {
 
 app.controller('MainController', function ($scope) {
 	// Presets
-	$scope.tab = 1;
+	$scope.tab = 5;
+	$scope.changesTab = 1;
 	$scope.newgrades = [{}];
 	$scope.search = {
 		mp: 2
@@ -409,6 +410,57 @@ app.controller('MainController', function ($scope) {
 			}
 		}
 	}
+
+	function initInsights() {
+		$scope.insights = [{}, {}, {}, {}];
+		$scope.averageChanges = [[], [], [], []];
+		for (var mp = 1; mp <= 4; mp++) {
+			if ($scope.graphPoints[mp-1].length <= 1) continue;
+			for (var g = 1; g <= $scope.graphPoints[mp-1].length - 1; g++) {
+				$scope.averageChanges[mp-1].push($scope.graphPoints[mp-1][g].y - $scope.graphPoints[mp-1][g-1].y);
+			}
+			var insights = {
+				biggestDrop: Math.min(...$scope.averageChanges[mp-1]),
+				biggestRise: Math.max(...$scope.averageChanges[mp-1])
+			};
+			insights.biggestDropDate = $scope.graphPoints[mp-1][$scope.averageChanges[mp-1].indexOf(insights.biggestDrop) + 1].x;
+			insights.biggestRiseDate = $scope.graphPoints[mp-1][$scope.averageChanges[mp-1].indexOf(insights.biggestRise) + 1].x;
+			$scope.insights[mp-1] = insights;
+			$scope.averageTrends = [[], [], [], []];
+			var sign, days = 0, startindex = 0, net = 0; // -1 = negative (downtrend), 0 = zero (consolidation), 1 = positive (uptrend)
+			for (var t = 0; t <= $scope.averageChanges[mp-1].length - 1; t++) {
+				var value = $scope.averageChanges[mp-1][t];
+				if (t === 0) {
+					if (value > 0) sign = 1;
+					else if (value < 0) sign = -1;
+					else sign = 0;
+					days++;
+					net += value;
+				}
+				else {
+					if (sign * value > 0 || (sign === 0 && value === 0)) {
+						days++;
+						net += value;
+					}
+					else {
+						$scope.averageTrends[mp-1].push({
+							days: days,
+							type: sign,
+							net: net,
+							startDate: $scope.graphDates[mp-1][startindex],
+							endDate: $scope.graphDates[mp-1][t]
+						});
+						if (value > 0) sign = 1;
+						else if (value < 0) sign = -1;
+						else sign = 0;
+						days = 1;
+						startindex = t;
+						net = value;
+					}
+				}
+			}
+		}
+	}
 	
 	$scope.initViewClass = function() {
 		initClass();
@@ -416,6 +468,7 @@ app.controller('MainController', function ($scope) {
 		initGrades();
 		initBracketBasedStatsAndAverages();
 		initAverageProgression();
+		initInsights();
 	};
 	
 	// Events
@@ -557,6 +610,10 @@ app.controller('MainController', function ($scope) {
 	$scope.changeTab = function(t) {
 		$scope.tab = t;
 	};
+
+	$scope.changeChangesTab = function(t) {
+		$scope.changesTab = t;
+	}
 
 	$scope.createRow = function() {
 		$scope.newgrades.push({});

@@ -35,7 +35,7 @@
 					Insights
 				</a>
 				<a class="red item" ng-class="{'active': tab === 6}" ng-click="changeTab(6)">
-					<i class="quidditch icon"></i>
+					<i class="soccer icon"></i>
 					Goals
 				</a>
 			</div>
@@ -126,7 +126,6 @@
 											<div class="value">{[gradeBrackets[search.mp-1][search.category].arithmeticmean | number:2]}</div>
 											<div class="label">
 												Arithmetic Mean
-												<i class="info circle icon" data-variation="tiny" data-content="Arithmetic mean is the most commonly used average identifier, where the data is added. Use this mean when there are no extreme outliers and the grades are not interrelated."></i>
 											</div>
 										</div>
 									</div>
@@ -191,7 +190,6 @@
 											<div class="value">{[gradeBrackets[search.mp-1][search.category].geometricmean | number:2]}</div>
 											<div class="label">
 												Geometric Mean
-												<i class="info circle icon" data-variation="tiny" data-content="Geometric mean is also common, where the data is multiplied. Use this mean when your grades are skewed with some outliers."></i>
 											</div>
 										</div>
 									</div>
@@ -244,7 +242,6 @@
 											<div class="value">{[gradeBrackets[search.mp-1][search.category].harmonicmean | number:2]}</div>
 											<div class="label">
 												Harmonic Mean
-												<i class="info circle icon" data-variation="tiny" data-content="The harmonic mean is calculated by using reciprocals of the data. Use this mean when your grades are fairly uniform but have a few outliers."></i>
 											</div>
 										</div>
 									</div>
@@ -332,7 +329,31 @@
 					</div>
 				</div>
 				<div class="tab" ng-show="tab === 5">
-					<h3>Insights</h3>
+					<div class="ui top attached secondary pointing large menu">
+						<a class="red item" ng-class="{'active': changesTab === 1}" ng-click="changeChangesTab(1)">
+							<i class="table icon"></i>
+							Biggest Changes
+						</a>
+						<a class="blue item" ng-class="{'active': changesTab === 2}" ng-click="changeChangesTab(2)">
+							<i class="chart bar icon"></i>
+							All Changes
+						</a>
+						<a class="green item" ng-class="{'active': changesTab === 3}" ng-click="changeChangesTab(3)">
+							<i class="chart line icon"></i>
+							Trends
+						</a>
+					</div>
+					<div class="ui bottom attached segment">
+						<div ng-show="changesTab === 1">
+							Biggest Changes
+						</div>
+						<div ng-show="changesTab === 2">
+							All Changes
+						</div>
+						<div ng-show="changesTab === 3">
+							Trends
+						</div>
+					</div>
 				</div>
 				<div class="tab" ng-show="tab === 6">
 					<h3>Goals</h3>
