@@ -33,12 +33,12 @@
 		<div class="four wide column">
 			<div class="ui center aligned segment">
 				<div class="ui statistic">
-					<div class="value">π</div>
-					<div class="label">Some Statistic</div>
+					<div class="value">{[classes.length]}</div>
+					<div class="label">Classes</div>
 				</div>
 			</div>
 		</div>
-		<div class="nine wide column">
+		<div class="twelve wide column">
 			<div class="ui fluid action input">
 				<input type="text" placeholder="Search for classes...">
 				<button class="ui red right labeled icon button">
@@ -65,17 +65,8 @@
 				<option value="4">MP4</option>
 			</select>
 		</div>
-		<div class="three wide column">
-			<select class="ui fluid dropdown" id="sortByDropdown" ng-model="search.sortby">
-				<option value="">Sort Dropdown</option>
-				<option value="1">Grade High to Low</option>
-				<option value="2">Grade Low to High</option>
-				<option value="3" selected>Name A-Z</option>
-				<option value="4">Name Z-A</option>
-			</select>
-		</div>
 		<div class="sixteen wide column">
-			<table class="ui center aligned celled table" id="classesTable" ng-hide="shownclasses === 0">
+			<table class="ui center aligned compact celled table" id="classesTable" ng-hide="shownclasses === 0">
 				<thead>
 					<tr>
 						<th colspan="2">Grade</th>
@@ -90,13 +81,13 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="class in classes" ng-click="redirect($index)" ng-show="class.grade === search.grade && class['mp' + search.mp]">
-						<td>
-							<span class="ui header" ng-show="class.lettergrade">{[class.lettergrade]}</span>
-							<span class="ui header" ng-hide="class.lettergrade">-</span>
+						<td style="font-size: 18px !important;">
+							<span class="ui header" ng-show="class.letterAvg[search.mp-1]">{[class.letterAvg[search.mp-1]]}</span>
+							<span class="ui header" ng-hide="class.letterAvg[search.mp-1]">-</span>
 						</td>
 						<td>
-							<span class="ui header" ng-show="class.numbergrade">{[class.numbergrade | number:2]}%</span>
-							<span class="ui header" ng-hide="class.numbergrade">-</span>
+							<span class="ui header" ng-show="class.percentAvg[search.mp-1]">{[class.percentAvg[search.mp-1] | number:2]}%</span>
+							<span class="ui header" ng-hide="class.percentAvg[search.mp-1]">-</span>
 						</td>
 						<td><h3 class="ui header">{[class.name]}</h3></td>
 						<td><h2 class="ui header">{[class.credits | number:2]}</h2></td>

@@ -65,6 +65,25 @@ app.filter('trendtype', function() {
 	}
 });
 
+app.filter('numequivtoletter', function() {
+	return function(n) {
+		n = parseFloat(n);
+		if (n < 1) return 'F';
+		else n = Math.round(n);
+		
+		if (n === 10) return 'A+';
+		else if (n === 9) return 'A';
+		else if (n === 8) return 'A-';
+		else if (n === 7) return 'B+';
+		else if (n === 6) return 'B';
+		else if (n === 5) return 'B-';
+		else if (n === 4) return 'C+';
+		else if (n === 3) return 'C';
+		else if (n === 2) return 'C-';
+		else return 'D';
+	}
+});
+
 /*function returnWithDir(v, d) {
 	if (d === 1) return v;
 	else return (v === 1) ? -1 : 1;
@@ -193,8 +212,10 @@ function calcQuartile(data, q) {
 
 app.controller('MainController', function ($scope) {
 	// Presets
-	$scope.tab = 5;
+	$scope.tab = 1;
 	$scope.changesTab = 3;
+	$scope.goalTab = 1;
+	$scope.toolTab = 1;
 	$scope.newgrades = [{}];
 	$scope.search = {
 		mp: 2
@@ -203,6 +224,7 @@ app.controller('MainController', function ($scope) {
 		dir: 1, // 1 = ascemdimg, -1 = descending
 		field: 1, // 1 = date, 2 = letter, ..., 6 = assignment name
 	};
+	$scope.expavgs = { mp1: "10", mp2: "10", mp3: "10", mp4: "10", final: "10" };
 	$scope.initializedAverageProgressionChart = false;
 	$scope.initializedUndecilesChart = false;
 	$scope.advancedmode = false;
@@ -377,6 +399,7 @@ app.controller('MainController', function ($scope) {
 				mpAverageBracket.averageLetter = GradeFactory.percentToLetter((Math.round(mpAverageBracket.averagePercent*10)/10).toFixed(2));
 				mpAverageBracket.averageNumEquiv = GradeFactory.letterToNumEquiv(mpAverageBracket.averageLetter);
 				$scope.yearAverageNumEquiv += mpAverageBracket.averageNumEquiv;
+				$scope.expavgs['mp' + mp] = mpAverageBracket.averageNumEquiv;
 				$scope.totalValidMPs++;
 			}
 		}
@@ -446,9 +469,10 @@ app.controller('MainController', function ($scope) {
 				biggestDrop: Math.min.apply(Math, $scope.averageChanges[mp-1].map(function(o) { return o.change; })),
 				biggestRise: Math.max.apply(Math, $scope.averageChanges[mp-1].map(function(o) { return o.change; }))
 			};
-			insights.biggestDropDate = $scope.graphDates[mp-1][$scope.averageChanges[mp-1].map(function(e) {return e.change;}).indexOf(insights.biggestDrop) + 1];
-			insights.biggestRiseDate = $scope.graphDates[mp-1][$scope.averageChanges[mp-1].map(function(e) {return e.change;}).indexOf(insights.biggestRise) + 1];
-			$scope.insights[mp-1] = insights;
+			insights.biggestDropEndDate = $scope.graphDates[mp-1][$scope.averageChanges[mp-1].map(function(e) {return e.change;}).indexOf(insights.biggestDrop) + 1];
+			insights.biggestDropStartDate = $scope.graphDates[mp-1][$scope.averageChanges[mp-1].map(function(e) {return e.change;}).indexOf(insights.biggestDrop)];
+			insights.biggestRiseEndDate = $scope.graphDates[mp-1][$scope.averageChanges[mp-1].map(function(e) {return e.change;}).indexOf(insights.biggestRise) + 1];
+			insights.biggestRiseStartDate = $scope.graphDates[mp-1][$scope.averageChanges[mp-1].map(function(e) {return e.change;}).indexOf(insights.biggestRise)];
 			var sign, startindex = 0, net = 0;
 			for (var t = 0; t <= $scope.averageChanges[mp-1].length - 1; t++) {
 				var value = $scope.averageChanges[mp-1][t].change;
@@ -459,9 +483,8 @@ app.controller('MainController', function ($scope) {
 					net += value;
 				}
 				else {
-					if (sign * value > 0 || (sign === 0 && value === 0)) {
-						net += value;
-					}
+					if (value === 0) continue;
+					else if (sign * value > 0)  net += value;
 					else {
 						var trend = {
 							net: net,
@@ -485,6 +508,19 @@ app.controller('MainController', function ($scope) {
 			};
 			trend.days = Math.abs((new Date(trend.endDate).getTime() - new Date(trend.startDate).getTime())/(24*60*60*1000));
 			$scope.averageTrends[mp-1].push(trend);
+			insights.biggestDowntrend = Math.min.apply(Math, $scope.averageTrends[mp-1].map(function(o) { return o.net; }));
+			insights.biggestUptrend = Math.max.apply(Math, $scope.averageTrends[mp-1].map(function(o) { return o.net; }));
+			for (var trend of $scope.averageTrends[mp-1]) {
+				if (trend.net === insights.biggestDowntrend) {
+					insights.biggestDowntrendStartDate = trend.startDate;
+					insights.biggestDowntrendEndDate = trend.endDate;
+				}
+				else if (trend.net === insights.biggestUptrend) {
+					insights.biggestUptrendStartDate = trend.startDate;
+					insights.biggestUptrendEndDate = trend.endDate;
+				}
+			}
+			$scope.insights[mp-1] = insights;
 		}
 	}
 	
@@ -503,6 +539,15 @@ app.controller('MainController', function ($scope) {
 		$scope.reinitAverageProgressionChart();
 		$scope.reinitUndecilesChart();
 	}, true);
+
+	var calcExpFinalAvg = function() {
+		$scope.expavgs.final = (parseInt($scope.expavgs.mp1) + parseInt($scope.expavgs.mp2) + parseInt($scope.expavgs.mp3) + parseInt($scope.expavgs.mp4)) / 4;
+	}
+
+	$scope.$watch('expavgs.mp1', calcExpFinalAvg, true);
+	$scope.$watch('expavgs.mp2', calcExpFinalAvg, true);
+	$scope.$watch('expavgs.mp3', calcExpFinalAvg, true);
+	$scope.$watch('expavgs.mp4', calcExpFinalAvg, true);
 
 	var averageProgressionChart;
 	$scope.reinitAverageProgressionChart = function() {
@@ -634,13 +679,25 @@ app.controller('MainController', function ($scope) {
 		}
 	};
 
+	$scope.setExpValue = function(v) {
+		$scope.expavgs['mp' + v[0]] = v.substr(1);
+	};
+
 	$scope.changeTab = function(t) {
 		$scope.tab = t;
 	};
 
 	$scope.changeChangesTab = function(t) {
 		$scope.changesTab = t;
-	}
+	};
+
+	$scope.changeGoalTab = function(t) {
+		$scope.goalTab = t;
+	};
+
+	$scope.changeToolTab = function(t) {
+		$scope.toolTab = t;
+	};
 
 	$scope.createRow = function() {
 		$scope.newgrades.push({});
@@ -759,6 +816,8 @@ app.controller('MainController', function ($scope) {
 $(document).ready(function () {
 	$('#mpSelectionDropdown').dropdown();
 	$('#categorySelectionDropdown').dropdown();
+	$('.averageDropdown').dropdown();
+
 	if (window.localStorage.getItem('currentmp')) $('#mpSelectionDropdown').dropdown('set selected', window.localStorage.getItem('currentmp'));
 	else $('#mpSelectionDropdown').dropdown('set selected', '1');
 

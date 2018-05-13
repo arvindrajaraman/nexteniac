@@ -349,18 +349,31 @@
 								<thead>
 									<th></th>
 									<th>Greatest Rise</th>
+									<th>Greatest Uptrend</th>
 									<th>Greatest Drop</th>
+									<th>Greatest Downtrend</th>
 								</thead>
 								<tbody>
 									<tr>
 										<th>Change</th>
-										<td style="color: #07B953;"><i class="arrow up icon"></i> {[insights[search.mp - 1].biggestRise | number: 2]}%</td>
-										<td style="color: #DF2428;"><i class="arrow down icon"></i> {[insights[search.mp - 1].biggestDrop | number: 2]}%</td>
+										<td style="color: #07B953;"><i class="angle up icon"></i> {[insights[search.mp - 1].biggestRise | number: 2]}%</td>
+										<td style="color: #07B953;"><i class="angle double up icon"></i> {[insights[search.mp - 1].biggestUptrend | number: 2]}%</td>
+										<td style="color: #DF2428;"><i class="angle down icon"></i> {[insights[search.mp - 1].biggestDrop | number: 2]}%</td>
+										<td style="color: #DF2428;"><i class="angle double down icon"></i> {[insights[search.mp - 1].biggestDowntrend | number: 2]}%</td>
 									</tr>
 									<tr>
-										<th>Date Changed</th>
-										<td>{[insights[search.mp - 1].biggestRiseDate | date:'MMM d, yyyy']}</td>
-										<td>{[insights[search.mp - 1].biggestDropDate | date:'MMM d, yyyy']}</td>
+										<th>Start Date</th>
+										<td>{[insights[search.mp - 1].biggestRiseStartDate | date:'MMM d, yyyy']}</td>
+										<td>{[insights[search.mp - 1].biggestUptrendStartDate | date:'MMM d, yyyy']}</td>
+										<td>{[insights[search.mp - 1].biggestDropStartDate | date:'MMM d, yyyy']}</td>
+										<td>{[insights[search.mp - 1].biggestDowntrendStartDate | date:'MMM d, yyyy']}</td>
+									</tr>
+									<tr>
+										<th>End Date</th>
+										<td>{[insights[search.mp - 1].biggestRiseEndDate | date:'MMM d, yyyy']}</td>
+										<td>{[insights[search.mp - 1].biggestUptrendEndDate | date:'MMM d, yyyy']}</td>
+										<td>{[insights[search.mp - 1].biggestDropEndDate | date:'MMM d, yyyy']}</td>
+										<td>{[insights[search.mp - 1].biggestDowntrendEndDate | date:'MMM d, yyyy']}</td>
 									</tr>
 								</tbody>
 							</table>
@@ -380,7 +393,7 @@
 										<td>{[change.startDate | date: 'MMM d, yyyy']}</td>
 										<td>{[change.endDate | date: 'MMM d, yyyy']}</td>
 										<td>{[change.change | changetype]}</td>
-										<td ng-class="{'redText': change.change < 0, 'greenText': change.change > 0}"><i class="icon" ng-class="{'down arrow': change.change < 0, 'up arrow': change.change > 0, 'minus': change.change === 0}"></i> {[change.change | number: 2]}%</td>
+										<td ng-class="{'redText': change.change < 0, 'greenText': change.change > 0}"><i class="icon" ng-class="{'down angle': change.change < 0, 'up angle': change.change > 0, 'right angle': change.change === 0}"></i> {[change.change | number: 2]}%</td>
 									</tr>
 								</tbody>
 							</table>
@@ -400,25 +413,167 @@
 										<td>{[trend.startDate | date: 'MMM d, yyyy']}</td>
 										<td>{[trend.endDate | date: 'MMM d, yyyy']}</td>
 										<td>{[trend.net | trendtype]}</td>
-										<td ng-class="{'redText': trend.net < 0, 'greenText': trend.net > 0}"><i class="icon" ng-class="{'down arrow': trend.net < 0, 'up arrow': trend.net > 0, 'minus': trend.net === 0}"></i> {[trend.net | number: 2]}%</td>
+										<td ng-class="{'redText': trend.net < 0, 'greenText': trend.net > 0}"><i class="icon" ng-class="{'double down angle': trend.net < 0, 'double up angle': trend.net > 0, 'double right angle': trend.net === 0}"></i> {[trend.net | number: 2]}%</td>
 									</tr>
 								</tbody>
 							</table>
 						</div>
-						<div ng-hide="mpGrades[search.mp-1].length >= 3" style="width: 100%; text-align: center;">
-							<h3><i class="frown icon"></i> There are not enough grades in this MP for these insights.</h3>
+						<div ng-show="mpGrades[search.mp-1].length < 3" style="width: 100%; text-align: center;">
+							<h3><i class="frown icon"></i> Not enough grades in this MP to view these insights!</h3>
 						</div>
 					</div>
 				</div>
 				<div class="tab" ng-show="tab === 6">
-					<h3>Goals</h3>
+					<div class="ui top attached secondary pointing large menu">
+						<a class="yellow item" ng-class="{'active': goalTab === 1}" ng-click="changeGoalTab(1)">
+							<i class="chart pie icon"></i>
+							Goal Met
+						</a>
+						<a class="orange item" ng-class="{'active': goalTab === 2}" ng-click="changeGoalTab(2)">
+							<i class="quidditch icon"></i>
+							Meet Your Goal
+						</a>
+						<a class="red item" ng-class="{'active': goalTab === 3}" ng-click="changeGoalTab(3)">
+							<i class="soccer icon"></i>
+							Your Goal
+						</a>
+					</div>
+					<div class="ui bottom attached segment" ng-class="{'secondary': mpGrades[search.mp-1].length < 3}">
+						<div ng-show="goalTab === 1 && mpGrades[search.mp-1].length >= 3">
+							Goal Met
+						</div>
+						<div ng-show="goalTab === 2 && mpGrades[search.mp-1].length >= 3">
+							Meet Your Goal
+						</div>
+						<div ng-show="goalTab === 3 && mpGrades[search.mp-1].length >= 3">
+							Your Goal
+						</div>
+					</div>
+					<div class="ui top attached secondary pointing large menu">
+						<a class="pink item" ng-class="{'active': toolTab === 1}" ng-click="changeToolTab(1)">
+							<i class="chart pie icon"></i>
+							Average Experimenter
+						</a>
+						<a class="purple item" ng-class="{'active': toolTab === 2}" ng-click="changeToolTab(2)">
+							<i class="pencil alternate icon"></i>
+							Phantom Grades
+						</a>
+						<a class="violet item" ng-class="{'active': toolTab === 3}" ng-click="changeToolTab(3)">
+							<i class="soccer icon"></i>
+							Your Goal
+						</a>
+					</div>
+					<div class="ui bottom attached segment">
+						<div ng-show="toolTab === 1">
+							<div class="ui five statistics">
+								<div class="ui statistic">
+									<div class="value avg1">{[expavgs.mp1 | numequivtoletter]}</div>
+									<div class="label">
+										<div class="ui inline dropdown averageDropdown" id="avg1Dropdown">
+								      		<div class="text">MP1</div>
+								      		<i class="dropdown icon"></i>
+								      		<div class="menu">
+									     		<div class="item" data-text="MP1" ng-click="setExpValue('110')">A+</div>
+								     	  		<div class="item" data-text="MP1" ng-click="setExpValue('19')">A</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('18')">A-</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('17')">B+</div>
+								     	  		<div class="item" data-text="MP1" ng-click="setExpValue('16')">B</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('15')">B-</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('14')">C+</div>
+								     	  		<div class="item" data-text="MP1" ng-click="setExpValue('13')">C</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('12')">C-</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('11')">D</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('10')">F</div>
+								      		</div>
+									    </div>
+									</div>
+								</div>
+								<div class="ui statistic">
+									<div class="value avg2">{[expavgs.mp2 | numequivtoletter]}</div>
+									<div class="label">
+										<div class="ui inline dropdown averageDropdown" id="avg2Dropdown">
+								      		<div class="text">MP2</div>
+								      		<i class="dropdown icon"></i>
+								      		<div class="menu">
+									     		<div class="item" data-text="MP2" ng-click="setExpValue('210')">A+</div>
+								     	  		<div class="item" data-text="MP2" ng-click="setExpValue('29')">A</div>
+									        	<div class="item" data-text="MP2" ng-click="setExpValue('28')">A-</div>
+									        	<div class="item" data-text="MP2" ng-click="setExpValue('27')">B+</div>
+								     	  		<div class="item" data-text="MP2" ng-click="setExpValue('26')">B</div>
+									        	<div class="item" data-text="MP2" ng-click="setExpValue('25')">B-</div>
+									        	<div class="item" data-text="MP2" ng-click="setExpValue('24')">C+</div>
+								     	  		<div class="item" data-text="MP2" ng-click="setExpValue('23')">C</div>
+									        	<div class="item" data-text="MP2" ng-click="setExpValue('22')">C-</div>
+									        	<div class="item" data-text="MP2" ng-click="setExpValue('21')">D</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('20')">F</div>
+								      		</div>
+									    </div>
+									</div>
+								</div>
+								<div class="ui statistic">
+									<div class="value avg3">{[expavgs.mp3 | numequivtoletter]}</div>
+									<div class="label">
+										<div class="ui inline dropdown averageDropdown" id="avg3Dropdown">
+								      		<div class="text">MP3</div>
+								      		<i class="dropdown icon"></i>
+								      		<div class="menu">
+									     		<div class="item" data-text="MP3" ng-click="setExpValue('310')">A+</div>
+								     	  		<div class="item" data-text="MP3" ng-click="setExpValue('39')">A</div>
+									        	<div class="item" data-text="MP3" ng-click="setExpValue('38')">A-</div>
+									        	<div class="item" data-text="MP3" ng-click="setExpValue('37')">B+</div>
+								     	  		<div class="item" data-text="MP3" ng-click="setExpValue('36')">B</div>
+									        	<div class="item" data-text="MP3" ng-click="setExpValue('35')">B-</div>
+									        	<div class="item" data-text="MP3" ng-click="setExpValue('34')">C+</div>
+								     	  		<div class="item" data-text="MP3" ng-click="setExpValue('33')">C</div>
+									        	<div class="item" data-text="MP3" ng-click="setExpValue('32')">C-</div>
+									        	<div class="item" data-text="MP3" ng-click="setExpValue('31')">D</div>
+									        	<div class="item" data-text="MP3" ng-click="setExpValue('30')">F</div>
+								      		</div>
+									    </div>
+									</div>
+								</div>
+								<div class="ui statistic">
+									<div class="value avg4">{[expavgs.mp4 | numequivtoletter]}</div>
+									<div class="label">
+										<div class="ui inline dropdown averageDropdown" id="avg4Dropdown">
+								      		<div class="text">MP4</div>
+								      		<i class="dropdown icon"></i>
+								      		<div class="menu">
+									     		<div class="item" data-text="MP4" ng-click="setExpValue('410')">A+</div>
+								     	  		<div class="item" data-text="MP4" ng-click="setExpValue('49')">A</div>
+									        	<div class="item" data-text="MP4" ng-click="setExpValue('48')">A-</div>
+									        	<div class="item" data-text="MP4" ng-click="setExpValue('47')">B+</div>
+								     	  		<div class="item" data-text="MP4" ng-click="setExpValue('46')">B</div>
+									        	<div class="item" data-text="MP4" ng-click="setExpValue('45')">B-</div>
+									        	<div class="item" data-text="MP4" ng-click="setExpValue('44')">C+</div>
+								     	  		<div class="item" data-text="MP4" ng-click="setExpValue('43')">C</div>
+									        	<div class="item" data-text="MP4" ng-click="setExpValue('42')">C-</div>
+									        	<div class="item" data-text="MP4" ng-click="setExpValue('41')">D</div>
+									        	<div class="item" data-text="MP4" ng-click="setExpValue('40')">F</div>
+								      		</div>
+									    </div>
+									</div>
+								</div>
+								<div class="ui red statistic">
+									<div class="value avgF">{[expavgs.final | numequivtoletter]}</div>
+									<div class="label">Final</div>
+								</div>
+							</div>
+						</div>
+						<div ng-show="toolTab === 2">
+							Meet Your Goal
+						</div>
+						<div ng-show="toolTab === 3">
+							Your Goal
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="four wide center aligned column">
 			<button class="ui large fluid red labeled icon button" id="addGradeButton">
 				<i class="table icon"></i>
-				Add Grade
+				Add Grades
 			</button>
 			<br>
 			<select class="ui fluid dropdown" id="mpSelectionDropdown" ng-model="search.mp">
