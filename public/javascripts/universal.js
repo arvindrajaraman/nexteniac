@@ -84,4 +84,12 @@ $(document).ready(function () {
 	        alert('Error reading file!');
 	    }
 	});
+
+	for (var c = 1; c <= parseInt(window.localStorage.getItem("classcount")); c++) {
+		var _class = JSON.parse(window.localStorage.getItem("c" + c));
+		if (parseInt(_class.grade) !== parseInt(window.localStorage.getItem("currentgrade"))) continue;
+		var elem = '<a href="/classes/' + encodeURIComponent(_class.name) + '" class="item"><i class="graduation cap icon"></i>' + _class.name + '</a>';
+		$('#classesDropdown .menu').append(elem);
+	}
+	$('#classesDropdown').dropdown();
 });

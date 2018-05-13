@@ -343,8 +343,8 @@
 							Greatest Changes
 						</a>
 					</div>
-					<div class="ui bottom attached segment">
-						<div ng-show="changesTab === 1">
+					<div class="ui bottom attached segment" ng-class="{'secondary': mpGrades[search.mp-1].length < 3}">
+						<div ng-show="changesTab === 1 && mpGrades[search.mp-1].length >= 3">
 							<table class="ui center aligned celled compact definition table">
 								<thead>
 									<th></th>
@@ -365,7 +365,7 @@
 								</tbody>
 							</table>
 						</div>
-						<div ng-show="changesTab === 2">
+						<div ng-show="changesTab === 2 && mpGrades[search.mp-1].length >= 3">
 							<table class="ui center aligned celled compact table">
 								<thead>
 									<th>Days</th>
@@ -385,7 +385,7 @@
 								</tbody>
 							</table>
 						</div>
-						<div ng-show="changesTab === 3">
+						<div ng-show="changesTab === 3 && mpGrades[search.mp-1].length >= 3">
 							<table class="ui center aligned celled compact table">
 								<thead>
 									<th>Days</th>
@@ -404,6 +404,9 @@
 									</tr>
 								</tbody>
 							</table>
+						</div>
+						<div ng-hide="mpGrades[search.mp-1].length >= 3" style="width: 100%; text-align: center;">
+							<h3><i class="frown icon"></i> There are not enough grades in this MP for these insights.</h3>
 						</div>
 					</div>
 				</div>
