@@ -36,7 +36,7 @@ $(document).ready(function () {
 		var element = document.createElement('a');
 		element.style.display = 'none';
 		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(window.btoa(JSON.stringify(data))));
-		element.setAttribute('download', 'literatedata.ldcf');
+		element.setAttribute('download', 'nexteniacdata.bjson');
 		document.body.appendChild(element);
 		element.click();
 		document.body.removeChild(element);

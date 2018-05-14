@@ -1,4 +1,4 @@
-var app = angular.module('literate-classes', []);
+var app = angular.module('nexteniac-classes', []);
 
 app.config(function($interpolateProvider) {
 	$interpolateProvider.startSymbol('{[');
