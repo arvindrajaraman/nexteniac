@@ -33,10 +33,16 @@ $(document).ready(function () {
 			data[window.localStorage.key(i)] = window.localStorage.getItem(window.localStorage.key(i));
 		}
 		var date = new Date();
+		var monthNames = [
+			"January", "February", "March",
+			"April", "May", "June", "July",
+			"August", "September", "October",
+			"November", "December"
+		];
 		var element = document.createElement('a');
 		element.style.display = 'none';
 		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(window.btoa(JSON.stringify(data))));
-		element.setAttribute('download', 'nexteniacdata.bjson');
+		element.setAttribute('download', 'NextEniac Data - ' + date.getDate() + ' ' + monthNames[date.getMonth()] + ' ' + date.getFullYear() + '.txt');
 		document.body.appendChild(element);
 		element.click();
 		document.body.removeChild(element);
