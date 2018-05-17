@@ -212,10 +212,11 @@ function calcQuartile(data, q) {
 
 app.controller('MainController', function ($scope) {
 	// Presets
-	$scope.tab = 1;
+	$scope.tab = 3;
 	$scope.changesTab = 3;
 	$scope.goalTab = 1;
 	$scope.toolTab = 1;
+	$scope.distributionTab = 1;
 	$scope.newgrades = [{}];
 	$scope.search = {
 		mp: 2
@@ -227,6 +228,7 @@ app.controller('MainController', function ($scope) {
 	$scope.expavgs = { mp1: "10", mp2: "10", mp3: "10", mp4: "10", final: "10" };
 	$scope.initializedAverageProgressionChart = false;
 	$scope.initializedUndecilesChart = false;
+	$scope.initializedFrequencyChart = false;
 	$scope.advancedmode = false;
 
 	function initClass() {
@@ -262,16 +264,11 @@ app.controller('MainController', function ($scope) {
 	function initGrades() {
 		$scope.grades = [];
 		$scope.mpGrades = [[], [], [], []];
-		$scope.undeciles = [];
-		for (var mp = 1; mp <= 4; mp++) {
-			$scope.undeciles.push({"A+": 0, "A": 0, "A-": 0, "B+": 0, "B": 0, "B-": 0, "C+": 0, "C": 0, "C-": 0, "D": 0, "F": 0});
-		}
 		for (var g = 1; g <= parseInt(LS.getItem("c" + $scope.classlsid + "-assignmentcount")); g++) {
 			var grade = LS.getGrade($scope.classlsid, g);
 			delete grade.$$hashKey;
 			grade.percent = grade.ptsearned * 100 / grade.ptstotal;
 			grade.letter = GradeFactory.percentToLetter(grade.percent);
-			$scope.undeciles[grade.mp-1][grade.letter]++;
 			$scope.grades.push(grade);
 			$scope.mpGrades[grade.mp-1].push(grade);
 			
@@ -287,6 +284,42 @@ app.controller('MainController', function ($scope) {
 			$scope.mpGrades[mp-1].sort(function(g1, g2) {
 				return new Date(g1.date) - new Date(g2.date);
 			});
+		}
+	}
+
+	function initFrequencies() {
+		$scope.frequencies = [[], [], [], []];
+		for (var mp = 1; mp <= 4; mp++) {
+			for (var c = 0; c <= 100; c += 10) {
+				$scope.frequencies[mp-1].push({
+					classlowerlimit: c,
+					classupperlimit: c + 9,
+					frequency: 0,
+					relativefrequency: 0,
+					cumulativefrequency: 0,
+					cumulativerelativefrequency: 0
+				});
+			}
+		}
+		for (var g = 1; g <= $scope.grades.length; g++) {
+			var grade = $scope.grades[g-1];
+			var percentIndex = Math.floor(((grade.ptsearned * 100 / grade.ptstotal) / 10));
+			if (percentIndex > 10) percentIndex = 10;
+			$scope.frequencies[grade.mp-1][percentIndex].frequency++;
+		}
+		for (var mp = 1; mp <= 4; mp++) {
+			for (var c = 0; c <= 10; c++) {
+				$scope.frequencies[mp-1][c].relativefrequency = Math.round(($scope.frequencies[mp-1][c].frequency * 100 / $scope.mpGrades[mp-1].length) * 100) / 100;
+				if (c === 0) {
+					$scope.frequencies[mp-1][c].cumulativefrequency = $scope.frequencies[mp-1][c].frequency;
+				}
+				else {
+					$scope.frequencies[mp-1][c].cumulativefrequency = $scope.frequencies[mp-1][c-1].cumulativefrequency + $scope.frequencies[mp-1][c].frequency;
+				}
+			}
+			for (var c = 0; c <= 10; c++) {
+				$scope.frequencies[mp-1][c].cumulativerelativefrequency = Math.round(($scope.frequencies[mp-1][c].cumulativefrequency * 100 / $scope.mpGrades[mp-1].length) * 100) / 100;
+			}
 		}
 	}
 	
@@ -473,6 +506,16 @@ app.controller('MainController', function ($scope) {
 			insights.biggestDropStartDate = $scope.graphDates[mp-1][$scope.averageChanges[mp-1].map(function(e) {return e.change;}).indexOf(insights.biggestDrop)];
 			insights.biggestRiseEndDate = $scope.graphDates[mp-1][$scope.averageChanges[mp-1].map(function(e) {return e.change;}).indexOf(insights.biggestRise) + 1];
 			insights.biggestRiseStartDate = $scope.graphDates[mp-1][$scope.averageChanges[mp-1].map(function(e) {return e.change;}).indexOf(insights.biggestRise)];
+			if (insights.biggestRise < 0) {
+				insights.biggestRise = 0;
+				insights.biggestRiseEndDate = $scope.mpGrades[mp-1][$scope.mpGrades[mp-1].length - 1].date;
+				insights.biggestRiseStartDate = $scope.mpGrades[mp-1][0].date;
+			}
+			else if (insights.biggestDrop >= 0) {
+				insights.biggestDrop = 0;
+				insights.biggestDropEndDate = $scope.mpGrades[mp-1][$scope.mpGrades[mp-1].length - 1].date;
+				insights.biggestDropStartDate = $scope.mpGrades[mp-1][0].date;
+			}
 			var sign, startindex = 0, net = 0;
 			for (var t = 0; t <= $scope.averageChanges[mp-1].length - 1; t++) {
 				var value = $scope.averageChanges[mp-1][t].change;
@@ -520,6 +563,18 @@ app.controller('MainController', function ($scope) {
 					insights.biggestUptrendEndDate = trend.endDate;
 				}
 			}
+			if ($scope.averageTrends[mp-1].length <= 1) {
+				if (insights.biggestUptrend >= 0) {
+					insights.biggestDowntrend = 0;
+				}
+				else {
+					insights.biggestUptrend = 0;
+				}
+				insights.biggestUptrendStartDate = $scope.mpGrades[mp-1][0].date;
+				insights.biggestUptrendEndDate = $scope.mpGrades[mp-1][$scope.mpGrades[mp-1].length - 1].date;
+				insights.biggestDowntrendStartDate = $scope.mpGrades[mp-1][0].date;
+				insights.biggestDowntrendEndDate = $scope.mpGrades[mp-1][$scope.mpGrades[mp-1].length - 1].date;
+			}
 			$scope.insights[mp-1] = insights;
 		}
 	}
@@ -528,16 +583,21 @@ app.controller('MainController', function ($scope) {
 		initClass();
 		initCategoriesAndGradeBrackets();
 		initGrades();
+		initFrequencies();
 		initBracketBasedStatsAndAverages();
 		initAverageProgression();
 		initInsights();
-		console.log($scope);
+		//console.log($scope);
 	};
 	
 	// Events
 	$scope.$watch('search.mp', function() {
 		$scope.reinitAverageProgressionChart();
-		$scope.reinitUndecilesChart();
+		$scope.reinitFrequencyChart();
+	}, true);
+
+	$scope.$watch('distributionTab', function() {
+		$scope.reinitFrequencyChart();
 	}, true);
 
 	var calcExpFinalAvg = function() {
@@ -610,22 +670,46 @@ app.controller('MainController', function ($scope) {
 		}
 	};
 
-	var undecilesChart;
-	$scope.reinitUndecilesChart = function () {
-		if ($scope.initializedUndecilesChart) {
-			var d = $scope.undeciles[$scope.search.mp-1];
-			undecilesChart.data.datasets[0].data = [d["A+"], d["A"], d["A-"], d["B+"], d["B"], d["B-"], d["C+"], d["C"], d["C-"], d["D"], d["F"]].slice(0);
-			undecilesChart.update();
+	var frequencyChart;
+	$scope.reinitFrequencyChart = function() {
+		var data = [];
+		var field, label;
+		switch ($scope.distributionTab) {
+			case 1:
+				field = 'frequency';
+				label = 'Frequency';
+				break;
+			case 2:
+				field = 'relativefrequency';
+				label = 'Relative Frequency';
+				break;
+			case 3:
+				field = 'cumulativefrequency';
+				label = 'Cumulative Frequency';
+				break;
+			case 4:
+				field = 'cumulativerelativefrequency';
+				label = 'Cumulative Relative Frequency';
+				break;
 		}
-		else {
-			var d = $scope.undeciles[$scope.search.mp-1];
-			undecilesChart = new Chart("undecilesChart", {
+		for (var _class of $scope.frequencies[$scope.search.mp-1]) {
+			data.push(_class[field]);
+		}
+
+		if ($scope.initializedFrequencyChart) {
+			frequencyChart.data.datasets[0].data = data.slice(0);
+			frequencyChart.data.datasets[0].label = label;
+			frequencyChart.options.title.text = 'Grade ' + label;
+			frequencyChart.update();
+		}
+		else {		
+			frequencyChart = new Chart("frequencyChart", {
 				type: 'bar',
 				data: {
-					labels: ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D", "F"],
+					labels: ["0-9", "10-19", "20-29", "30-39", "40-49", "50-59", "60-69", "70-79", "80-89", "90-99", "100+"],
 					datasets: [{
-						data: [d["A+"], d["A"], d["A-"], d["B+"], d["B"], d["B-"], d["C+"], d["C"], d["C-"], d["D"], d["F"]],
-						label: 'Number of Assignments',
+						data: data,
+						label: label,
 						fill: true,
 			    		borderColor: 'rgb(223,36,40)',
 			    		backgroundColor: 'rgba(223,36,40,0.3)',
@@ -636,7 +720,7 @@ app.controller('MainController', function ($scope) {
 					legend: { display: false },
 					title: {
 						display: true,
-						text: 'Grade Distribution'
+						text: 'Grade ' + label
 					},
 					scales: {
 			            yAxes: [{
@@ -647,7 +731,7 @@ app.controller('MainController', function ($scope) {
 			        }
 				}
 			});
-			$scope.initializedUndecilesChart = true;
+			$scope.initializedFrequencyChart = true;
 		}
 	};
 
@@ -697,6 +781,10 @@ app.controller('MainController', function ($scope) {
 
 	$scope.changeToolTab = function(t) {
 		$scope.toolTab = t;
+	};
+
+	$scope.changeDistributionTab = function(t) {
+		$scope.distributionTab = t;
 	};
 
 	$scope.createRow = function() {

@@ -273,8 +273,59 @@
 					<div class="ui segment" ng-hide="mpGrades[search.mp-1].length === 0">
 						<canvas id="averageProgressionChart" height="150"></canvas>
 					</div>
-					<div class="ui segment" ng-hide="mpGrades[search.mp-1].length === 0" id="undecilesChartContainer">
+					<div class="ui top attached secondary pointing large menu" ng-hide="mpGrades[search.mp-1].length === 0">
+						<a class="red item" ng-class="{'active': distributionTab === 1}" ng-click="changeDistributionTab(1)">
+							Frequency
+						</a>
+						<a class="orange item" ng-class="{'active': distributionTab === 2}" ng-click="changeDistributionTab(2)">
+							Relative Frequency
+						</a>
+						<a class="yellow item" ng-class="{'active': distributionTab === 3}" ng-click="changeDistributionTab(3)">
+							Cumulative Frequency
+						</a>
+						<a class="green item" ng-class="{'active': distributionTab === 4}" ng-click="changeDistributionTab(4)">
+							Cumulative Relative Frequency
+						</a>
+						<a class="blue item" ng-class="{'active': distributionTab === 5}" ng-click="changeDistributionTab(5)">
+							Table
+						</a>
+					</div>
+					<!--<div class="ui bottom attached segment" ng-show="mpGrades[search.mp-1].length !== 0" id="undecilesChartContainer">
 						<canvas id="undecilesChart" height="150"></canvas>
+					</div>-->
+					<div class="ui bottom attached segment" ng-hide="mpGrades[search.mp-1].length === 0">
+						<div ng-hide="distributionTab === 5">
+							<canvas id="frequencyChart" height="150"></canvas>
+						</div>
+						<div ng-show="distributionTab === 5">
+							<table class="ui center aligned celled table">
+								<thead>
+									<tr>
+										<th>Limits</th>
+										<th>Frequency</th>
+										<th>Relative Frequency</th>
+										<th>Cumulative Frequency</th>
+										<th>Cumulative Relative Frequency</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="class in frequencies[search.mp-1]">
+										<td>{[class.classlowerlimit]} - {[class.classupperlimit]}</td>
+										<td>{[class.frequency]}</td>
+										<td>{[class.relativefrequency | number:2]}</td>
+										<td>{[class.cumulativefrequency]}</td>
+										<td>{[class.cumulativerelativefrequency | number:2]}</td>
+									</tr>
+								</tbody>
+								<tfoot>
+									<th>Totals</th>
+									<th>{[mpGrades[search.mp-1].length]}</th>
+									<th>100</th>
+									<th>{[mpGrades[search.mp-1].length]}</th>
+									<th>100</th>
+								</tfoot>
+							</table>
+						</div>
 					</div>
 					<div class="ui secondary center aligned segment" ng-show="mpGrades[search.mp-1].length === 0">
 						<h2>
@@ -343,8 +394,8 @@
 							Greatest Changes
 						</a>
 					</div>
-					<div class="ui bottom attached segment" ng-class="{'secondary': mpGrades[search.mp-1].length < 3}">
-						<div ng-show="changesTab === 1 && mpGrades[search.mp-1].length >= 3">
+					<div class="ui bottom attached segment" ng-class="{'secondary': mpGrades[search.mp-1].length < 4}">
+						<div ng-show="changesTab === 1 && mpGrades[search.mp-1].length >= 4">
 							<table class="ui center aligned celled compact definition table">
 								<thead>
 									<th></th>
@@ -378,7 +429,7 @@
 								</tbody>
 							</table>
 						</div>
-						<div ng-show="changesTab === 2 && mpGrades[search.mp-1].length >= 3">
+						<div ng-show="changesTab === 2 && mpGrades[search.mp-1].length >= 4">
 							<table class="ui center aligned celled compact table">
 								<thead>
 									<th>Days</th>
@@ -418,7 +469,7 @@
 								</tbody>
 							</table>
 						</div>
-						<div ng-show="mpGrades[search.mp-1].length < 3" style="width: 100%; text-align: center;">
+						<div ng-show="mpGrades[search.mp-1].length < 4" style="width: 100%; text-align: center;">
 							<h3><i class="frown icon"></i> Not enough grades in this MP to view these insights!</h3>
 						</div>
 					</div>
