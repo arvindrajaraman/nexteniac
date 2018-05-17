@@ -289,11 +289,11 @@ app.controller('MainController', function ($scope) {
 
 	function initFrequencies() {
 		$scope.frequencies = [[], [], [], []];
+		var grades = ["F", "D", "C+", "C", "C-", "B-", "B", "B+", "A-", "A", "A+"];
 		for (var mp = 1; mp <= 4; mp++) {
-			for (var c = 0; c <= 100; c += 10) {
+			for (var c = 0; c <= 10; c++) {
 				$scope.frequencies[mp-1].push({
-					classlowerlimit: c,
-					classupperlimit: c + 9,
+					classgrade: grades[c],
 					frequency: 0,
 					relativefrequency: 0,
 					cumulativefrequency: 0,
@@ -303,8 +303,8 @@ app.controller('MainController', function ($scope) {
 		}
 		for (var g = 1; g <= $scope.grades.length; g++) {
 			var grade = $scope.grades[g-1];
-			var percentIndex = Math.floor(((grade.ptsearned * 100 / grade.ptstotal) / 10));
-			if (percentIndex > 10) percentIndex = 10;
+			var percentIndex = GradeFactory.letterToNumEquiv(GradeFactory.percentToLetter(grade.ptsearned * 100 / grade.ptstotal));
+			//console.log(Math.floor(((grade.ptsearned * 100 / grade.ptstotal) / 10)));
 			$scope.frequencies[grade.mp-1][percentIndex].frequency++;
 		}
 		for (var mp = 1; mp <= 4; mp++) {
@@ -706,7 +706,7 @@ app.controller('MainController', function ($scope) {
 			frequencyChart = new Chart("frequencyChart", {
 				type: 'bar',
 				data: {
-					labels: ["0-9", "10-19", "20-29", "30-39", "40-49", "50-59", "60-69", "70-79", "80-89", "90-99", "100+"],
+					labels: ["F", "D", "C+", "C", "C-", "B-", "B", "B+", "A-", "A", "A+"],
 					datasets: [{
 						data: data,
 						label: label,

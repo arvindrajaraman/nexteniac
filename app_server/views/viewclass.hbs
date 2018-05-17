@@ -301,7 +301,7 @@
 							<table class="ui center aligned celled table">
 								<thead>
 									<tr>
-										<th>Limits</th>
+										<th>Grade</th>
 										<th>Frequency</th>
 										<th>Relative Frequency</th>
 										<th>Cumulative Frequency</th>
@@ -310,7 +310,7 @@
 								</thead>
 								<tbody>
 									<tr ng-repeat="class in frequencies[search.mp-1]">
-										<td>{[class.classlowerlimit]} - {[class.classupperlimit]}</td>
+										<td>{[class.classgrade]}</td>
 										<td>{[class.frequency]}</td>
 										<td>{[class.relativefrequency | number:2]}</td>
 										<td>{[class.cumulativefrequency]}</td>
