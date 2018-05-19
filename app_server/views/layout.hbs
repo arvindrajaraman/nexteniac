@@ -19,7 +19,7 @@
   </head>
   <body>
     <div id="scriptedContent">
-      <div class="ui fixed inverted red menu" id="mainMenu">
+      <div class="ui fixed inverted teal menu" id="mainMenu">
         <div class="ui container">
           <a class="link item" href="/home">
             <img src="/images/logo/icon_64.png">
@@ -116,7 +116,7 @@
           </div>
         </div>
         <div class="actions">
-          <div class="ui green approve button">Change</div>
+          <div class="ui teal approve button">Change</div>
           <div class="ui red cancel button">Cancel</div>
         </div>
       </div>
@@ -135,7 +135,7 @@
           </div>
         </div>
         <div class="actions">
-          <div class="ui green approve button">Change</div>
+          <div class="ui teal approve button">Change</div>
           <div class="ui red cancel button">Cancel</div>
         </div>
       </div>
@@ -145,16 +145,15 @@
           <span>Upload the data file that you downloaded earlier. Make sure it is the most recent one you downloaded.</span>
           <br><br>
           <div class="ui fluid action input">
-            <input type="text" placeholder="Select File" readonly="readonly" id="selectFileText">
-            <button class="ui red right labeled icon button" id="selectFileButton">
-              <i class="file icon"></i>
+            <input type="text" placeholder="File" readonly="readonly" id="selectFileText">
+            <div class="ui teal right button" id="selectFileButton">
               Select File
-            </button>
+            </div>
           </div>
           <input type="file" id="importDataFile" style="display: none;">
         </div>
         <div class="actions">
-          <div class="ui green approve button" id="importDataButton">Import</div>
+          <div class="ui teal approve button" id="importDataButton">Import</div>
           <div class="ui red cancel button">Cancel</div>
         </div>
       </div>
@@ -164,7 +163,7 @@
           <span>Click "Download" to download the data file. Keep this file in a safe place. When you want to import the data, just upload this file to <b>Next ENIAC</b>. (If you are on mobile, copy and paste the text that comes on the screen and paste into a .txt file on your desktop. Then, you can use this file.)</span>
         </div>
         <div class="actions">
-          <div class="ui green ok labeled icon button" id="downloadDataButton">
+          <div class="ui teal ok labeled icon button" id="downloadDataButton">
             <i class="file icon"></i>
             Download
           </div>
@@ -184,7 +183,7 @@
             <i class="x icon"></i>
             Cancel
           </div>
-          <div class="ui green ok inverted button">
+          <div class="ui teal ok inverted button">
             <i class="eraser icon"></i>
             Clear
           </div>

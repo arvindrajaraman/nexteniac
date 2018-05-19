@@ -7,7 +7,7 @@ app.config(function($interpolateProvider) {
 
 app.filter('check', function() {
 	return function(val) {
-		return (val) ? 'green check' : 'red x';
+		return (val) ? 'teal check' : 'red x';
 	}
 });
 
@@ -212,7 +212,7 @@ function calcQuartile(data, q) {
 
 app.controller('MainController', function ($scope) {
 	// Presets
-	$scope.tab = 3;
+	$scope.tab = 1;
 	$scope.changesTab = 3;
 	$scope.goalTab = 1;
 	$scope.toolTab = 1;
@@ -296,29 +296,37 @@ app.controller('MainController', function ($scope) {
 					classgrade: grades[c],
 					frequency: 0,
 					relativefrequency: 0,
+					inversefrequency: 0,
+					inverserelativefrequency: 0,
 					cumulativefrequency: 0,
-					cumulativerelativefrequency: 0
+					cumulativerelativefrequency: 0,
+					inversecumulativefrequency: 0,
+					inversecumulativerelativefrequency: 0
 				});
 			}
 		}
 		for (var g = 1; g <= $scope.grades.length; g++) {
 			var grade = $scope.grades[g-1];
 			var percentIndex = GradeFactory.letterToNumEquiv(GradeFactory.percentToLetter(grade.ptsearned * 100 / grade.ptstotal));
-			//console.log(Math.floor(((grade.ptsearned * 100 / grade.ptstotal) / 10)));
 			$scope.frequencies[grade.mp-1][percentIndex].frequency++;
 		}
 		for (var mp = 1; mp <= 4; mp++) {
 			for (var c = 0; c <= 10; c++) {
-				$scope.frequencies[mp-1][c].relativefrequency = Math.round(($scope.frequencies[mp-1][c].frequency * 100 / $scope.mpGrades[mp-1].length) * 100) / 100;
+				$scope.frequencies[mp-1][c].inversefrequency = $scope.mpGrades[mp-1].length - $scope.frequencies[mp-1][c].frequency;
+				$scope.frequencies[mp-1][c].relativefrequency = Math.round(($scope.frequencies[mp-1][c].frequency * 100 / $scope.mpGrades[mp-1].length) * 100) / 10000;
+				$scope.frequencies[mp-1][c].inverserelativefrequency = 1 - $scope.frequencies[mp-1][c].relativefrequency;
 				if (c === 0) {
 					$scope.frequencies[mp-1][c].cumulativefrequency = $scope.frequencies[mp-1][c].frequency;
+					$scope.frequencies[mp-1][10-c].inversecumulativefrequency = $scope.frequencies[mp-1][10-c].frequency;
 				}
 				else {
 					$scope.frequencies[mp-1][c].cumulativefrequency = $scope.frequencies[mp-1][c-1].cumulativefrequency + $scope.frequencies[mp-1][c].frequency;
+					$scope.frequencies[mp-1][10-c].inversecumulativefrequency = $scope.frequencies[mp-1][11-c].inversecumulativefrequency + $scope.frequencies[mp-1][10-c].frequency;
 				}
 			}
 			for (var c = 0; c <= 10; c++) {
-				$scope.frequencies[mp-1][c].cumulativerelativefrequency = Math.round(($scope.frequencies[mp-1][c].cumulativefrequency * 100 / $scope.mpGrades[mp-1].length) * 100) / 100;
+				$scope.frequencies[mp-1][c].cumulativerelativefrequency = Math.round(($scope.frequencies[mp-1][c].cumulativefrequency * 100 / $scope.mpGrades[mp-1].length) * 100) / 10000;
+				$scope.frequencies[mp-1][c].inversecumulativerelativefrequency = Math.round(($scope.frequencies[mp-1][c].inversecumulativefrequency * 100 / $scope.mpGrades[mp-1].length) * 100) / 10000;
 			}
 		}
 	}
@@ -625,8 +633,8 @@ app.controller('MainController', function ($scope) {
 			    		data: $scope.graphPoints[$scope.search.mp-1],
 			    		label: 'Average',
 			    		fill: true,
-			    		borderColor: 'rgb(223,36,40)',
-			    		backgroundColor: 'rgba(223,36,40,0.3)',
+			    		borderColor: 'rgb(0,181,174)',
+			    		backgroundColor: 'rgba(0,181,174,0.3)',
 			    		pointRadius: 4
 			    	}]
 		    	},
@@ -679,17 +687,17 @@ app.controller('MainController', function ($scope) {
 				field = 'frequency';
 				label = 'Frequency';
 				break;
-			case 2:
-				field = 'relativefrequency';
-				label = 'Relative Frequency';
+			case 7:
+				field = 'inversefrequency';
+				label = 'Inverse Frequency';
 				break;
 			case 3:
 				field = 'cumulativefrequency';
 				label = 'Cumulative Frequency';
 				break;
-			case 4:
-				field = 'cumulativerelativefrequency';
-				label = 'Cumulative Relative Frequency';
+			case 6:
+				field = 'inversecumulativefrequency';
+				label = 'Inverse Cumulative Frequency';
 				break;
 		}
 		for (var _class of $scope.frequencies[$scope.search.mp-1]) {
@@ -711,8 +719,8 @@ app.controller('MainController', function ($scope) {
 						data: data,
 						label: label,
 						fill: true,
-			    		borderColor: 'rgb(223,36,40)',
-			    		backgroundColor: 'rgba(223,36,40,0.3)',
+			    		borderColor: 'rgb(0,181,174)',
+			    		backgroundColor: 'rgba(0,181,174,0.3)',
 			            borderWidth: 1
 					}]
 				},

@@ -7,7 +7,7 @@ app.config(function($interpolateProvider) {
 
 app.filter('check', function() {
 	return function(val) {
-		return (val) ? 'green check' : 'red x';
+		return (val) ? 'teal check' : 'red x';
 	}
 });
 

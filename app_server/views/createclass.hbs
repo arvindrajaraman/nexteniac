@@ -7,14 +7,14 @@
 			</div>
 		</div>
 		<div class="four wide column">
-			<button class="ui massive fluid red labeled icon button" ng-click="createClass()">
+			<div class="ui massive fluid teal labeled icon button" ng-click="createClass()">
 				<i class="book icon"></i>
 				Create
-			</button>
+			</div>
 		</div>
 		<div class="eight wide column">
 			<div class="ui segments">
-				<div class="ui red segment">
+				<div class="ui teal segment">
 					<span class="ui header">Basic Information</span>
 					<br>
 					<span>Basic information about this class</span>
@@ -42,7 +42,7 @@
 				</div>
 			</div>
 			<div class="ui segments">
-				<div class="ui red segment">
+				<div class="ui teal segment">
 					<span class="ui header">Personalization</span>
 					<br>
 					<span>Your experience with this class</span>
@@ -105,7 +105,7 @@
 		</div>
 		<div class="eight wide column">
 			<div class="ui segments">
-				<div class="ui red segment">
+				<div class="ui teal segment">
 					<span class="ui header">
 						Marking Periods
 					</span>
@@ -115,22 +115,22 @@
 				<div class="ui form segment">
 					<div class="four fields">
 						<div class="field">
-							<button class="ui fluid toggle button" ng-class="{'green': mpactive[0]}" ng-click="toggleMP(1)">MP1</button>
+							<div class="ui fluid toggle button" ng-class="{'teal': mpactive[0]}" ng-click="toggleMP(1)">MP1</div>
 						</div>
 						<div class="field">
-							<button class="ui fluid toggle button" ng-class="{'green': mpactive[1]}" ng-click="toggleMP(2)">MP2</button>
+							<div class="ui fluid toggle button" ng-class="{'teal': mpactive[1]}" ng-click="toggleMP(2)">MP2</div>
 						</div>
 						<div class="field">
-							<button class="ui fluid toggle button" ng-class="{'green': mpactive[2]}" ng-click="toggleMP(3)">MP3</button>
+							<div class="ui fluid toggle button" ng-class="{'teal': mpactive[2]}" ng-click="toggleMP(3)">MP3</div>
 						</div>
 						<div class="field">
-							<button class="ui fluid toggle button" ng-class="{'green': mpactive[3]}" ng-click="toggleMP(4)">MP4</button>
+							<div class="ui fluid toggle button" ng-class="{'teal': mpactive[3]}" ng-click="toggleMP(4)">MP4</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="ui segments">
-				<div class="ui red segment">
+				<div class="ui teal segment">
 					<span class="ui header">
 						Assignment Categories
 					</span>
@@ -149,16 +149,16 @@
 						</div>
 						<div class="three wide tablet two wide small screen one wide large screen field">
 							<label ng-show="$index === 0" style="visibility: hidden;">Delete</label>
-							<button class="ui fluid inverted red icon button" ng-class="{'disabled': categories.length === 1}" ng-click="deleteCategory($index)"><i class="trash icon"></i></button>
+							<div class="ui fluid inverted red icon button" ng-class="{'disabled': categories.length === 1}" ng-click="deleteCategory($index)"><i class="trash icon"></i></div>
 						</div>
 					</div>
 					<div class="fields">
 						<div class="five wide field"></div>
 						<div class="six wide field">
-							<button class="ui fluid inverted red button" ng-click="addCategory()">
+							<div class="ui fluid teal button" ng-click="addCategory()">
 								<i class="plus icon"></i>
 								Add <span class="hidden-sm">Category</span>
-							</button>
+							</div>
 						</div>
 						<div class="five wide field"></div>
 					</div>
