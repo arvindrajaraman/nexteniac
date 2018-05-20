@@ -41,8 +41,8 @@ $(document).ready(function () {
 		];
 		var element = document.createElement('a');
 		element.style.display = 'none';
-		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(data)));
-		element.setAttribute('download', 'NextEniac Data - ' + date.getDate() + ' ' + monthNames[date.getMonth()] + ' ' + date.getFullYear() + '.json');
+		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + window.btoa(JSON.stringify(data)));
+		element.setAttribute('download', 'NextEniac Data - ' + date.getDate() + ' ' + monthNames[date.getMonth()] + ' ' + date.getFullYear() + '.beff');
 		document.body.appendChild(element);
 		element.click();
 		document.body.removeChild(element);
@@ -79,7 +79,7 @@ $(document).ready(function () {
 		var reader = new FileReader();
 		reader.readAsText(document.getElementById('importDataFile').files[0], "UTF-8");
 		reader.onload = function (evt) {
-			var data = JSON.parse(decodeURIComponent(evt.target.result));
+			var data = JSON.parse(window.atob(evt.target.result));
 			window.localStorage.clear();
 			for (var key in data) {
 				if (data.hasOwnProperty(key)) window.localStorage.setItem(key, data[key]);
