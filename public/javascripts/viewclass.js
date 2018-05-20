@@ -586,6 +586,14 @@ app.controller('MainController', function ($scope) {
 			$scope.insights[mp-1] = insights;
 		}
 	}
+
+	function updateAverages() {
+		var averages = [];
+		for (var mp = 1; mp <= 4; mp++) {
+			averages.push($scope.mpAverages[mp-1].averageNumEquiv);
+		}
+		LS.setItem("c" + $scope.classlsid + "-averages", averages, true);
+	}
 	
 	$scope.initViewClass = function() {
 		initClass();
@@ -595,7 +603,8 @@ app.controller('MainController', function ($scope) {
 		initBracketBasedStatsAndAverages();
 		initAverageProgression();
 		initInsights();
-		//console.log($scope);
+		updateAverages();
+		console.log($scope);
 	};
 	
 	// Events

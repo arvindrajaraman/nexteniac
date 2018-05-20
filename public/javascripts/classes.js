@@ -25,6 +25,25 @@ app.filter('type', function() {
 	}
 });
 
+app.filter('numequivtoletter', function() {
+	return function(n) {
+		n = parseFloat(n);
+		if (n < 1) return 'F';
+		else n = Math.round(n);
+		
+		if (n === 10) return 'A+';
+		else if (n === 9) return 'A';
+		else if (n === 8) return 'A-';
+		else if (n === 7) return 'B+';
+		else if (n === 6) return 'B';
+		else if (n === 5) return 'B-';
+		else if (n === 4) return 'C+';
+		else if (n === 3) return 'C';
+		else if (n === 2) return 'C-';
+		else return 'D';
+	}
+});
+
 class GradeFactory {
 	static percentToLetter(p) {
 		p = Math.round(p);
@@ -80,70 +99,41 @@ app.controller('MainController', function ($scope) {
 	$scope.shownclasses = 0;
 
 	$scope.search = {
-		grade: parseInt(window.localStorage.getItem('currentgrade')),
-		mp: parseInt(window.localStorage.getItem('currentmp'))
+		grade: parseInt(window.localStorage.getItem('currentgrade'))
 	};
+	$scope.currentmp = parseInt(window.localStorage.getItem('currentmp'));
+	$scope.currentgrade = parseInt(window.localStorage.getItem('currentgrade'));
 	$scope.classes = [];
+	$scope.averages = [];
+	$scope.classcounts = [0, 0, 0, 0];
+
+	$scope.loadAverages = function() {
+		for (var c = 1; c <= parseInt(window.localStorage.getItem("classcount")); c++) {
+			$scope.averages.push(JSON.parse(window.localStorage.getItem("c" + c + "-averages")));
+		}
+	};
+
 	$scope.searchClasses = function() {
 		for (var i = 1; i <= window.localStorage.getItem('classcount'); i++) {
 			var _class = JSON.parse(window.localStorage.getItem('c' + i));
+			delete _class.priority;
+			delete _class.difficulty;
+			delete _class.goalaverage;
+			delete _class.id;
 			_class.lsid = 'c' + i;
-			_class.percentAvg = [];
-			_class.letterAvg = [];
-			// Calculate average
-			var categories = [{}, {}, {}, {}];
-			var totalpts = [0, 0, 0, 0];
-			var totalweight = [0, 0, 0, 0];
-			for (var mp = 1; mp <= 4; mp++) {
-				for (var cat = 1; cat <= parseInt(window.localStorage.getItem(_class.lsid + "-catcount")); cat++) {
-					var category = JSON.parse(window.localStorage.getItem(_class.lsid + "-cat" + cat));
-					categories[mp-1][category.name] = {
-						weight: category.weight,
-						ptsearned: 0,
-						ptstotal: 0
-					};
-				}
-			}
-			for (var g = 1; g <= parseInt(window.localStorage.getItem(_class.lsid + "-assignmentcount")); g++) {
-				var grade = JSON.parse(window.localStorage.getItem(_class.lsid + "-a" + g));
-				console.log(categories);
-				categories[parseInt(grade.mp-1)][grade.category].ptsearned += grade.ptsearned;
-				categories[parseInt(grade.mp-1)][grade.category].ptstotal += grade.ptstotal;
-			}
-			for (var mp = 1; mp <= 4; mp++) {
-				for (var category in categories[mp-1]) {
-					if (!categories[mp-1].hasOwnProperty(category)) continue;
-					if (categories[mp-1][category].ptstotal === 0) continue;
-					totalpts[mp-1] += ((categories[mp-1][category].ptsearned / categories[mp-1][category].ptstotal) * categories[mp-1][category].weight);
-					totalweight[mp-1] += categories[mp-1][category].weight;
-				}
-				if (totalweight[mp-1] === 0) {
-					_class.percentAvg.push(null);
-					_class.letterAvg.push(null);
-				}
-				else {
-					_class.percentAvg.push((totalpts[mp-1] / totalweight[mp-1]) * 100);
-					_class.letterAvg.push(GradeFactory.percentToLetter((totalpts[mp-1] / totalweight[mp-1]) * 100));
-				}
-			}
-			// Insert class into $scope
+			_class.letterAvg = $scope.averages[i-1];
+			$scope.classcounts[_class.grade-9]++;
 			$scope.classes.push(_class);
 		}
 	};
+
 	$scope.redirect = function(link) {
 		window.location.href = '/classes/' + $scope.classes[link].name;
 	}
 
-	$scope.refreshShownClassCount = function() {
-		$scope.shownclasses = 0;
-		for (var _class of $scope.classes) {
-			if (_class.grade === $scope.search.grade && _class['mp' + $scope.search.mp]) $scope.shownclasses++;
-		}
-	};
-
 	$scope.initClasses = function() {
+		$scope.loadAverages();
 		$scope.searchClasses();
-		$scope.refreshShownClassCount();
 	}
 });
 
@@ -152,6 +142,4 @@ $(document).ready(function () {
 	
 	if (window.localStorage.getItem('currentgrade')) $('#gradeSelectionDropdown').dropdown('set selected', window.localStorage.getItem('currentgrade'));
 	else $('#gradeSelectionDropdown').dropdown('set selected', '9');
-	if (window.localStorage.getItem('currentmp')) $('#mpSelectionDropdown').dropdown('set selected', window.localStorage.getItem('currentmp'));
-	else $('#mpSelectionDropdown').dropdown('set selected', '1');
 });

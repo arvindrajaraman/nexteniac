@@ -38,7 +38,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="twelve wide column">
+		<div class="thirteen wide column">
 			<div class="ui fluid action input">
 				<input type="text" placeholder="Search for classes...">
 				<div class="ui teal right labeled icon button">
@@ -47,8 +47,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="two wide column">
-			<select class="ui fluid dropdown" id="gradeSelectionDropdown" ng-model="search.grade" ng-change="refreshShownClassCount()">
+		<div class="three wide column">
+			<select class="ui fluid dropdown" id="gradeSelectionDropdown" ng-model="search.grade">
 				<option value="">Grade</option>
 				<option value="12">Grade 12</option>
 				<option value="11">Grade 11</option>
@@ -56,55 +56,50 @@
 				<option value="9">Grade 9</option>
 			</select>
 		</div>
-		<div class="two wide column">
-			<select class="ui fluid dropdown" id="mpSelectionDropdown" ng-model="search.mp" ng-change="refreshShownClassCount()">
-				<option value="">Marking Period</option>
-				<option value="1">MP1</option>
-				<option value="2">MP2</option>
-				<option value="3">MP3</option>
-				<option value="4">MP4</option>
-			</select>
-		</div>
 		<div class="sixteen wide column">
-			<table class="ui center aligned compact celled table" id="classesTable" ng-hide="shownclasses === 0">
+			<table class="ui center aligned compact celled table" id="classesTable">
 				<thead>
 					<tr>
-						<th colspan="2">Grade</th>
+						<th>Grade</th>
 						<th>Name</th>
 						<th>Credits</th>
 						<th>Type</th>
-						<th>MP1</th>
-						<th>MP2</th>
-						<th>MP3</th>
-						<th>MP4</th>
+						<th ng-class="{'highlightedMP': currentmp === 1 && search.grade == currentgrade}">MP1</th>
+						<th ng-class="{'highlightedMP': currentmp === 2 && search.grade == currentgrade}">MP2</th>
+						<th ng-class="{'highlightedMP': currentmp === 3 && search.grade == currentgrade}">MP3</th>
+						<th ng-class="{'highlightedMP': currentmp === 4 && search.grade == currentgrade}">MP4</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="class in classes" ng-click="redirect($index)" ng-show="class.grade === search.grade && class['mp' + search.mp]">
-						<td style="font-size: 18px !important;">
-							<span class="ui header" ng-show="class.letterAvg[search.mp-1]">{[class.letterAvg[search.mp-1]]}</span>
-							<span class="ui header" ng-hide="class.letterAvg[search.mp-1]">-</span>
-						</td>
-						<td>
-							<span class="ui header" ng-show="class.percentAvg[search.mp-1]">{[class.percentAvg[search.mp-1] | number:2]}%</span>
-							<span class="ui header" ng-hide="class.percentAvg[search.mp-1]">-</span>
-						</td>
+					<tr ng-repeat="class in classes" ng-click="redirect($index)" ng-show="class.grade === search.grade">
+						<td><h2 class="ui header">{[class.grade]}</h2></td>
 						<td><h3 class="ui header">{[class.name]}</h3></td>
 						<td><h2 class="ui header">{[class.credits | number:2]}</h2></td>
 						<td><h3 class="ui header">{[class.type | type]}</h3></td>
-						<td class="hidden-xs"><i class="large {[class.mp1 | check]} icon"></i></td>
-						<td class="hidden-xs"><i class="large {[class.mp2 | check]} icon"></i></td>
-						<td class="hidden-xs"><i class="large {[class.mp3 | check]} icon"></i></td>
-						<td class="hidden-xs"><i class="large {[class.mp4 | check]} icon"></i></td>
+						<td style="font-size: 18px !important;" ng-class="{'highlightedMP': currentmp === 1}">
+							<span class="ui header" ng-show="class.letterAvg[0]">{[class.letterAvg[0] | numequivtoletter]}</span>
+							<span class="ui header" ng-hide="class.letterAvg[0]">-</span>
+						</td>
+						<td style="font-size: 18px !important;" ng-class="{'highlightedMP': currentmp === 2}">
+							<span class="ui header" ng-show="class.letterAvg[1]">{[class.letterAvg[1] | numequivtoletter]}</span>
+							<span class="ui header" ng-hide="class.letterAvg[1]">-</span>
+						</td>
+						<td style="font-size: 18px !important;" ng-class="{'highlightedMP': currentmp === 3}">
+							<span class="ui header" ng-show="class.letterAvg[2]">{[class.letterAvg[2] | numequivtoletter]}</span>
+							<span class="ui header" ng-hide="class.letterAvg[2]">-</span>
+						</td>
+						<td style="font-size: 18px !important;" ng-class="{'highlightedMP': currentmp === 4}">
+							<span class="ui header" ng-show="class.letterAvg[3]">{[class.letterAvg[3] | numequivtoletter]}</span>
+							<span class="ui header" ng-hide="class.letterAvg[3]">-</span>
+						</td>
+					</tr>
+					<tr class="backupRow" ng-hide="classcounts[search.grade-9] > 0">
+						<td colspan="8" style="padding: 20px !important;">
+							<h2>You do not have any classes in Grade {[search.grade]}!</h2>
+						</td>
 					</tr>
 				</tbody>
 			</table>
-			<div class="ui secondary center aligned segment" ng-show="shownclasses === 0">
-				<h2>
-					<i class="frown icon"></i>
-					No classes matched these criteria!
-				</h2>
-			</div>
 		</div>
 	</div>
 </div>

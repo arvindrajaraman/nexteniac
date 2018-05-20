@@ -1,10 +1,18 @@
 #classesTable tr {
   cursor: pointer;
   transition: 0.2s ease all; }
-  #classesTable tr:hover {
+  #classesTable tr:hover:not(.backupRow) {
     background: #b3fffb;
     border-color: #b3fffb; }
-    #classesTable tr:hover td {
+    #classesTable tr:hover:not(.backupRow) td {
       border-color: #b3fffb; }
+
+.highlightedMP {
+  border-color: #1afff7 !important;
+  background: #66fffa !important; }
+
+th.highlightedMP {
+  border-color: #1afff7 !important;
+  background: #00e6de !important; }
 
 /*# sourceMappingURL=classes.css.map */
