@@ -270,25 +270,34 @@
 					</div>
 				</div>
 				<div class="tab" ng-show="tab === 3">
-					<div class="ui segment" ng-hide="mpGrades[search.mp-1].length === 0">
-						<canvas id="averageProgressionChart" height="150"></canvas>
-					</div>
-					<div class="ui top attached secondary pointing large menu" ng-hide="mpGrades[search.mp-1].length === 0">
-						<a class="teal item" ng-class="{'active': distributionTab === 1}" ng-click="changeDistributionTab(1)">Frequency</a>
-						<a class="teal item" ng-class="{'active': distributionTab === 3}" ng-click="changeDistributionTab(3)">Cumulative Frequency</a>
-						<a class="teal item" ng-class="{'active': distributionTab === 7}" ng-click="changeDistributionTab(7)">Inverse Frequency</a>
-						<a class="teal item" ng-class="{'active': distributionTab === 6}" ng-click="changeDistributionTab(6)">Inverse Cumulative Frequency</a>
-						<a class="teal item" ng-class="{'active': distributionTab === 5}" ng-click="changeDistributionTab(5)">Table</a>
-					</div>
-					<!--<div class="ui bottom attached segment" ng-show="mpGrades[search.mp-1].length !== 0" id="undecilesChartContainer">
-						<canvas id="undecilesChart" height="150"></canvas>
-					</div>-->
-					<div class="ui bottom attached segment" ng-hide="mpGrades[search.mp-1].length === 0">
-						<div ng-hide="distributionTab === 5">
-							<canvas id="frequencyChart" height="150"></canvas>
+					<div class="ui stackable grid">
+						<div class="sixteen wide column">
+							<div class="ui segment" ng-hide="mpGrades[search.mp-1].length === 0">
+								<canvas id="averageProgressionChart" height="150"></canvas>
+							</div>
 						</div>
-						<div ng-show="distributionTab === 5">
-							<table class="ui center aligned celled table">
+						<div class="eight wide column">
+							<div class="ui segment">
+								<canvas id="frequencyChart" height="150"></canvas>
+							</div>
+						</div>
+						<div class="eight wide column"> 
+							<div class="ui segment">
+								<canvas id="inverseFrequencyChart" height="150"></canvas>
+							</div>
+						</div>
+						<div class="eight wide column"> 
+							<div class="ui segment">
+								<canvas id="cumulativeFrequencyChart" height="150"></canvas>
+							</div>
+						</div>
+						<div class="eight wide column"> 
+							<div class="ui segment">
+								<canvas id="inverseCumulativeFrequencyChart" height="150"></canvas>
+							</div>
+						</div>
+						<div class="sixteen wide column">
+							<table class="ui center aligned celled structured table">
 								<thead>
 									<tr>
 										<th rowspan="2">Grade</th>

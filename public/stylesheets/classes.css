@@ -2,9 +2,9 @@
   cursor: pointer;
   transition: 0.2s ease all; }
   #classesTable tr:hover {
-    background: #f9d2d3;
-    border-color: #f9d2d3; }
+    background: #b3fffb;
+    border-color: #b3fffb; }
     #classesTable tr:hover td {
-      border-color: #f9d2d3; }
+      border-color: #b3fffb; }
 
 /*# sourceMappingURL=classes.css.map */

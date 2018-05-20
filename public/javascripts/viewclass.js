@@ -635,7 +635,7 @@ app.controller('MainController', function ($scope) {
 			    		fill: true,
 			    		borderColor: 'rgb(0,181,174)',
 			    		backgroundColor: 'rgba(0,181,174,0.3)',
-			    		pointRadius: 4
+			    		pointRadius: 3
 			    	}]
 		    	},
 			    options: {
@@ -678,68 +678,60 @@ app.controller('MainController', function ($scope) {
 		}
 	};
 
-	var frequencyChart;
+	var charts = [];
 	$scope.reinitFrequencyChart = function() {
-		var data = [];
-		var field, label;
-		switch ($scope.distributionTab) {
-			case 1:
-				field = 'frequency';
-				label = 'Frequency';
-				break;
-			case 7:
-				field = 'inversefrequency';
-				label = 'Inverse Frequency';
-				break;
-			case 3:
-				field = 'cumulativefrequency';
-				label = 'Cumulative Frequency';
-				break;
-			case 6:
-				field = 'inversecumulativefrequency';
-				label = 'Inverse Cumulative Frequency';
-				break;
-		}
+		var chartData = [[], [], [], []];
+		var fields = ['frequency', 'inversefrequency', 'cumulativefrequency', 'inversecumulativefrequency'];
+		var labels = ['Frequency', 'Inverted Frequency', 'Cumulative Frequency', 'Cumulative Inverted Frequency'];
 		for (var _class of $scope.frequencies[$scope.search.mp-1]) {
-			data.push(_class[field]);
+			chartData[0].push(_class.frequency);
+			chartData[1].push(_class.inversefrequency);
+			chartData[2].push(_class.cumulativefrequency);
+			chartData[3].push(_class.inversecumulativefrequency);
 		}
-
 		if ($scope.initializedFrequencyChart) {
-			frequencyChart.data.datasets[0].data = data.slice(0);
-			frequencyChart.data.datasets[0].label = label;
-			frequencyChart.options.title.text = 'Grade ' + label;
-			frequencyChart.update();
+			for (var c = 1; c <= 4; c++) {
+				console.log(c);
+				charts[c-1].data.datasets[0].data = chartData[c-1].slice(0);
+				charts[c-1].data.datasets[0].label = labels[c-1];
+				charts[c-1].options.title.text = 'Grade ' + labels[c-1];
+				charts[c-1].update();
+			}
 		}
-		else {		
-			frequencyChart = new Chart("frequencyChart", {
-				type: 'bar',
-				data: {
-					labels: ["F", "D", "C+", "C", "C-", "B-", "B", "B+", "A-", "A", "A+"],
-					datasets: [{
-						data: data,
-						label: label,
-						fill: true,
-			    		borderColor: 'rgb(0,181,174)',
-			    		backgroundColor: 'rgba(0,181,174,0.3)',
-			            borderWidth: 1
-					}]
-				},
-				options: {
-					legend: { display: false },
-					title: {
-						display: true,
-						text: 'Grade ' + label
+		else {
+			var chartNames = ['frequencyChart', 'cumulativeFrequencyChart', 'inverseFrequencyChart', 'inverseCumulativeFrequencyChart'];
+			for (var c = 1; c <= 4; c++) {
+				charts.push(new Chart(chartNames[c-1], {
+					type: 'bar',
+					data: {
+						labels: ["F", "D", "C+", "C", "C-", "B-", "B", "B+", "A-", "A", "A+"],
+						datasets: [{
+							data: chartData[c-1],
+							label: labels[c-1],
+							fill: true,
+				    		borderColor: 'rgb(0,181,174)',
+				    		backgroundColor: 'rgba(0,181,174,0.3)',
+				            borderWidth: 1
+						}]
 					},
-					scales: {
-			            yAxes: [{
-			                ticks: {
-			                    beginAtZero: true
-			                }
-			            }]
-			        }
-				}
-			});
+					options: {
+						legend: { display: false },
+						title: {
+							display: true,
+							text: 'Grade ' + labels[c-1]
+						},
+						scales: {
+				            yAxes: [{
+				                ticks: {
+				                    beginAtZero: true
+				                }
+				            }]
+				        }
+					}
+				}));
+			}
 			$scope.initializedFrequencyChart = true;
+			console.log(charts);
 		}
 	};
 
