@@ -93,12 +93,13 @@ class GradeFactory {
 }
 
 app.controller('MainController', function ($scope) {
-	$scope.unweightedgpa = 3.801;
-	$scope.weightedgpa = 5.519;
-	$scope.average = 'A';
+	$scope.tab = 1;
+	$scope.average = 0;
+	$scope.mps = 0;
 	$scope.shownclasses = 0;
 
 	$scope.search = {
+		query: "",
 		grade: parseInt(window.localStorage.getItem('currentgrade'))
 	};
 	$scope.currentmp = parseInt(window.localStorage.getItem('currentmp'));
@@ -106,6 +107,10 @@ app.controller('MainController', function ($scope) {
 	$scope.classes = [];
 	$scope.averages = [];
 	$scope.classcounts = [0, 0, 0, 0];
+
+	$scope.changeTab = function(t) {
+		$scope.tab = t;
+	}
 
 	$scope.loadAverages = function() {
 		for (var c = 1; c <= parseInt(window.localStorage.getItem("classcount")); c++) {
@@ -131,10 +136,72 @@ app.controller('MainController', function ($scope) {
 		window.location.href = '/classes/' + $scope.classes[link].name;
 	}
 
+	$scope.calculateGPA = function() {
+	  var weightedpts = 0, unweightedpts = 0, totalcredits = 0, _class, numequiv, letter, qualitypts, gpacomponent = {}, validmps = 0, credits = 0;
+	  $scope.gpacomponents = [];
+	  for (var c = 1; c <= parseInt(window.localStorage.getItem("classcount")); c++) {
+	  	gpacomponent = {};
+	  	validmps = 0;
+	  	numequiv = 0;
+	    _class = JSON.parse(window.localStorage.getItem("c" + c));
+	    for (var avg of JSON.parse(window.localStorage.getItem("c" + c + "-averages"))) {
+	    	if (avg) {
+	    		validmps++;
+	    		numequiv += avg;
+	    		$scope.average += avg;
+	    		$scope.mps++;
+	    	}
+	    }
+	    numequiv /= validmps;
+	    letter = GradeFactory.numEquivToLetter(numequiv);
+	    gpacomponent.finalavg = letter;
+	    switch (letter) {
+	      case 'A+': qualitypts = 4.33; break;
+	      case 'A': qualitypts = 4; break;
+	      case 'A-': qualitypts = 3.67; break;
+	      case 'B+': qualitypts = 3.33; break;
+	      case 'B': qualitypts = 3; break;
+	      case 'B-': qualitypts = 2.67; break;
+	      case 'C+': qualitypts = 2.33; break;
+	      case 'C': qualitypts = 2; break;
+	      case 'C-': qualitypts = 1.67; break;
+	      case 'D': qualitypts = 1; break;
+	      case 'F': qualitypts = 0; break;
+	    }
+	    totalcredits += _class.credits;
+	    unweightedpts += (qualitypts * _class.credits);
+	    gpacomponent.course = _class.name;
+	    gpacomponent.grade = _class.grade;
+	    gpacomponent.type = _class.type;
+	    gpacomponent.unweightedqualitypts = qualitypts;
+	    gpacomponent.credits = _class.credits;
+	    credits += gpacomponent.credits;
+	    if (letter !== 'D' && letter !== 'F') {
+	      if (_class.type === "0") qualitypts += 2;
+	      else if (_class.type === "1") qualitypts += 1;
+	    }
+	    gpacomponent.weightedqualitypts = qualitypts;
+	    weightedpts += (qualitypts * _class.credits);
+	    $scope.gpacomponents.push(gpacomponent);
+	  }
+	  $scope.unweightedgpa = unweightedpts / totalcredits;
+	  $scope.unweightedpts = unweightedpts;
+	  $scope.weightedgpa = weightedpts / totalcredits;
+	  $scope.weightedpts = weightedpts;
+	  $scope.totalcredits = credits;
+	  $scope.average /= $scope.mps;
+	};
+
+	$scope.calculateGPAProgression = function() {
+
+	};
+
 	$scope.initClasses = function() {
 		$scope.loadAverages();
 		$scope.searchClasses();
-	}
+		$scope.calculateGPA();
+		console.log($scope);
+	};
 });
 
 $(document).ready(function () {

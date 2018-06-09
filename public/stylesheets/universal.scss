@@ -8,6 +8,9 @@
 *:not(i) {
 	font-family: "Source Sans Pro", sans-serif !important;
 }
+*::selection {
+	background-color: #affffb;
+}
 .hidden-xs {
 	@media screen and (max-width: 768px) {
 	    display: none !important;

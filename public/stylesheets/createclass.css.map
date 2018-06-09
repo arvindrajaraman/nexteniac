@@ -4,6 +4,6 @@
 	"sources": [
 		"createclass.scss"
 	],
-	"mappings": "",
+	"mappings": "AAAA,AAAkB,iBAAD,CAAC,QAAQ,CAAC;EAC1B,MAAM,EAAE,OAAQ,GAChB",
 	"names": []
 }

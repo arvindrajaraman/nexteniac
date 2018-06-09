@@ -227,8 +227,7 @@ app.controller('MainController', function ($scope) {
 	};
 	$scope.expavgs = { mp1: "10", mp2: "10", mp3: "10", mp4: "10", final: "10" };
 	$scope.initializedAverageProgressionChart = false;
-	$scope.initializedUndecilesChart = false;
-	$scope.initializedFrequencyChart = false;
+	$scope.initializedFrequencyCharts = false;
 	$scope.advancedmode = false;
 
 	function initClass() {
@@ -588,6 +587,7 @@ app.controller('MainController', function ($scope) {
 	}
 
 	function updateAverages() {
+		if (!$scope.class.isfullfeaturedclass) return;
 		var averages = [];
 		for (var mp = 1; mp <= 4; mp++) {
 			averages.push($scope.mpAverages[mp-1].averageNumEquiv);
@@ -604,7 +604,12 @@ app.controller('MainController', function ($scope) {
 		initAverageProgression();
 		initInsights();
 		updateAverages();
-		console.log($scope);
+		$scope.edit = {
+			name: $scope.class.name,
+			grade: $scope.class.grade,
+			type: $scope.class.type,
+			credits: $scope.class.credits
+		};
 	};
 	
 	// Events
@@ -698,9 +703,8 @@ app.controller('MainController', function ($scope) {
 			chartData[2].push(_class.cumulativefrequency);
 			chartData[3].push(_class.inversecumulativefrequency);
 		}
-		if ($scope.initializedFrequencyChart) {
+		if ($scope.initializedFrequencyCharts) {
 			for (var c = 1; c <= 4; c++) {
-				console.log(c);
 				charts[c-1].data.datasets[0].data = chartData[c-1].slice(0);
 				charts[c-1].data.datasets[0].label = labels[c-1];
 				charts[c-1].options.title.text = 'Grade ' + labels[c-1];
@@ -739,8 +743,7 @@ app.controller('MainController', function ($scope) {
 					}
 				}));
 			}
-			$scope.initializedFrequencyChart = true;
-			console.log(charts);
+			$scope.initializedFrequencyCharts = true;
 		}
 	};
 
@@ -876,20 +879,6 @@ app.controller('MainController', function ($scope) {
 			}
 		}
 	};
-
-	$scope.deleteClass = function() {
-		for (var g = 1; g <= parseInt(LS.getItem("c" + $scope.classlsid + "-assignmentcount")); g++) {
-			LS.deleteGrade($scope.classlsid, g);
-		}
-		LS.deleteItem("c" + $scope.classlsid + "-assignmentcount");
-		for (var cat = 1; cat <= parseInt(LS.getItem("c" + $scope.classlsid + "-catcount")); cat++) {
-			LS.deleteCategory($scope.classlsid, cat);
-		}
-		LS.deleteItem("c" + $scope.classlsid + "-catcount");
-		LS.deleteClass($scope.classlsid);
-		LS.decItem("classcount");
-		window.location.href = "/classes";
-	};
 	
 	$scope.deleteGrade = function(g) {
 		var grade = LS.getGrade($scope.classlsid, g);
@@ -908,6 +897,31 @@ app.controller('MainController', function ($scope) {
 	$scope.deleteNewGrade = function(index) {
 		$scope.newgrades.splice(index, 1);
 	};
+
+	$scope.editClass = function() {
+		var _class = JSON.parse(window.localStorage.getItem("c" + $scope.classlsid));
+		_class.name = $scope.edit.name;
+		_class.credits = $scope.edit.credits;
+		_class.type = $scope.edit.type;
+		_class.grade = $scope.edit.grade;
+		window.localStorage.setItem("c" + $scope.classlsid, JSON.stringify(_class));
+		window.location.href = "/classes/" + _class.name;
+	};
+
+	$scope.deleteClass = function() {
+		for (var a = 1; a <= parseInt(window.localStorage.getItem("c" + $scope.classlsid + "-assignmentcount")); a++) {
+			window.localStorage.removeItem("c" + $scope.classlsid + "-a" + a);
+		}
+		for (var cat = 1; cat <= parseInt(window.localStorage.getItem("c" + $scope.classlsid + "-catcount")); cat++) {
+			window.localStorage.removeItem("c" + $scope.classlsid + "-cat" + cat);
+		}
+		window.localStorage.removeItem("c" + $scope.classlsid);
+		window.localStorage.removeItem("c" + $scope.classlsid + "-assignmentcount");
+		window.localStorage.removeItem("c" + $scope.classlsid + "-catcount");
+		window.localStorage.removeItem("c" + $scope.classlsid + "-averages");
+		window.localStorage.setItem("classcount", parseInt(window.localStorage.getItem("classcount")) - 1);
+		window.location.href = "/classes";
+	};
 });
 
 $(document).ready(function () {
@@ -921,5 +935,10 @@ $(document).ready(function () {
 	$('#addGradeButton').click(function () {
 		$('#addGradeModal').modal('show');
 	});
-	$('#categoryStatsGrid .info.icon').popup();
+	$('#editClassButton').click(function () {
+		$('#editModal').modal('show');
+	});
+	$('#deleteClassButton').click(function () {
+		$('#deleteClassModal').modal('show');
+	});
 });
