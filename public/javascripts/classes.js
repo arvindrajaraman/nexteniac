@@ -90,6 +90,46 @@ class GradeFactory {
 		else if (n === 2) return 'C-';
 		else return 'D';
 	}
+
+	static letterToUnweightedPoints(l) {
+		switch (l) {
+			case 'A+': return 4.33; break;
+			case 'A': return 4; break;
+			case 'A-': return 3.67; break;
+			case 'B+': return 3.33; break;
+			case 'B': return 3; break;
+			case 'B-': return 2.67; break;
+			case 'C+': return 2.33; break;
+			case 'C': return 2; break;
+			case 'C-': return 1.67; break;
+			case 'D': return 1; break;
+			case 'F': return 0; break;
+		}
+	}
+
+	static letterToWeightedPoints(l, t) {
+		switch (l) {
+			case 'D': return 1; break;
+			case 'F': return 0; break;
+		}
+		var pts;
+		switch (l) {
+			case 'A+': pts = 4.33; break;
+			case 'A': pts = 4; break;
+			case 'A-': pts = 3.67; break;
+			case 'B+': pts = 3.33; break;
+			case 'B': pts = 3; break;
+			case 'B-': pts = 2.67; break;
+			case 'C+': pts = 2.33; break;
+			case 'C': pts = 2; break;
+			case 'C-': pts = 1.67; break;
+		}
+		switch (parseInt(t)) {
+			case 2: return pts; break;
+			case 1: return pts + 1; break;
+			case 0: return pts + 2; break;
+		}
+	}
 }
 
 app.controller('MainController', function ($scope) {
@@ -107,6 +147,7 @@ app.controller('MainController', function ($scope) {
 	$scope.classes = [];
 	$scope.averages = [];
 	$scope.classcounts = [0, 0, 0, 0];
+	$scope.Math = window.Math;
 
 	$scope.changeTab = function(t) {
 		$scope.tab = t;
@@ -193,14 +234,100 @@ app.controller('MainController', function ($scope) {
 	};
 
 	$scope.calculateGPAProgression = function() {
-
+		$scope.unweightedgpapoints = [];
+		$scope.weightedgpapoints = [];
+		$scope.gpalabels = [];
+		var points = 0;
+		for (var mp = 1; mp <= 16; mp++) {
+			var unweightedpts = 0, weightedpts = 0, credits = 0;
+			for (var c = 1; c <= $scope.classes.length; c++) {
+				var _class = $scope.classes[c-1];
+				if (_class.grade <= 8 + Math.ceil(mp / 4)) {
+					var averages = JSON.parse(window.localStorage.getItem("c" + c + "-averages"));
+					var finalavg = 0, mps = 0;
+					var upto;
+					if (_class.grade < 8 + Math.ceil(mp / 4)) upto = 4;
+					else upto = (mp % 4 === 0) ? 4 : mp % 4;
+					for (var m = 1; m <= upto; m++) {
+						if (averages[m-1]) {
+							finalavg += averages[m-1];
+							mps++;
+						}
+					}
+					finalavg /= mps;
+					credits += _class.credits;
+					unweightedpts += GradeFactory.letterToUnweightedPoints(GradeFactory.numEquivToLetter(finalavg)) * _class.credits;
+					weightedpts += GradeFactory.letterToWeightedPoints(GradeFactory.numEquivToLetter(finalavg), _class.type) * _class.credits;
+				}
+			}
+			unweightedpts /= credits;
+			weightedpts /= credits;
+			$scope.unweightedgpapoints.push({
+				x: mp,
+				y: Math.round(unweightedpts * 1000) / 1000
+			});
+			$scope.weightedgpapoints.push({
+				x: mp,
+				y: Math.round(weightedpts * 1000) / 1000
+			});
+		}
+		for (var grade = 9; grade <= 12; grade++) {
+			for (var mp = 1; mp <= 4; mp++) {
+				$scope.gpalabels.push({
+					grade: grade,
+					mp: mp
+				});
+			}
+		}
+		var unweightedGPAProgressionChart = new Chart("unweightedGPAProgressionChart", {
+		    type: 'line',
+		    data: {
+		    	labels: ["MP1", "MP2", "MP3", "MP4", "MP5", "MP6", "MP7", "MP8", "MP9", "MP10", "MP11", "MP12", "MP13", "MP14", "MP15", "MP16"],
+		    	datasets: [{
+		    		data: $scope.unweightedgpapoints,
+		    		label: 'Unweighted GPA',
+		    		fill: true,
+		    		borderColor: 'rgb(0,181,174)',
+		    		backgroundColor: 'rgba(0,181,174,0.3)',
+		    		pointRadius: 3
+		    	}]
+	    	},
+		    options: {
+		    	legend: { display: false },
+		    	title: {
+		            display: true,
+		            text: 'Unweighted GPA Progression'
+		        }
+		    }
+		});
+		var weightedGPAProgressionChart = new Chart("weightedGPAProgressionChart", {
+		    type: 'line',
+		    data: {
+		    	labels: ["MP1", "MP2", "MP3", "MP4", "MP5", "MP6", "MP7", "MP8", "MP9", "MP10", "MP11", "MP12", "MP13", "MP14", "MP15", "MP16"],
+		    	datasets: [{
+		    		data: $scope.weightedgpapoints,
+		    		label: 'Weighted GPA',
+		    		fill: true,
+		    		borderColor: 'rgb(0,181,174)',
+		    		backgroundColor: 'rgba(0,181,174,0.3)',
+		    		pointRadius: 3
+		    	}]
+	    	},
+		    options: {
+		    	legend: { display: false },
+		    	title: {
+		            display: true,
+		            text: 'Weighted GPA Progression'
+		        }
+		    }
+		});
 	};
 
 	$scope.initClasses = function() {
 		$scope.loadAverages();
 		$scope.searchClasses();
 		$scope.calculateGPA();
-		console.log($scope);
+		$scope.calculateGPAProgression();
 	};
 });
 

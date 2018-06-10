@@ -180,5 +180,42 @@
 			<div class="four wide column"></div>
 		</div>
 	</div>
+	<div ng-show="tab === 4">
+		<div class="ui grid">
+			<div class="ui ten wide column">
+				<div class="ui segment">
+					<canvas id="unweightedGPAProgressionChart" height="150"></canvas>
+				</div>
+				<div class="ui segment">
+					<canvas id="weightedGPAProgressionChart" height="150"></canvas>
+				</div>
+			</div>
+			<div class="ui six wide column">
+				<table class="ui compact center aligned celled table">
+					<thead>
+						<tr>
+							<th>MP</th>
+							<th>UGPA</th>
+							<th>WGPA</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="gpalabel in gpalabels" ng-class="{'highlightedMP': currentgrade === gpalabel.grade && currentmp === gpalabel.mp}">
+							<td>
+								<span class="ui header" style="font-size: 16px !important;">MP {[$index + 1]}</span>
+								<br />
+								<i style="font-size: 12px !important;">G{[gpalabel.grade]} MP{[gpalabel.mp]}</i>
+							</td>
+							<td><h2 class="ui header">{[unweightedgpapoints[$index].y | number:3]}</h2></td>
+							<td><h2 class="ui header">{[weightedgpapoints[$index].y | number:3]}</h2></td>
+						</tr>
+					</tbody>
+					<tfoot>
+
+					</tfoot>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
 <br />
