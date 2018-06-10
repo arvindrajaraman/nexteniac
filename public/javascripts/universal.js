@@ -42,7 +42,7 @@ $(document).ready(function () {
 		var element = document.createElement('a');
 		element.style.display = 'none';
 		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + window.btoa(JSON.stringify(data)));
-		element.setAttribute('download', 'NextEniac Data - ' + date.getDate() + ' ' + monthNames[date.getMonth()] + ' ' + date.getFullYear() + '.beff');
+		element.setAttribute('download', 'NextEniac Data - ' + date.getDate() + ' ' + monthNames[date.getMonth()] + ' ' + date.getFullYear() + '.txt');
 		document.body.appendChild(element);
 		element.click();
 		document.body.removeChild(element);
