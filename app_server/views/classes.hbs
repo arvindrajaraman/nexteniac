@@ -165,13 +165,15 @@
 		</table>
 		<div class="ui grid">
 			<div class="four wide column"></div>
-			<div class="eight wide column">
-				<div class="ui center aligned segment" ng-show="tab === 2">
+			<div class="eight wide column" ng-show="tab === 2">
+				<div class="ui center aligned segment">
 					<span class="ui header" style="font-size: 28px;">{[unweightedpts | number:2]}&nbsp; ÷ &nbsp;{[totalcredits | number:2]}&nbsp; = &nbsp;{[unweightedgpa | number:2]}</span>
 					<br />
 					<span class="ui header" style="font-size: 14px;">UNWEIGHTED GPA</span>
 				</div>
-				<div class="ui center aligned segment" ng-show="tab === 3">
+			</div>
+			<div class="eight wide column" ng-show="tab === 3">
+				<div class="ui center aligned segment">
 					<span class="ui header" style="font-size: 28px;">{[weightedpts | number:2]}&nbsp; ÷ &nbsp;{[totalcredits | number:2]}&nbsp; = &nbsp;{[weightedgpa | number:2]}</span>
 					<br />
 					<span class="ui header" style="font-size: 14px;">WEIGHTED GPA</span>

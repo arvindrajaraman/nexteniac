@@ -228,7 +228,6 @@ app.controller('MainController', function ($scope) {
 	$scope.expavgs = { mp1: "10", mp2: "10", mp3: "10", mp4: "10", final: "10" };
 	$scope.initializedAverageProgressionChart = false;
 	$scope.initializedFrequencyCharts = false;
-	$scope.advancedmode = false;
 
 	function initClass() {
 		var classname = decodeURIComponent(window.location.href.split("/").last());
@@ -610,6 +609,7 @@ app.controller('MainController', function ($scope) {
 			type: $scope.class.type,
 			credits: $scope.class.credits
 		};
+		console.log($scope);
 	};
 	
 	// Events
@@ -745,10 +745,6 @@ app.controller('MainController', function ($scope) {
 			}
 			$scope.initializedFrequencyCharts = true;
 		}
-	};
-
-	$scope.toggleAdvancedMode = function() {
-		$scope.advancedmode = !$scope.advancedmode;
 	};
 
 	$scope.addGrades = function() {

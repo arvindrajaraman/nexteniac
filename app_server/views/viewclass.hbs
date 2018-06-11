@@ -95,20 +95,39 @@
 							There are no grades in this category and MP!
 						</h2>
 					</div>
-					<div ng-show="gradeBrackets[search.mp-1][search.category].percents.length && search.category">
-						<div class="ui grid">
-							<div class="twelve wide column">
+					<div ng-show="gradeBrackets[search.mp-1][search.category].percents.length && search.category">					
+						<div class="ui center aligned grid" id="categoryStatsGrid">
+							<div class="sixteen wide column">
 								<div class="ui fluid center aligned segment" style="padding: 0.75em 0.75em !important;">
 									<h3>MP{[search.mp]} {[search.category]} Statistics</h3>
 								</div>
 							</div>
-							<div class="four wide column">
-								<div class="ui fluid basic teal big button" ng-click="toggleAdvancedMode()"><i class="icon" ng-class="{'cogs': !advancedmode, 'cog': advancedmode}"></i> &nbsp;<span ng-show="!advancedmode">Advanced</span><span ng-show="advancedmode">Basic</span></div>
-							</div>
-						</div>						
-						<div class="ui center aligned grid" id="categoryStatsGrid">
 							<div class="six wide column">
-								\
+								<div class="ui segments">
+									<div class="ui center aligned teal segment">
+										<h3>Category Average</h3>
+									</div>
+									<div class="ui segment">
+										<h1>
+											{[gradeBrackets[search.mp-1][search.category].averageLetter]} &nbsp;
+											<span style="font-weight: normal !important;">{[gradeBrackets[search.mp-1][search.category].averagePercent | number:2]}%</span>
+										</h1>
+									</div>
+									<div class="ui segment">
+										<h2>{[gradeBrackets[search.mp-1][search.category].ptsearned]} of {[gradeBrackets[search.mp-1][search.category].ptstotal]}</h2>
+									</div>
+								</div>
+								<div class="ui segments">
+									<div class="ui center aligned teal segment">
+										<h3>Scores ({[gradeBrackets[search.mp-1][search.category].count]})</h3>
+									</div>
+									<div class="ui compact segment">
+										<h3 ng-repeat="score in gradeBrackets[search.mp-1][search.category].percents track by $index">
+											{[score / 100 | lettergrade]} &nbsp;
+											<span style="font-weight: normal !important;">{[score | number:2]}%</span>
+										</h3>
+									</div>
+								</div>
 							</div>
 							<div class="ten wide column">
 								<div class="ui segments">
@@ -169,6 +188,31 @@
 											<div class="ui statistic">
 												<div class="value">{[gradeBrackets[search.mp-1][search.category].meandev | number:1]}</div>
 												<div class="label">Mean Deviation</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="ui segments">
+									<div class="ui center aligned teal segment">
+										<h3>Outliers</h3>
+									</div>
+									<div class="ui segment">
+										<div class="ui two tiny statistics">
+											<div class="ui statistic">
+												<div class="value">–∞ → {[gradeBrackets[search.mp-1][search.category].lofence | number:1]}</div>
+												<div class="label">Extreme Lower Outliers</div>
+											</div>
+											<div class="ui statistic">
+												<div class="value">{[gradeBrackets[search.mp-1][search.category].lofence | number:1]} → {[gradeBrackets[search.mp-1][search.category].lifence | number:1]}</div>
+												<div class="label">Mild Lower Outliers</div>
+											</div>
+											<div class="ui statistic">
+												<div class="value">{[gradeBrackets[search.mp-1][search.category].uifence | number:1]} → {[gradeBrackets[search.mp-1][search.category].uofence | number:1]}</div>
+												<div class="label">Mild Upper Outliers</div>
+											</div>
+											<div class="ui statistic">
+												<div class="value">{[gradeBrackets[search.mp-1][search.category].uofence | number:1]} → ∞</div>
+												<div class="label">Extreme Upper Outliers</div>
 											</div>
 										</div>
 									</div>
