@@ -1,4 +1,4 @@
-<div class="ui container" ng-app="nexteniac-viewclass" ng-controller="MainController" ng-init="initViewClass()" ng-cloak>
+<div class="ui container" ng-app="nexteniac-viewclass" ng-controller="MainController" ng-init="initViewClass()">
 	<br>
 	<div class="ui secondary center aligned segment" ng-hide="classexists">
 		<h2>
@@ -7,9 +7,24 @@
 		</h2>
 	</div>
 	<div class="ui grid" ng-show="classexists">
-		<div class="sixteen wide column">
-			<div class="ui center aligned segment headerSegment">
+		<div class="twelve wide column">
+			<div class="ui center aligned segment headerSegment" ng-class="{'inverted pink': phantommode}">
 				<h1>{[class.name]}</h1>
+			</div>
+		</div>
+		<div class="two wide column">
+			<div class="ui pink center aligned segment headerSegment" ng-click="togglePhantomMode()" ng-class="{'inverted': !phantommode, 'phantommodeactive': phantommode}">
+				<h1>
+					<i class="gamepad icon"></i>
+				</h1>
+			</div>
+		</div>
+		<div class="two wide column">
+			<div class="ui inverted teal center aligned segment headerSegment" ng-click="toggleEditMode()">
+				<h1>
+					<i class="lock icon" ng-show="editmode"></i>
+					<i class="unlock icon" ng-hide="editmode"></i>
+				</h1>
 			</div>
 		</div>
 		<div class="twelve wide column">
@@ -41,40 +56,63 @@
 			</div>
 			<div id="viewClassTabs">
 				<div class="tab" ng-show="tab === 1">
-					<table class="ui compact center aligned table" ng-hide="mpGrades[search.mp-1].length === 0">
-						<thead id="viewClassGradesHeader">
-							<th ng-click="sortGrades(1)">Date <i class="caret icon" ng-show="sort.field === 1" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
-							<th ng-click="sortGrades(2)">Letter <i class="caret icon" ng-show="sort.field === 2" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
-							<th ng-click="sortGrades(3)">Percent <i class="caret icon" ng-show="sort.field === 3" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
-							<th ng-click="sortGrades(4)">Points <i class="caret icon" ng-show="sort.field === 4" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
-							<th ng-click="sortGrades(5)">Category <i class="caret icon" ng-show="sort.field === 5" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
-							<th ng-click="sortGrades(6)">Assignment Name <i class="caret icon" ng-show="sort.field === 6" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
-						</thead>
-						<tbody>
-							<tr ng-repeat="grade in mpGrades[search.mp-1]" ng-show="grade.mp === search.mp" ng-class="{'gradeshown': grade.mp === search.mp}">
-								<td>
-									{[grade.date | date:'EEE M/d/yy']}
-								</td>
-								<td>
-									<h2 class="ui center aligned header">
-										{[grade.ptsearned / grade.ptstotal | lettergrade]}
-									</h2>
-								</td>
-								<td>
-									<b style="font-size: 16px !important;">{[grade.ptsearned * 100 / grade.ptstotal | number:2]}%</b>
-								</td>
-								<td style="font-size: 16px !important;">
-									{[grade.ptsearned]} of {[grade.ptstotal]}
-								</td>
-								<td style="font-size: 16px !important;">
-									<span>{[grade.category]}</span>
-								</td style="font-size: 16px !important;">
-								<td style="font-size: 16px !important;">
-									<span>{[grade.name]}</span>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+					<div class="ui form">
+						<table class="ui compact center aligned table" ng-hide="mpGrades[search.mp-1].length === 0">
+							<thead id="viewClassGradesHeader">
+								<th ng-click="sortGrades(1)">Date <i class="caret icon" ng-show="sort.field === 1" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+								<th ng-hide="editmode" ng-click="sortGrades(2)">Letter <i class="caret icon" ng-show="sort.field === 2" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+								<th ng-click="sortGrades(3)"><span ng-hide="editmode">Percent</span><span ng-show="editmode">Points Earned</span> <i class="caret icon" ng-show="sort.field === 3" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+								<th ng-click="sortGrades(4)">Points <span ng-show="editmode">Total</span> <i class="caret icon" ng-show="sort.field === 4" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+								<th ng-click="sortGrades(5)">Category <i class="caret icon" ng-show="sort.field === 5" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+								<th ng-click="sortGrades(6)">Assignment Name <i class="caret icon" ng-show="sort.field === 6" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
+								<th ng-show="editmode"></th>
+							</thead>
+							<tbody>
+								<tr ng-repeat="grade in mpGrades[search.mp-1]" ng-show="grade.mp === search.mp" ng-class="{'gradeshown': grade.mp === search.mp, 'error': mpGrades[search.mp-1][$index].deleted}">
+									<td>
+										<span ng-hide="editmode">{[grade.date | date:'EEE M/d/yy']}</span>
+										<div class="ui small input" ng-show="editmode" ng-class="{'disabled': mpGrades[search.mp-1][$index].deleted}">
+											<input type="date" ng-model="mpGrades[search.mp-1][$index].date" />
+										</div>
+									</td>
+									<td ng-hide="editmode">
+										<h2 class="ui center aligned header">
+											{[grade.ptsearned / grade.ptstotal | lettergrade]}
+										</h2>
+									</td>
+									<td>
+										<b ng-hide="editmode" style="font-size: 16px !important;">{[grade.ptsearned * 100 / grade.ptstotal | number:2]}%</b>
+										<div class="ui small input" ng-show="editmode" ng-class="{'disabled': mpGrades[search.mp-1][$index].deleted}">
+											<input type="text" ng-model="mpGrades[search.mp-1][$index].ptsearned" />
+										</div>
+									</td>
+									<td>
+										<span ng-hide="editmode" style="font-size: 16px !important;">{[grade.ptsearned]} of {[grade.ptstotal]}</span>
+										<div class="ui small input" ng-show="editmode" ng-class="{'disabled': mpGrades[search.mp-1][$index].deleted}">
+											<input type="text" ng-model="mpGrades[search.mp-1][$index].ptstotal" />
+										</div>
+									</td>
+									<td>
+										<span ng-hide="editmode" style="font-size: 16px !important;">{[grade.category]}</span>
+										<select class="ui small dropdown" ng-show="editmode" ng-model="mpGrades[search.mp-1][$index].category" ng-class="{'disabled': mpGrades[search.mp-1][$index].deleted}">
+											<option ng-repeat="category in categories" value="{[category.name]}">{[category.name]}</option>
+										</select>
+									</td>
+									<td>
+										<span ng-hide="editmode" style="font-size: 16px !important;">{[grade.name]}</span>
+										<div class="ui small input" ng-show="editmode" ng-class="{'disabled': mpGrades[search.mp-1][$index].deleted}">
+											<input type="text" ng-model="mpGrades[search.mp-1][$index].name" />
+										</div>
+									</td>
+									<td ng-show="editmode">
+										<div class="ui inverted icon button" ng-class="{'red': !mpGrades[search.mp-1][$index].deleted, 'blue': mpGrades[search.mp-1][$index].deleted}" ng-click="toggleDeleted(search.mp-1, $index)">
+											<i class="icon" ng-class="{'trash': !mpGrades[search.mp-1][$index].deleted, 'check': mpGrades[search.mp-1][$index].deleted}"></i>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					<div class="ui secondary center aligned segment" ng-show="mpGrades[search.mp-1].length === 0">
 						<h2>
 							<i class="frown icon"></i>
@@ -235,54 +273,8 @@
 						</div>
 						<div class="eight wide column"> 
 							<div class="ui segment">
-								<canvas id="inverseFrequencyChart" height="150"></canvas>
-							</div>
-						</div>
-						<div class="eight wide column"> 
-							<div class="ui segment">
 								<canvas id="cumulativeFrequencyChart" height="150"></canvas>
 							</div>
-						</div>
-						<div class="eight wide column"> 
-							<div class="ui segment">
-								<canvas id="inverseCumulativeFrequencyChart" height="150"></canvas>
-							</div>
-						</div>
-						<div class="sixteen wide column">
-							<table class="ui center aligned celled structured table">
-								<thead>
-									<tr>
-										<th rowspan="2">Grade</th>
-										<th colspan="2">Freq</th>
-										<th colspan="2">Cumul Freq</th>
-										<th colspan="2">Inv Freq</th>
-										<th colspan="2">Inv Cumul Freq</th>
-									</tr>
-									<tr>
-										<th>Abs</th>
-										<th>Rel</th>
-										<th>Abs</th>
-										<th>Rel</th>
-										<th>Abs</th>
-										<th>Rel</th>
-										<th>Abs</th>
-										<th>Rel</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr ng-repeat="class in frequencies[search.mp-1]">
-										<td><b>{[class.classgrade]}</b></td>
-										<td>{[class.frequency]}</td>
-										<td>{[class.relativefrequency | number:4]}</td>
-										<td>{[class.cumulativefrequency]}</td>
-										<td>{[class.cumulativerelativefrequency | number:4]}</td>
-										<td>{[class.inversefrequency]}</td>
-										<td>{[class.inverserelativefrequency | number:4]}</td>
-										<td>{[class.inversecumulativefrequency]}</td>
-										<td>{[class.inversecumulativerelativefrequency | number:4]}</td>
-									</tr>
-								</tbody>
-							</table>
 						</div>
 					</div>
 					<div class="ui secondary center aligned segment" ng-show="mpGrades[search.mp-1].length === 0">
@@ -582,6 +574,7 @@
 				<option value="2">MP2</option>
 				<option value="3">MP3</option>
 				<option value="4">MP4</option>
+				<option value="5">Year</option>
 			</select>
 			<div ng-show="tab === 2">
 				<br>

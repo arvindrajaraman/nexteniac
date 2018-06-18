@@ -228,6 +228,8 @@ app.controller('MainController', function ($scope) {
 	$scope.expavgs = { mp1: "10", mp2: "10", mp3: "10", mp4: "10", final: "10" };
 	$scope.initializedAverageProgressionChart = false;
 	$scope.initializedFrequencyCharts = false;
+	$scope.editmode = false;
+	$scope.phantommode = false;
 
 	function initClass() {
 		var classname = decodeURIComponent(window.location.href.split("/").last());
@@ -267,6 +269,9 @@ app.controller('MainController', function ($scope) {
 			delete grade.$$hashKey;
 			grade.percent = grade.ptsearned * 100 / grade.ptstotal;
 			grade.letter = GradeFactory.percentToLetter(grade.percent);
+			grade.date = new Date(grade.date);
+			grade.key = g;
+			grade.deleted = false;
 			$scope.grades.push(grade);
 			$scope.mpGrades[grade.mp-1].push(grade);
 			
@@ -286,20 +291,14 @@ app.controller('MainController', function ($scope) {
 	}
 
 	function initFrequencies() {
-		$scope.frequencies = [[], [], [], []];
-		var grades = ["F", "D", "C+", "C", "C-", "B-", "B", "B+", "A-", "A", "A+"];
-		for (var mp = 1; mp <= 4; mp++) {
+		$scope.frequencies = [[], [], [], [], []];
+		var grades = ["F", "D", "C-", "C", "C+", "B-", "B", "B+", "A-", "A", "A+"];
+		for (var mp = 1; mp <= 5; mp++) {
 			for (var c = 0; c <= 10; c++) {
 				$scope.frequencies[mp-1].push({
 					classgrade: grades[c],
 					frequency: 0,
-					relativefrequency: 0,
-					inversefrequency: 0,
-					inverserelativefrequency: 0,
-					cumulativefrequency: 0,
-					cumulativerelativefrequency: 0,
-					inversecumulativefrequency: 0,
-					inversecumulativerelativefrequency: 0
+					cumulativefrequency: 0
 				});
 			}
 		}
@@ -307,24 +306,16 @@ app.controller('MainController', function ($scope) {
 			var grade = $scope.grades[g-1];
 			var percentIndex = GradeFactory.letterToNumEquiv(GradeFactory.percentToLetter(grade.ptsearned * 100 / grade.ptstotal));
 			$scope.frequencies[grade.mp-1][percentIndex].frequency++;
+			$scope.frequencies[4][percentIndex].frequency++;
 		}
-		for (var mp = 1; mp <= 4; mp++) {
+		for (var mp = 1; mp <= 5; mp++) {
 			for (var c = 0; c <= 10; c++) {
-				$scope.frequencies[mp-1][c].inversefrequency = $scope.mpGrades[mp-1].length - $scope.frequencies[mp-1][c].frequency;
-				$scope.frequencies[mp-1][c].relativefrequency = Math.round(($scope.frequencies[mp-1][c].frequency * 100 / $scope.mpGrades[mp-1].length) * 100) / 10000;
-				$scope.frequencies[mp-1][c].inverserelativefrequency = 1 - $scope.frequencies[mp-1][c].relativefrequency;
 				if (c === 0) {
 					$scope.frequencies[mp-1][c].cumulativefrequency = $scope.frequencies[mp-1][c].frequency;
-					$scope.frequencies[mp-1][10-c].inversecumulativefrequency = $scope.frequencies[mp-1][10-c].frequency;
 				}
 				else {
 					$scope.frequencies[mp-1][c].cumulativefrequency = $scope.frequencies[mp-1][c-1].cumulativefrequency + $scope.frequencies[mp-1][c].frequency;
-					$scope.frequencies[mp-1][10-c].inversecumulativefrequency = $scope.frequencies[mp-1][11-c].inversecumulativefrequency + $scope.frequencies[mp-1][10-c].frequency;
 				}
-			}
-			for (var c = 0; c <= 10; c++) {
-				$scope.frequencies[mp-1][c].cumulativerelativefrequency = Math.round(($scope.frequencies[mp-1][c].cumulativefrequency * 100 / $scope.mpGrades[mp-1].length) * 100) / 10000;
-				$scope.frequencies[mp-1][c].inversecumulativerelativefrequency = Math.round(($scope.frequencies[mp-1][c].inversecumulativefrequency * 100 / $scope.mpGrades[mp-1].length) * 100) / 10000;
 			}
 		}
 	}
@@ -454,8 +445,8 @@ app.controller('MainController', function ($scope) {
 	
 	function initAverageProgression() {
 		var pointTotals = [{}, {}, {}, {}];
-		$scope.graphPoints = [[], [], [], []];
-		$scope.graphDates = [[], [], [], []];
+		$scope.graphPoints = [[], [], [], [], []];
+		$scope.graphDates = [[], [], [], [], []];
 		for (var mp = 1; mp <= 4; mp++) {
 			for (var category of $scope.categories) {
 				pointTotals[mp-1][category.name] = {
@@ -470,9 +461,6 @@ app.controller('MainController', function ($scope) {
 				var grade = $scope.mpGrades[mp-1][g];
 				pointTotals[mp-1][grade.category].ptsearned += grade.ptsearned;
 				pointTotals[mp-1][grade.category].ptstotal += grade.ptstotal;
-				if (g !== $scope.mpGrades[mp-1].length - 1) {
-					if ($scope.mpGrades[mp-1][g+1].date === grade.date) continue;
-				}
 				var totalpoints = 0, totalweight = 0;
 				for (var category in pointTotals[mp-1]) {
 					if (!pointTotals[mp-1].hasOwnProperty(category) || pointTotals[mp-1][category].ptstotal === 0) continue;
@@ -482,6 +470,11 @@ app.controller('MainController', function ($scope) {
 				if (totalweight === 0) continue;
 				$scope.graphDates[mp-1].push(grade.date);
 				$scope.graphPoints[mp-1].push({
+					x: grade.date,
+					y: (totalpoints * 100 / totalweight).toFixed(2)
+				});
+				$scope.graphDates[4].push(grade.date);
+				$scope.graphPoints[4].push({
 					x: grade.date,
 					y: (totalpoints * 100 / totalweight).toFixed(2)
 				});
@@ -593,6 +586,26 @@ app.controller('MainController', function ($scope) {
 		}
 		LS.setItem("c" + $scope.classlsid + "-averages", averages, true);
 	}
+
+	function findLowestPossibleAverage() {
+		var currentmp = parseInt(window.localStorage.getItem("currentmp")) - 1;
+		var averages = JSON.parse(window.localStorage.getItem("c" + $scope.classlsid + "-averages"));
+		var goalaverage = parseInt($scope.class.goalaverage);
+		var average = 0;
+		for (var mp = 1; mp <= currentmp; mp++) {
+			if (averages[mp-1]) average += averages[mp-1];
+			else average += 10;
+		}
+		for (var mp = 1; mp <= 3 - currentmp; mp++) {
+			average += 10;
+		}
+		average /= 4;
+		var experimentalavg = 0;
+		while (GradeFactory.letterToNumEquiv(GradeFactory.numEquivToLetter(average + (experimentalavg / 4))) < goalaverage) {
+			experimentalavg++;
+		}
+		$scope.lowestPossibleAverage = (experimentalavg <= 10) ? GradeFactory.numEquivToLetter(experimentalavg) : null;
+	};
 	
 	$scope.initViewClass = function() {
 		initClass();
@@ -603,6 +616,7 @@ app.controller('MainController', function ($scope) {
 		initAverageProgression();
 		initInsights();
 		updateAverages();
+		findLowestPossibleAverage();
 		$scope.edit = {
 			name: $scope.class.name,
 			grade: $scope.class.grade,
@@ -653,6 +667,11 @@ app.controller('MainController', function ($scope) {
 			    	}]
 		    	},
 			    options: {
+			    	layout: {
+					    padding: {
+					    	top: 5
+					    }
+					},
 			    	legend: { display: false },
 			    	title: {
 			            display: true,
@@ -694,17 +713,15 @@ app.controller('MainController', function ($scope) {
 
 	var charts = [];
 	$scope.reinitFrequencyChart = function() {
-		var chartData = [[], [], [], []];
-		var fields = ['frequency', 'inversefrequency', 'cumulativefrequency', 'inversecumulativefrequency'];
-		var labels = ['Frequency', 'Inverted Frequency', 'Cumulative Frequency', 'Cumulative Inverted Frequency'];
+		var chartData = [[], []];
+		var fields = ['frequency', 'cumulativefrequency'];
+		var labels = ['Frequency', 'Cumulative Frequency'];
 		for (var _class of $scope.frequencies[$scope.search.mp-1]) {
 			chartData[0].push(_class.frequency);
-			chartData[1].push(_class.inversefrequency);
-			chartData[2].push(_class.cumulativefrequency);
-			chartData[3].push(_class.inversecumulativefrequency);
+			chartData[1].push(_class.cumulativefrequency);
 		}
 		if ($scope.initializedFrequencyCharts) {
-			for (var c = 1; c <= 4; c++) {
+			for (var c = 1; c <= 2; c++) {
 				charts[c-1].data.datasets[0].data = chartData[c-1].slice(0);
 				charts[c-1].data.datasets[0].label = labels[c-1];
 				charts[c-1].options.title.text = 'Grade ' + labels[c-1];
@@ -712,12 +729,12 @@ app.controller('MainController', function ($scope) {
 			}
 		}
 		else {
-			var chartNames = ['frequencyChart', 'cumulativeFrequencyChart', 'inverseFrequencyChart', 'inverseCumulativeFrequencyChart'];
-			for (var c = 1; c <= 4; c++) {
+			var chartNames = ['frequencyChart', 'cumulativeFrequencyChart'];
+			for (var c = 1; c <= 2; c++) {
 				charts.push(new Chart(chartNames[c-1], {
 					type: 'bar',
 					data: {
-						labels: ["F", "D", "C+", "C", "C-", "B-", "B", "B+", "A-", "A", "A+"],
+						labels: ["F", "D", "C-", "C", "C+", "B-", "B", "B+", "A-", "A", "A+"],
 						datasets: [{
 							data: chartData[c-1],
 							label: labels[c-1],
@@ -875,6 +892,71 @@ app.controller('MainController', function ($scope) {
 			}
 		}
 	};
+
+	$scope.toggleEditMode = function() {
+		if ($scope.editmode) {
+			// Edit
+			for (var mp = 1; mp <= 4; mp++) {
+				var grades = $scope.mpGrades[mp-1];
+				for (var g = 1; g <= grades.length; g++) {
+					var grade = grades[g-1];
+					window.localStorage.setItem("c" + $scope.classlsid + "-a" + grade.key, JSON.stringify({
+						category: grade.category,
+						date: grade.date,
+						mp: grade.mp,
+						name: grade.name,
+						ptsearned: parseFloat(grade.ptsearned),
+						ptstotal: parseFloat(grade.ptstotal)
+					}));
+				}
+			}
+			// Delete
+			var todelete = [];
+			for (var mp = 1; mp <= 4; mp++) {
+				var grades = $scope.mpGrades[mp-1];
+				for (var g = 1; g <= grades.length; g++) {
+					if (grades[g-1].deleted) todelete.push(grades[g-1].key);
+				}
+			}
+			$scope.grades.sort(function (a, b) {
+				if (a.key < b.key)
+			    	return -1;
+				if (a.key > b.key)
+			    	return 1;
+				return 0;
+			});
+			var gradecount = $scope.grades.length;
+			for (var key of todelete) {
+				if (key === gradecount) {
+					window.localStorage.removeItem("c" + $scope.classlsid + "-a" + gradecount);
+				}
+				else {
+					var deletedgrade = JSON.parse(window.localStorage.getItem("c" + $scope.classlsid + "-a" + gradecount));
+					window.localStorage.removeItem("c" + $scope.classlsid + "-a" + gradecount);
+					window.localStorage.setItem("c" + $scope.classlsid + "-a" + key, JSON.stringify({
+						category: deletedgrade.category,
+						date: deletedgrade.date,
+						mp: deletedgrade.mp,
+						name: deletedgrade.name,
+						ptsearned: deletedgrade.ptsearned,
+						ptstotal: deletedgrade.ptstotal
+					}));
+				}
+				gradecount--;
+				window.localStorage.setItem("c" + $scope.classlsid + "-assignmentcount", parseInt(window.localStorage.getItem("c" + $scope.classlsid + "-assignmentcount")) - 1);
+			}
+			location.reload();
+		}
+		$scope.editmode = !$scope.editmode;
+	};
+
+	$scope.togglePhantomMode = function() {
+		$scope.phantommode = !$scope.phantommode;
+	};
+
+	$scope.toggleDeleted = function(mp, index) {
+		$scope.mpGrades[mp][index].deleted = !$scope.mpGrades[mp][index].deleted;
+	};
 	
 	$scope.deleteGrade = function(g) {
 		var grade = LS.getGrade($scope.classlsid, g);
@@ -918,6 +1000,8 @@ app.controller('MainController', function ($scope) {
 		window.localStorage.setItem("classcount", parseInt(window.localStorage.getItem("classcount")) - 1);
 		window.location.href = "/classes";
 	};
+
+	
 });
 
 $(document).ready(function () {
