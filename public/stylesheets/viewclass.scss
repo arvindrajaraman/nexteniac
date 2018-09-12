@@ -1,3 +1,21 @@
+/*.headerSegment {
+	background: linear-gradient(270deg, #5433FF, #20BDFF, #0082c8) !important;
+	background-size: 200% 200% !important;
+
+	-webkit-animation: viewclassname 5s ease infinite !important;
+	-moz-animation: viewclassname 5s ease infinite !important;
+	-o-animation: viewclassname 5s ease infinite !important;
+	animation: viewclassname 5s ease infinite !important;
+}
+.phantomHeaderSegment {
+	background: linear-gradient(270deg, #03001e, #7303c0, #ec38bc, #fdeff9) !important;
+	background-size: 200% 200% !important;
+
+	-webkit-animation: viewclassname 5s ease infinite !important;
+	-moz-animation: viewclassname 5s ease infinite !important;
+	-o-animation: viewclassname 5s ease infinite !important;
+	animation: viewclassname 5s ease infinite !important;
+}*/
 #viewClassGradesHeader th {
 	cursor: pointer;
 	transition: 0.2s ease all;
@@ -17,4 +35,25 @@
 }
 .phantommodeactive {
 	color: #E33A93 !important;
+}
+
+@-webkit-keyframes viewclassname {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@-moz-keyframes viewclassname {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@-o-keyframes viewclassname {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@keyframes viewclassname { 
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
 }

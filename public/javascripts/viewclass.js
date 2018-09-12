@@ -212,11 +212,10 @@ function calcQuartile(data, q) {
 
 app.controller('MainController', function ($scope) {
 	// Presets
-	$scope.tab = 1;
+	$scope.tab = 6;
 	$scope.changesTab = 3;
-	$scope.goalTab = 1;
-	$scope.toolTab = 1;
 	$scope.distributionTab = 1;
+	$scope.achievegoalpage = 0;
 	$scope.newgrades = [{}];
 	$scope.search = {
 		mp: 2
@@ -227,9 +226,14 @@ app.controller('MainController', function ($scope) {
 	};
 	$scope.expavgs = { mp1: "10", mp2: "10", mp3: "10", mp4: "10", final: "10" };
 	$scope.initializedAverageProgressionChart = false;
+	$scope.initializedCategoricalAverageProgressionChart = false;
 	$scope.initializedFrequencyCharts = false;
 	$scope.editmode = false;
 	$scope.phantommode = false;
+	$scope.achievegoalstats = [];
+	$scope.achievegoalavg = 10;
+	$scope.currentmp = parseInt(window.localStorage.getItem('currentmp'));
+	$scope.newgoalavg = 10;
 
 	function initClass() {
 		var classname = decodeURIComponent(window.location.href.split("/").last());
@@ -250,6 +254,13 @@ app.controller('MainController', function ($scope) {
 		for (var cat = 1; cat <= parseInt(LS.getItem("c" + $scope.classlsid + "-catcount")); cat++) {
 			var category = LS.getCategory($scope.classlsid, cat);
 			$scope.categories.push(category);
+			$scope.achievegoalstats.push({
+				category: category.name,
+				difficulty: 0,
+				asgnleft: 0,
+				avgpoints: 0,
+				weight: category.weight
+			});
 			for (var mp = 1; mp <= 4; mp++) {
 				$scope.gradeBrackets[mp-1][category.name] = {
 					percents: [],
@@ -447,6 +458,9 @@ app.controller('MainController', function ($scope) {
 		var pointTotals = [{}, {}, {}, {}];
 		$scope.graphPoints = [[], [], [], [], []];
 		$scope.graphDates = [[], [], [], [], []];
+		$scope.catAvgPoints = [{}, {}, {}, {}];
+		$scope.categoricalAverageProgression = [{}, {}, {}, {}];
+		$scope.catAvgFullPoints = [{}, {}, {}, {}];
 		for (var mp = 1; mp <= 4; mp++) {
 			for (var category of $scope.categories) {
 				pointTotals[mp-1][category.name] = {
@@ -454,6 +468,9 @@ app.controller('MainController', function ($scope) {
 					ptstotal: 0,
 					weight: category.weight
 				};
+				$scope.catAvgPoints[mp-1][category.name] = [];
+				$scope.categoricalAverageProgression[mp-1][category.name] = [];
+				$scope.catAvgFullPoints[mp-1][category.name] = [];
 			}
 		}
 		for (var mp = 1; mp <= 4; mp++) {
@@ -467,7 +484,19 @@ app.controller('MainController', function ($scope) {
 					totalpoints += (pointTotals[mp-1][category].ptsearned / pointTotals[mp-1][category].ptstotal) * pointTotals[mp-1][category].weight;
 					totalweight += pointTotals[mp-1][category].weight;
 				}
+				$scope.catAvgPoints[mp-1][grade.category].push(grade.date);
+				$scope.categoricalAverageProgression[mp-1][grade.category].push({
+					x: grade.date,
+					y: (pointTotals[mp-1][grade.category].ptsearned * 100 / pointTotals[mp-1][grade.category].ptstotal).toFixed(2)
+				});
+				$scope.catAvgFullPoints[mp-1][grade.category].push({
+					x: grade.date,
+					y: (totalpoints * 100 / totalweight).toFixed(2)
+				});
 				if (totalweight === 0) continue;
+				if (g !== $scope.mpGrades[mp-1].length - 1) {
+					if (grade.date.getTime() === $scope.mpGrades[mp-1][g+1].date.getTime()) continue;
+				}
 				$scope.graphDates[mp-1].push(grade.date);
 				$scope.graphPoints[mp-1].push({
 					x: grade.date,
@@ -604,7 +633,7 @@ app.controller('MainController', function ($scope) {
 		while (GradeFactory.letterToNumEquiv(GradeFactory.numEquivToLetter(average + (experimentalavg / 4))) < goalaverage) {
 			experimentalavg++;
 		}
-		$scope.lowestPossibleAverage = (experimentalavg <= 10) ? GradeFactory.numEquivToLetter(experimentalavg) : null;
+		$scope.lowestPossibleAverage = (experimentalavg <= 10) ? experimentalavg : null;
 	};
 	
 	$scope.initViewClass = function() {
@@ -630,6 +659,11 @@ app.controller('MainController', function ($scope) {
 	$scope.$watch('search.mp', function() {
 		$scope.reinitAverageProgressionChart();
 		$scope.reinitFrequencyChart();
+		$scope.reinitCategoricalAverageProgressionChart();
+	}, true);
+
+	$scope.$watch('search.category', function() {
+		$scope.reinitCategoricalAverageProgressionChart();
 	}, true);
 
 	$scope.$watch('distributionTab', function() {
@@ -708,6 +742,81 @@ app.controller('MainController', function ($scope) {
 			    }
 			});
 			$scope.initializedAverageProgressionChart = true;
+		}
+	};
+
+	var categoricalAverageProgressionChart;
+	$scope.reinitCategoricalAverageProgressionChart = function() {
+		if ($scope.initializedCategoricalAverageProgressionChart) {
+			categoricalAverageProgressionChart.data.datasets[0].data = $scope.categoricalAverageProgression[$scope.search.mp-1][$scope.search.category].slice(0);
+			categoricalAverageProgressionChart.data.datasets[1].data = $scope.catAvgFullPoints[$scope.search.mp-1][$scope.search.category].slice(0);
+			categoricalAverageProgressionChart.data.datasets[0].label = $scope.search.category + ' Average';
+			categoricalAverageProgressionChart.data.labels = $scope.catAvgPoints[$scope.search.mp-1][$scope.search.category].slice(0);
+			categoricalAverageProgressionChart.update();
+		}
+		else {
+			categoricalAverageProgressionChart = new Chart("categoricalAverageProgressionChart", {
+			    type: 'line',
+			    data: {
+			    	labels: $scope.catAvgPoints[$scope.search.mp-1][$scope.search.category].slice(0),
+			    	datasets: [{
+			    		data: $scope.categoricalAverageProgression[$scope.search.mp-1][$scope.search.category].slice(0),
+			    		label: $scope.search.category + ' Average',
+			    		fill: false,
+			    		borderColor: 'rgb(0,181,174)',
+			    		backgroundColor: 'rgba(0,181,174,0.3)',
+			    		pointRadius: 3
+			    	}, {
+			    		data: $scope.catAvgFullPoints[$scope.search.mp-1][$scope.search.category].slice(0),
+			    		label: 'MP Average',
+			    		fill: false,
+			    		borderColor: 'rgb(234,28,137)',
+			    		backgroundColor: 'rgba(234,28,137,0.3)',
+			    		pointRadius: 3
+			    	}]
+		    	},
+			    options: {
+			    	layout: {
+					    padding: {
+					    	top: 0
+					    }
+					},
+			    	legend: { 
+			    		display: true,
+			    		position: 'bottom'
+			    	},
+			    	title: { display: false },
+			        scales: {
+			            xAxes: [{
+			            	type: 'time',
+			                time: {
+			                    unit: 'week',
+			                    displayFormats: { week: 'MMM D' },
+			                    tooltipFormat: 'MMMM DD, YYYY'
+			                }
+			            }],
+			            yAxes: [{
+			                ticks: {
+			                    callback: function(value, index, values) { return value + '%'; }
+			                }
+			            }]
+			        },
+			        tooltips: {
+			        	callbacks: {
+			        		label: function(tooltipItem, data) {
+			        			var label = data.datasets[tooltipItem.datasetIndex].label || '';
+			        			if (label) {
+			                        label += ': ';
+			                        label += GradeFactory.percentToLetter(tooltipItem.yLabel) + ' ';
+			                        label += tooltipItem.yLabel + '%';
+			                        return label;
+			                    }
+			        		}
+			        	}
+			        }
+			    }
+			});
+			$scope.initializedCategoricalAverageProgressionChart = true;
 		}
 	};
 
@@ -800,14 +909,6 @@ app.controller('MainController', function ($scope) {
 		$scope.changesTab = t;
 	};
 
-	$scope.changeGoalTab = function(t) {
-		$scope.goalTab = t;
-	};
-
-	$scope.changeToolTab = function(t) {
-		$scope.toolTab = t;
-	};
-
 	$scope.changeDistributionTab = function(t) {
 		$scope.distributionTab = t;
 	};
@@ -894,6 +995,7 @@ app.controller('MainController', function ($scope) {
 	};
 
 	$scope.toggleEditMode = function() {
+		if ($scope.phantommode) return;
 		if ($scope.editmode) {
 			// Edit
 			for (var mp = 1; mp <= 4; mp++) {
@@ -951,7 +1053,100 @@ app.controller('MainController', function ($scope) {
 	};
 
 	$scope.togglePhantomMode = function() {
+		if ($scope.phantommode) {
+			location.reload();
+		}
 		$scope.phantommode = !$scope.phantommode;
+		averageProgressionChart.data.datasets[0].borderColor = 'rgb(234,28,137)';
+		averageProgressionChart.data.datasets[0].backgroundColor = 'rgba(234,28,137,0.3)';
+		averageProgressionChart.update();
+		for (var freqChart of charts) {
+			console.log(freqChart);
+			freqChart.data.datasets[0].borderColor = 'rgb(234,28,137)';
+			freqChart.data.datasets[0].backgroundColor = 'rgba(234,28,137,0.3)'
+			freqChart.update();
+		}
+	};
+
+	$scope.deleteExpGrade = function(j) {
+		var grade = $scope.mpGrades[$scope.search.mp-1][j];
+		$scope.mpGrades[$scope.search.mp-1].splice(j, 1);
+		$scope.grades = [];
+		for (var mp = 1; mp <= 4; mp++) {
+			for (var i = 1; i <= $scope.mpGrades[mp-1].length; i++) {
+				$scope.grades.push($scope.mpGrades[mp-1][i-1]);
+			}
+		}
+		var gradeBracket = $scope.gradeBrackets[grade.mp-1][grade.category];
+		for (var p = 1; p <= gradeBracket.percents.length; p++) {
+			if (gradeBracket.percents[p-1] === grade.percent) {
+				gradeBracket.percents.splice(p-1, 1);
+				break;
+			}
+		}
+		gradeBracket.ptsearned -= grade.ptsearned;
+		gradeBracket.ptstotal -= grade.ptstotal;
+		gradeBracket = {
+			percents: gradeBracket.percents,
+			ptsearned: gradeBracket.ptsearned,
+			ptstotal: gradeBracket.ptstotal
+		};
+		$scope.grades.sort(function(g1, g2) {
+			return new Date(g1.date) - new Date(g2.date);
+		});
+		$scope.mpGrades[$scope.search.mp-1].sort(function(g1, g2) {
+			return new Date(g1.date) - new Date(g2.date);
+		});
+		initFrequencies();
+		initBracketBasedStatsAndAverages();
+		initAverageProgression();
+		initInsights();
+		updateAverages();
+		findLowestPossibleAverage();
+		$scope.reinitAverageProgressionChart();
+		$scope.reinitCategoricalAverageProgressionChart();
+		$scope.reinitFrequencyChart();
+	};
+
+	$scope.addExpGrade = function() {
+		var grade = {
+			name: $scope.expgrade.name,
+			category: $scope.expgrade.category,
+			date: new Date($scope.expgrade.date),
+			deleted: false,
+			key: null,
+			mp: $scope.search.mp,
+			ptsearned: parseFloat($scope.expgrade.ptsearned),
+			ptstotal: parseFloat($scope.expgrade.ptstotal)
+		};
+		grade.percent = (grade.ptsearned / grade.ptstotal) * 100;
+		grade.letter = GradeFactory.percentToLetter(grade.percent);
+		$scope.mpGrades[$scope.search.mp-1].push(grade);
+		$scope.grades.push(grade);
+		var gradeBracket = $scope.gradeBrackets[grade.mp-1][grade.category];
+		gradeBracket.percents.push(grade.percent);
+		gradeBracket.ptsearned += grade.ptsearned;
+		gradeBracket.ptstotal += grade.ptstotal;
+		gradeBracket = {
+			percents: gradeBracket.percents,
+			ptsearned: gradeBracket.ptsearned,
+			ptstotal: gradeBracket.ptstotal
+		};
+		$scope.grades.sort(function(g1, g2) {
+			return new Date(g1.date) - new Date(g2.date);
+		});
+		$scope.mpGrades[$scope.search.mp-1].sort(function(g1, g2) {
+			return new Date(g1.date) - new Date(g2.date);
+		});
+		initFrequencies();
+		initBracketBasedStatsAndAverages();
+		initAverageProgression();
+		initInsights();
+		updateAverages();
+		findLowestPossibleAverage();
+		$scope.reinitAverageProgressionChart();
+		$scope.reinitCategoricalAverageProgressionChart();
+		$scope.reinitFrequencyChart();
 	};
 
 	$scope.toggleDeleted = function(mp, index) {
@@ -1001,7 +1196,82 @@ app.controller('MainController', function ($scope) {
 		window.location.href = "/classes";
 	};
 
-	
+	$scope.achieveYourGoal = function() {
+		// Step 1
+		var ptsaway;
+		switch (parseInt($scope.achievegoalavg)) {
+			case 10: ptsaway = 96.5; break;
+			case 9: ptsaway = 92.5; break;
+			case 8: ptsaway = 89.5; break;
+			case 7: ptsaway = 86.5; break;
+			case 6: ptsaway = 82.5; break;
+			case 5: ptsaway = 79.5; break;
+			case 4: ptsaway = 76.5; break;
+			case 3: ptsaway = 72.5; break;
+			case 2: ptsaway = 69.5; break;
+			case 1: ptsaway = 64.5; break;
+			case 0: ptsaway = 1; break;
+		}
+		ptsaway -= $scope.mpAverages[$scope.currentmp - 1].averagePercent;
+		ptsaway = Math.ceil(ptsaway * 100) / 100;
+		// Step 2
+		var totaldifficulty = 0;
+		var catwhitelist = {};
+		for (var stat of $scope.achievegoalstats) {
+			if (stat.weight === 0 || stat.asgnleft === 0) continue;
+			catwhitelist[stat.category] = true;
+			totaldifficulty += parseInt(stat.difficulty);
+		}
+		// Step 2A
+		var categoricalptsaway = {};
+		for (var stat of $scope.achievegoalstats) {
+			if (stat.weight === 0 || stat.asgnleft === 0) continue;
+			categoricalptsaway[stat.category] = ptsaway * parseInt(stat.difficulty) / totaldifficulty;
+		}
+		// Step 2B
+		$scope.nextscores = [];
+		for (var stat of $scope.achievegoalstats) {
+			if (stat.weight === 0 || stat.asgnleft === 0) continue;
+			var A = $scope.gradeBrackets[$scope.currentmp-1][stat.category].count, B = stat.asgnleft, C = $scope.gradeBrackets[$scope.currentmp-1][stat.category].averagePercent, D = categoricalptsaway[stat.category];
+			if (!C) C = $scope.mpAverages[$scope.currentmp-1].averagePercent;
+			var nextscores = (((C+D)*(A+B)) - (A*C))/B;
+			// Step 2C
+			if (nextscores > 100) {
+				catwhitelist[stat.category] = false;
+				var ptsleft = ((C*A)+(100*B))/(A+B);
+				ptsleft = ptsleft - (C + categoricalptsaway[stat.category]);
+
+				var newtotaldifficulty = 0;
+				for (var stat2 of $scope.achievegoalstats) {
+					if (!catwhitelist[stat2.category]) continue;
+					newtotaldifficulty += stat2.weight;
+				}
+				for (var stat2 of $scope.achievegoalstats) {
+					if (!catwhitelist[stat2.category]) continue;
+					categoricalptsaway[stat2.category] += (parseInt(stat2.difficulty) * ptsleft / newtotaldifficulty);
+				}
+				categoricalptsaway[stat.category] = 0;
+			}
+			else $scope.nextscores.push({category: stat.category, nextscores: Math.ceil(nextscores)});
+		}
+	};
+
+	$scope.decAchieveGoalPage = function() {
+		$scope.achievegoalpage--;
+		if ($scope.achievegoalpage === 4) $scope.achieveYourGoal();
+	}
+
+	$scope.incAchieveGoalPage = function() {
+		$scope.achievegoalpage++;
+		if ($scope.achievegoalpage === 4) $scope.achieveYourGoal();
+	}
+
+	$scope.changeGoalAverage = function() {
+		$scope.class.goalaverage = $scope.newgoalavg;
+		delete $scope.class.$$hashKey;
+		window.localStorage.setItem("c" + $scope.classlsid, JSON.stringify($scope.class));
+		location.reload();
+	}
 });
 
 $(document).ready(function () {
