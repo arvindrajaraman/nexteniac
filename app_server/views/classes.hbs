@@ -1,6 +1,6 @@
 <div class="ui container" ng-app="nexteniac-classes" ng-controller="MainController" ng-init="initClasses()">
 	<br>
-	<div class="ui five item labeled icon menu">
+	<div class="ui four item labeled icon menu">
 		<a class="teal item" ng-class="{'active': tab === 1}" ng-click="changeTab(1)">
 			<i class="graduation cap icon"></i>
 			Classes
@@ -17,17 +17,13 @@
 			<i class="chart line icon"></i>
 			GPA Progression
 		</a>
-		<a class="teal item" ng-class="{'active': tab === 5}" ng-click="changeTab(5)">
-			<i class="chart pie icon"></i>
-			Grade Stats
-		</a>
 	</div>
 	<br>
 	<div class="ui stackable grid" ng-show="tab === 1">
 		<div class="four wide column">
 			<div class="ui center aligned segment">
 				<div class="ui statistic">
-					<div class="value">{[unweightedgpa | number:2]}</div>
+					<div class="value">{[unweightedgpa]}</div>
 					<div class="label">Unweighted GPA</div>
 				</div>
 			</div>
@@ -35,7 +31,7 @@
 		<div class="four wide column">
 			<div class="ui center aligned segment">
 				<div class="ui statistic">
-					<div class="value">{[weightedgpa | number:2]}</div>
+					<div class="value">{[weightedgpa]}</div>
 					<div class="label">Weighted GPA</div>
 				</div>
 			</div>
@@ -43,7 +39,7 @@
 		<div class="four wide column">
 			<div class="ui center aligned segment">
 				<div class="ui statistic">
-					<div class="value">{[average | numequivtoletter]}</div>
+					<div class="value">{[average]}</div>
 					<div class="label">Average</div>
 				</div>
 			</div>
@@ -117,7 +113,7 @@
 		</div>
 	</div>
 	<div class="" ng-show="tab === 2 || tab === 3">
-		<table class="ui center aligned celled table">
+		<table class="ui center aligned celled table" ng-hide="unweightedgpa === '-'">
 			<thead>
 				<th>Grade</th>
 				<th>Course</th>
@@ -163,7 +159,7 @@
 				</th>
 			</tfoot>
 		</table>
-		<div class="ui grid">
+		<div class="ui grid" ng-hide="unweightedgpa === '-'">
 			<div class="four wide column"></div>
 			<div class="eight wide column" ng-show="tab === 2">
 				<div class="ui center aligned segment">
@@ -181,9 +177,12 @@
 			</div>
 			<div class="four wide column"></div>
 		</div>
+		<div class="ui center aligned secondary segment" ng-show="unweightedgpa === '-'">
+			<h2>You do not have any classes yet for a GPA to be calculated.</h2>
+		</div>
 	</div>
 	<div ng-show="tab === 4">
-		<div class="ui grid">
+		<div class="ui grid" ng-hide="unweightedgpa === '-'">
 			<div class="ui ten wide column">
 				<div class="ui segment">
 					<canvas id="unweightedGPAProgressionChart" height="150"></canvas>
@@ -214,6 +213,9 @@
 					</tbody>
 				</table>
 			</div>
+		</div>
+		<div class="ui center aligned secondary segment" ng-show="unweightedgpa === '-'">
+			<h2>You do not have any classes yet for a GPA to be calculated.</h2>
 		</div>
 	</div>
 </div>

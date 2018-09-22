@@ -212,7 +212,7 @@ function calcQuartile(data, q) {
 
 app.controller('MainController', function ($scope) {
 	// Presets
-	$scope.tab = 6;
+	$scope.tab = 1;
 	$scope.changesTab = 3;
 	$scope.distributionTab = 1;
 	$scope.achievegoalpage = 0;

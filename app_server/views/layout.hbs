@@ -39,7 +39,7 @@
               </div>
             </div>
             <div class="ui icon dropdown item" id="settingsDropdown">
-              <span class="hidden-xs">&nbsp; Settings &nbsp;</span>
+              <span class="hidden-xs">&nbsp; Actions &nbsp;</span>
               <i class="caret down icon hidden-xs"></i>
               <i class="setting icon visible-xs"></i>
               <div class="menu">
@@ -62,10 +62,6 @@
                 <div class="header">
                   Preferences
                 </div>
-                <div class="item">
-                  <i class="font icon"></i>
-                  Change Name
-                </div>
                 <div class="item" id="currentGradeLink">
                   <i class="calendar outline icon"></i>
                   Current Grade
@@ -74,25 +70,9 @@
                   <i class="percent icon"></i>
                   Current MP
                 </div>
-                <div class="divider"></div>
-                <div class="header">
-                  Share
-                </div>
-                <div class="item">
-                  <i class="share icon"></i>
-                  Share Link
-                </div>
-                <div class="item">
-                  <i class="facebook f icon"></i>
-                  Facebook
-                </div>
-                <div class="item">
-                  <i class="twitter icon"></i>
-                  Twitter
-                </div>
-                <div class="item">
-                  <i class="instagram icon"></i>
-                  Instagram
+                <div class="item" id="gpaSettingsLink">
+                  <i class="setting icon"></i>
+                  GPA Settings
                 </div>
               </div>
             </div>
@@ -189,6 +169,61 @@
             Clear
           </div>
         </div>
+      </div>
+      <div class="ui tiny modal" id="gpaSettingsModal">
+        <div class="header">GPA Settings</div>
+        <div class="ui form content">
+          <span>Select the grades and marking periods you want to include in your GPA.</span>
+          <br><br>
+          <table class="ui center aligned definition table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>MP1</th>
+                <th>MP2</th>
+                <th>MP3</th>
+                <th>MP4</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Grade 9</td>
+                <td><div class="ui slider checkbox" id="gpasettings-9-1"><input type="checkbox" name="gpasettings-9-1"><label></label></div></td>
+                <td><div class="ui slider checkbox" id="gpasettings-9-2"><input type="checkbox" name="gpasettings-9-2"><label></label></div></td>
+                <td><div class="ui slider checkbox" id="gpasettings-9-3"><input type="checkbox" name="gpasettings-9-3"><label></label></div></td>
+                <td><div class="ui slider checkbox" id="gpasettings-9-4"><input type="checkbox" name="gpasettings-9-4"><label></label></div></td>
+              </tr>
+              <tr>
+                <td>Grade 10</td>
+                <td><div class="ui toggle checkbox" id="gpasettings-10-1"><input type="checkbox" name="gpasettings-10-1"><label></label></div></td>
+                <td><div class="ui toggle checkbox" id="gpasettings-10-2"><input type="checkbox" name="gpasettings-10-2"><label></label></div></td>
+                <td><div class="ui toggle checkbox" id="gpasettings-10-3"><input type="checkbox" name="gpasettings-10-3"><label></label></div></td>
+                <td><div class="ui toggle checkbox" id="gpasettings-10-4"><input type="checkbox" name="gpasettings-10-4"><label></label></div></td>
+              </tr>
+              <tr>
+                <td>Grade 11</td>
+                <td><div class="ui toggle checkbox" id="gpasettings-11-1"><input type="checkbox" name="gpasettings-11-1"><label></label></div></td>
+                <td><div class="ui toggle checkbox" id="gpasettings-11-2"><input type="checkbox" name="gpasettings-11-2"><label></label></div></td>
+                <td><div class="ui toggle checkbox" id="gpasettings-11-3"><input type="checkbox" name="gpasettings-11-3"><label></label></div></td>
+                <td><div class="ui toggle checkbox" id="gpasettings-11-4"><input type="checkbox" name="gpasettings-11-4"><label></label></div></td>
+              </tr>
+              <tr>
+                <td>Grade 12</td>
+                <td><div class="ui toggle checkbox" id="gpasettings-12-1"><input type="checkbox" name="gpasettings-12-1"><label></label></div></td>
+                <td><div class="ui toggle checkbox" id="gpasettings-12-2"><input type="checkbox" name="gpasettings-12-2"><label></label></div></td>
+                <td><div class="ui toggle checkbox" id="gpasettings-12-3"><input type="checkbox" name="gpasettings-12-3"><label></label></div></td>
+                <td><div class="ui toggle checkbox" id="gpasettings-12-4"><input type="checkbox" name="gpasettings-12-4"><label></label></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="actions">
+          <div class="ui teal approve button" id="updateSettingsButton">Update</div>
+          <div class="ui red cancel button">Cancel</div>
+        </div>
+      </div>
+      <div class="ui yellow massive circular icon button" id="exportDataReminder" style="position: fixed; bottom: 20px; left: 20px; display: none;">
+        <i class="exclamation icon"></i>
       </div>
       <script src="/vendors/angular/angular.min.js"></script>
       <script src="/vendors/angular/angular-animate.min.js"></script>

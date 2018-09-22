@@ -225,12 +225,18 @@ app.controller('MainController', function ($scope) {
 	    weightedpts += (qualitypts * _class.credits);
 	    $scope.gpacomponents.push(gpacomponent);
 	  }
-	  $scope.unweightedgpa = unweightedpts / totalcredits;
+	  $scope.unweightedgpa = Math.round(unweightedpts * 100 / totalcredits) / 100;
 	  $scope.unweightedpts = unweightedpts;
-	  $scope.weightedgpa = weightedpts / totalcredits;
+	  $scope.weightedgpa = Math.round(weightedpts * 100 / totalcredits) / 100;
 	  $scope.weightedpts = weightedpts;
 	  $scope.totalcredits = credits;
 	  $scope.average /= $scope.mps;
+	  $scope.average = GradeFactory.numEquivToLetter($scope.average);
+	  if (!$scope.unweightedgpa) {
+	  	$scope.unweightedgpa = "-";
+	  	$scope.weightedgpa = "-";
+	  	$scope.average = "-";
+	  }
 	};
 
 	$scope.calculateGPAProgression = function() {

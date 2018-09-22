@@ -1,5 +1,14 @@
 $(document).ready(function () {
 	$('#settingsDropdown').dropdown();
+	// Check when data was last exported
+	if (new Date(window.localStorage.getItem("lastexported")).getMilliseconds()/1000 - new Date().getMilliseconds()/1000 > 345600) {
+		$("#exportDataReminder").show();
+		$("#exportDataReminder").popup({
+			position: 'top center',
+			title: "Export your data!",
+			content: "It's been a while since you last exported your data. If your browser's search history gets cleared, you could lose your data!"
+		});
+	}
 	// Current Grade Modal
 	$('#currentGradeDropdown').dropdown();
 	if (window.localStorage.getItem('currentgrade')) $('#currentGradeDropdown').dropdown('set selected', window.localStorage.getItem('currentgrade'));
@@ -46,6 +55,7 @@ $(document).ready(function () {
 		document.body.appendChild(element);
 		element.click();
 		document.body.removeChild(element);
+		window.localStorage.setItem("lastexported", new Date());
 	});
 	$('#clearModal').modal({
 		onApprove: function() {
@@ -90,11 +100,21 @@ $(document).ready(function () {
 	        alert('Error reading file!');
 	    }
 	});
+	$('#gpaSettingsLink').click(function() {
+		$('#gpaSettingsModal').modal('show');
+	});
+	$('#updateSettingsButton').click(function() {
+		for (var g = 9; g <= 12; g++) {
+			for (var mp = 1; mp <= 4; mp++) {
+				console.log(g + " " + mp + " " + $("#gpasettings-" + g + "-" + mp).checkbox('is checked'));
+			}
+		}
+	});
 
 	for (var c = 1; c <= parseInt(window.localStorage.getItem("classcount")); c++) {
 		var _class = JSON.parse(window.localStorage.getItem("c" + c));
 		if (parseInt(_class.grade) !== parseInt(window.localStorage.getItem("currentgrade"))) continue;
-		var elem = '<a href="/classes/' + encodeURIComponent(_class.name) + '" class="item"><i class="graduation cap icon"></i>' + _class.name + '</a>';
+		var elem = '<a href="/classes/' + encodeURIComponent(_class.name) + '" class="item"><i class="book icon"></i>' + _class.name + '</a>';
 		$('#classesDropdown .menu').append(elem);
 	}
 	$('#classesDropdown').dropdown();
