@@ -251,6 +251,8 @@ app.controller('MainController', function ($scope) {
 	function initCategoriesAndGradeBrackets() {
 		$scope.categories = [];
 		$scope.gradeBrackets = [{}, {}, {}, {}];
+		$scope.mpaveragecalccategories = [];
+		$scope.mpaveragecalcavg = 95;
 		for (var cat = 1; cat <= parseInt(LS.getItem("c" + $scope.classlsid + "-catcount")); cat++) {
 			var category = LS.getCategory($scope.classlsid, cat);
 			$scope.categories.push(category);
@@ -269,6 +271,11 @@ app.controller('MainController', function ($scope) {
 					ptstotal: 0
 				};
 			}
+			$scope.mpaveragecalccategories.push({
+				category: category.name,
+				weight: category.weight,
+				average: 95
+			});
 		}
 	}
 	
@@ -1271,6 +1278,24 @@ app.controller('MainController', function ($scope) {
 		delete $scope.class.$$hashKey;
 		window.localStorage.setItem("c" + $scope.classlsid, JSON.stringify($scope.class));
 		location.reload();
+	}
+
+	$scope.incMPCalcAverage = function(i) {
+		$scope.mpaveragecalccategories[i].average++;
+		var totalaverage = 0;
+		for (var category of $scope.mpaveragecalccategories) {
+			totalaverage += (category.weight * (category.average / 100));
+		}
+		$scope.mpaveragecalcavg = totalaverage;
+	}
+
+	$scope.decMPCalcAverage = function(i) {
+		$scope.mpaveragecalccategories[i].average--;
+		var totalaverage = 0;
+		for (var category of $scope.mpaveragecalccategories) {
+			totalaverage += (category.weight * (category.average / 100));
+		}
+		$scope.mpaveragecalcavg = totalaverage;
 	}
 });
 

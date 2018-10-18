@@ -57,3 +57,33 @@
     50%{background-position:100% 50%}
     100%{background-position:0% 50%}
 }
+#mpAverageCalculator table {
+	width: 100% !important;
+	text-align: center;
+}
+#mpAverageCalculator td {
+	width: 14.2857% !important;
+	padding: 15px 0;
+	background: #efefef;
+	transition: 0.2s ease all;
+	font-weight: bold;
+}
+#mpAverageCalculator .primCell {
+	background: #00B5AE;
+	font-size: 20px;
+	color: white;
+}
+#mpAverageCalculator .secCell {
+	background: #80fffb;
+	font-size: 16px;
+	color: black;
+}
+#mpAverageCalculator .actionCell {
+	font-weight: bold !important;
+	font-size: 18px !important;
+	cursor: pointer;
+}
+#mpAverageCalculator .actionCell:hover {
+	background: #ababab;
+	color: white;
+}

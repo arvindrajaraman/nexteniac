@@ -282,7 +282,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="ui segments">
+								<!--<div class="ui segments">
 									<div class="ui center aligned segment" ng-class="{'teal': !phantommode, 'pink': phantommode}">
 										<h3>Outliers</h3>
 									</div>
@@ -306,7 +306,7 @@
 											</div>
 										</div>
 									</div>
-								</div>
+								</div>-->
 							</div>
 						</div>
 					</div>
@@ -375,7 +375,7 @@
 							<div class="ui inverted segment" ng-class="{'teal': !phantommode, 'pink': phantommode}">
 								<div class="ui inverted statistic">
 				 		 			<div class="value">{[yearAverageLetter | valueordefault]}</div>
-				 		 			<div class="label">YEAR AVERAGE</div>
+				 		 			<div class="label">FINAL AVERAGE</div>
 								</div>
 							</div>
 						</div>
@@ -474,104 +474,140 @@
 					</div>
 				</div>
 				<div class="tab" ng-show="tab === 6">
-					<div class="ui segment">
-						<div class="ui five statistics">
-							<div class="ui statistic" ng-style="{'visibility': class.mp1 ? 'visible': 'hidden'}">
-								<div class="value avg1">{[expavgs.mp1 | numequivtoletter]}</div>
-								<div class="label">
-									<div class="ui inline dropdown averageDropdown" id="avg1Dropdown">
-							      		<div class="text">MP1</div>
-							      		<i class="dropdown icon"></i>
-							      		<div class="menu">
-								     		<div class="item" data-text="MP1" ng-click="setExpValue('110')">A+</div>
-							     	  		<div class="item" data-text="MP1" ng-click="setExpValue('19')">A</div>
-								        	<div class="item" data-text="MP1" ng-click="setExpValue('18')">A-</div>
-								        	<div class="item" data-text="MP1" ng-click="setExpValue('17')">B+</div>
-							     	  		<div class="item" data-text="MP1" ng-click="setExpValue('16')">B</div>
-								        	<div class="item" data-text="MP1" ng-click="setExpValue('15')">B-</div>
-								        	<div class="item" data-text="MP1" ng-click="setExpValue('14')">C+</div>
-							     	  		<div class="item" data-text="MP1" ng-click="setExpValue('13')">C</div>
-								        	<div class="item" data-text="MP1" ng-click="setExpValue('12')">C-</div>
-								        	<div class="item" data-text="MP1" ng-click="setExpValue('11')">D</div>
-								        	<div class="item" data-text="MP1" ng-click="setExpValue('10')">F</div>
-							      		</div>
-								    </div>
+					<div class="ui segments">
+						<div class="ui segment">
+							<h3 style="font-family: Oswald !important;">Year Average Calculator</h3>
+						</div>
+						<div class="ui segment">
+							<div class="ui five statistics">
+								<div class="ui statistic" ng-style="{'visibility': class.mp1 ? 'visible': 'hidden'}">
+									<div class="value avg1">{[expavgs.mp1 | numequivtoletter]}</div>
+									<div class="label">
+										<div class="ui inline dropdown averageDropdown" id="avg1Dropdown">
+								      		<div class="text">MP1</div>
+								      		<i class="dropdown icon"></i>
+								      		<div class="menu">
+									     		<div class="item" data-text="MP1" ng-click="setExpValue('110')">A+</div>
+								     	  		<div class="item" data-text="MP1" ng-click="setExpValue('19')">A</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('18')">A-</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('17')">B+</div>
+								     	  		<div class="item" data-text="MP1" ng-click="setExpValue('16')">B</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('15')">B-</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('14')">C+</div>
+								     	  		<div class="item" data-text="MP1" ng-click="setExpValue('13')">C</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('12')">C-</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('11')">D</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('10')">F</div>
+								      		</div>
+									    </div>
+									</div>
 								</div>
-							</div>
-							<div class="ui statistic" ng-style="{'visibility': class.mp2 ? 'visible': 'hidden'}">
-								<div class="value avg2">{[expavgs.mp2 | numequivtoletter]}</div>
-								<div class="label">
-									<div class="ui inline dropdown averageDropdown" id="avg2Dropdown">
-							      		<div class="text">MP2</div>
-							      		<i class="dropdown icon"></i>
-							      		<div class="menu">
-								     		<div class="item" data-text="MP2" ng-click="setExpValue('210')">A+</div>
-							     	  		<div class="item" data-text="MP2" ng-click="setExpValue('29')">A</div>
-								        	<div class="item" data-text="MP2" ng-click="setExpValue('28')">A-</div>
-								        	<div class="item" data-text="MP2" ng-click="setExpValue('27')">B+</div>
-							     	  		<div class="item" data-text="MP2" ng-click="setExpValue('26')">B</div>
-								        	<div class="item" data-text="MP2" ng-click="setExpValue('25')">B-</div>
-								        	<div class="item" data-text="MP2" ng-click="setExpValue('24')">C+</div>
-							     	  		<div class="item" data-text="MP2" ng-click="setExpValue('23')">C</div>
-								        	<div class="item" data-text="MP2" ng-click="setExpValue('22')">C-</div>
-								        	<div class="item" data-text="MP2" ng-click="setExpValue('21')">D</div>
-								        	<div class="item" data-text="MP1" ng-click="setExpValue('20')">F</div>
-							      		</div>
-								    </div>
+								<div class="ui statistic" ng-style="{'visibility': class.mp2 ? 'visible': 'hidden'}">
+									<div class="value avg2">{[expavgs.mp2 | numequivtoletter]}</div>
+									<div class="label">
+										<div class="ui inline dropdown averageDropdown" id="avg2Dropdown">
+								      		<div class="text">MP2</div>
+								      		<i class="dropdown icon"></i>
+								      		<div class="menu">
+									     		<div class="item" data-text="MP2" ng-click="setExpValue('210')">A+</div>
+								     	  		<div class="item" data-text="MP2" ng-click="setExpValue('29')">A</div>
+									        	<div class="item" data-text="MP2" ng-click="setExpValue('28')">A-</div>
+									        	<div class="item" data-text="MP2" ng-click="setExpValue('27')">B+</div>
+								     	  		<div class="item" data-text="MP2" ng-click="setExpValue('26')">B</div>
+									        	<div class="item" data-text="MP2" ng-click="setExpValue('25')">B-</div>
+									        	<div class="item" data-text="MP2" ng-click="setExpValue('24')">C+</div>
+								     	  		<div class="item" data-text="MP2" ng-click="setExpValue('23')">C</div>
+									        	<div class="item" data-text="MP2" ng-click="setExpValue('22')">C-</div>
+									        	<div class="item" data-text="MP2" ng-click="setExpValue('21')">D</div>
+									        	<div class="item" data-text="MP1" ng-click="setExpValue('20')">F</div>
+								      		</div>
+									    </div>
+									</div>
 								</div>
-							</div>
-							<div class="ui statistic" ng-style="{'visibility': class.mp3 ? 'visible': 'hidden'}">
-								<div class="value avg3">{[expavgs.mp3 | numequivtoletter]}</div>
-								<div class="label">
-									<div class="ui inline dropdown averageDropdown" id="avg3Dropdown">
-							      		<div class="text">MP3</div>
-							      		<i class="dropdown icon"></i>
-							      		<div class="menu">
-								     		<div class="item" data-text="MP3" ng-click="setExpValue('310')">A+</div>
-							     	  		<div class="item" data-text="MP3" ng-click="setExpValue('39')">A</div>
-								        	<div class="item" data-text="MP3" ng-click="setExpValue('38')">A-</div>
-								        	<div class="item" data-text="MP3" ng-click="setExpValue('37')">B+</div>
-							     	  		<div class="item" data-text="MP3" ng-click="setExpValue('36')">B</div>
-								        	<div class="item" data-text="MP3" ng-click="setExpValue('35')">B-</div>
-								        	<div class="item" data-text="MP3" ng-click="setExpValue('34')">C+</div>
-							     	  		<div class="item" data-text="MP3" ng-click="setExpValue('33')">C</div>
-								        	<div class="item" data-text="MP3" ng-click="setExpValue('32')">C-</div>
-								        	<div class="item" data-text="MP3" ng-click="setExpValue('31')">D</div>
-								        	<div class="item" data-text="MP3" ng-click="setExpValue('30')">F</div>
-							      		</div>
-								    </div>
+								<div class="ui statistic" ng-style="{'visibility': class.mp3 ? 'visible': 'hidden'}">
+									<div class="value avg3">{[expavgs.mp3 | numequivtoletter]}</div>
+									<div class="label">
+										<div class="ui inline dropdown averageDropdown" id="avg3Dropdown">
+								      		<div class="text">MP3</div>
+								      		<i class="dropdown icon"></i>
+								      		<div class="menu">
+									     		<div class="item" data-text="MP3" ng-click="setExpValue('310')">A+</div>
+								     	  		<div class="item" data-text="MP3" ng-click="setExpValue('39')">A</div>
+									        	<div class="item" data-text="MP3" ng-click="setExpValue('38')">A-</div>
+									        	<div class="item" data-text="MP3" ng-click="setExpValue('37')">B+</div>
+								     	  		<div class="item" data-text="MP3" ng-click="setExpValue('36')">B</div>
+									        	<div class="item" data-text="MP3" ng-click="setExpValue('35')">B-</div>
+									        	<div class="item" data-text="MP3" ng-click="setExpValue('34')">C+</div>
+								     	  		<div class="item" data-text="MP3" ng-click="setExpValue('33')">C</div>
+									        	<div class="item" data-text="MP3" ng-click="setExpValue('32')">C-</div>
+									        	<div class="item" data-text="MP3" ng-click="setExpValue('31')">D</div>
+									        	<div class="item" data-text="MP3" ng-click="setExpValue('30')">F</div>
+								      		</div>
+									    </div>
+									</div>
 								</div>
-							</div>
-							<div class="ui statistic" ng-style="{'visibility': class.mp4 ? 'visible': 'hidden'}">
-								<div class="value avg4">{[expavgs.mp4 | numequivtoletter]}</div>
-								<div class="label">
-									<div class="ui inline dropdown averageDropdown" id="avg4Dropdown">
-							      		<div class="text">MP4</div>
-							      		<i class="dropdown icon"></i>
-							      		<div class="menu">
-								     		<div class="item" data-text="MP4" ng-click="setExpValue('410')">A+</div>
-							     	  		<div class="item" data-text="MP4" ng-click="setExpValue('49')">A</div>
-								        	<div class="item" data-text="MP4" ng-click="setExpValue('48')">A-</div>
-								        	<div class="item" data-text="MP4" ng-click="setExpValue('47')">B+</div>
-							     	  		<div class="item" data-text="MP4" ng-click="setExpValue('46')">B</div>
-								        	<div class="item" data-text="MP4" ng-click="setExpValue('45')">B-</div>
-								        	<div class="item" data-text="MP4" ng-click="setExpValue('44')">C+</div>
-							     	  		<div class="item" data-text="MP4" ng-click="setExpValue('43')">C</div>
-								        	<div class="item" data-text="MP4" ng-click="setExpValue('42')">C-</div>
-								        	<div class="item" data-text="MP4" ng-click="setExpValue('41')">D</div>
-								        	<div class="item" data-text="MP4" ng-click="setExpValue('40')">F</div>
-							      		</div>
-								    </div>
+								<div class="ui statistic" ng-style="{'visibility': class.mp4 ? 'visible': 'hidden'}">
+									<div class="value avg4">{[expavgs.mp4 | numequivtoletter]}</div>
+									<div class="label">
+										<div class="ui inline dropdown averageDropdown" id="avg4Dropdown">
+								      		<div class="text">MP4</div>
+								      		<i class="dropdown icon"></i>
+								      		<div class="menu">
+									     		<div class="item" data-text="MP4" ng-click="setExpValue('410')">A+</div>
+								     	  		<div class="item" data-text="MP4" ng-click="setExpValue('49')">A</div>
+									        	<div class="item" data-text="MP4" ng-click="setExpValue('48')">A-</div>
+									        	<div class="item" data-text="MP4" ng-click="setExpValue('47')">B+</div>
+								     	  		<div class="item" data-text="MP4" ng-click="setExpValue('46')">B</div>
+									        	<div class="item" data-text="MP4" ng-click="setExpValue('45')">B-</div>
+									        	<div class="item" data-text="MP4" ng-click="setExpValue('44')">C+</div>
+								     	  		<div class="item" data-text="MP4" ng-click="setExpValue('43')">C</div>
+									        	<div class="item" data-text="MP4" ng-click="setExpValue('42')">C-</div>
+									        	<div class="item" data-text="MP4" ng-click="setExpValue('41')">D</div>
+									        	<div class="item" data-text="MP4" ng-click="setExpValue('40')">F</div>
+								      		</div>
+									    </div>
+									</div>
 								</div>
-							</div>
-							<div class="ui statistic" ng-class="{'teal': !phantommode, 'pink': phantommode}">
-								<div class="value avgF">{[expavgs.final | numequivtoletter]}</div>
-								<div class="label">Final</div>
+								<div class="ui statistic" ng-class="{'teal': !phantommode, 'pink': phantommode}">
+									<div class="value avgF">{[expavgs.final | numequivtoletter]}</div>
+									<div class="label">Final</div>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="ui raised segment" style="padding: 0 !important; background: url(/images/achieveyourgoal.jpg) 50% 50% no-repeat; background-size: cover;">
-						<div style="background: rgba(255,255,255,0.7) !important; padding: 15px; width: 100%; position: relative; bottom: 2px;">
+					<div class="ui segments">
+						<div class="ui segment">
+							<h3 style="font-family: Oswald !important;">MP Average Calculator</h3>
+						</div>
+						<div class="ui segment">
+							<table style="width: 100% !important;">
+								<tr>
+									<td style="width: 75% !important;" id="mpAverageCalculator">
+										<div ng-repeat="category in mpaveragecalccategories" style="width: 100% !important; display: block;">
+											<div style="padding: 5px 0; text-align: center; width: 100%; font-family: Oswald !important;">{[category.category]}</div>
+											<table>
+												<tr>
+													<td class="secCell">{[category.average-2]}</td>
+													<td class="secCell">{[category.average-1]}</td>
+													<td class="primCell">{[category.average]}</td>
+													<td class="secCell">{[category.average+1]}</td>
+													<td class="secCell">{[category.average+2]}</td>
+													<td class="actionCell" ng-click="incMPCalcAverage($index)"><i class="plus icon"></i></td>
+													<td class="actionCell" ng-click="decMPCalcAverage($index)"><i class="minus icon"></i></td>
+												</tr>
+											</table>
+										</div>
+									</td>
+									<td style="width: 25% !important; text-align: center;">
+										<b style="font-size: 36px !important;">{[mpaveragecalcavg | number:2]}%<br><br></b>
+										<b style="font-size: 28px !important;">{[mpaveragecalcavg / 100 | lettergrade]}</b>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<!--<div class="ui segment" style="padding: 0 !important; background: url(/images/achieveyourgoal.jpg) 50% 50% no-repeat; background-size: cover;">
+						<div style="background: rgba(255,255,255,0.8) !important; padding: 15px; width: 100%; position: relative; bottom: 2px;">
 							<table style="width: 100%;">
 								<tr>
 									<td>
@@ -584,7 +620,7 @@
 							</table>
 						</div>
 						<div style="width: 100% !important; padding: 60px; text-align: center;">
-							<div style="width: 80% !important; display: inline-block; background: rgba(255,255,255,0.7) !important; padding: 20px; font-size: 18px;">
+							<div style="width: 80% !important; display: inline-block; background: rgba(255,255,255,0.8) !important; padding: 20px; font-size: 18px;">
 								<div ng-show="achievegoalpage === 0">
 									<div ng-show="lowestPossibleAverage">
 										Determine what scores you need going forward to achieve a <b>{[class.goalaverage | numequivtoletter]}</b>!
@@ -671,7 +707,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div>-->
 				</div>
 			</div>
 		</div>
@@ -686,7 +722,7 @@
 				<option value="2">MP2</option>
 				<option value="3">MP3</option>
 				<option value="4">MP4</option>
-				<option value="5">Year</option>
+				<!--<option value="5">Year</option>-->
 			</select>
 			<div ng-show="tab === 2">
 				<br>
