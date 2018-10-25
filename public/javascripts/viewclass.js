@@ -218,7 +218,7 @@ app.controller('MainController', function ($scope) {
 	$scope.achievegoalpage = 0;
 	$scope.newgrades = [{}];
 	$scope.search = {
-		mp: 2
+		mp: 1
 	};
 	$scope.sort = {
 		dir: 1, // 1 = ascemdimg, -1 = descending
@@ -229,7 +229,6 @@ app.controller('MainController', function ($scope) {
 	$scope.initializedCategoricalAverageProgressionChart = false;
 	$scope.initializedFrequencyCharts = false;
 	$scope.editmode = false;
-	$scope.phantommode = false;
 	$scope.achievegoalstats = [];
 	$scope.achievegoalavg = 10;
 	$scope.currentmp = parseInt(window.localStorage.getItem('currentmp'));
@@ -909,7 +908,11 @@ app.controller('MainController', function ($scope) {
 	};
 
 	$scope.changeTab = function(t) {
-		$scope.tab = t;
+		if (!$scope.editmode) $scope.tab = t;
+	};
+
+	$scope.changeMP = function(mp) {
+		if (!$scope.editmode) $scope.search.mp = mp;
 	};
 
 	$scope.changeChangesTab = function(t) {
@@ -1002,7 +1005,6 @@ app.controller('MainController', function ($scope) {
 	};
 
 	$scope.toggleEditMode = function() {
-		if ($scope.phantommode) return;
 		if ($scope.editmode) {
 			// Edit
 			for (var mp = 1; mp <= 4; mp++) {
@@ -1057,22 +1059,6 @@ app.controller('MainController', function ($scope) {
 			location.reload();
 		}
 		$scope.editmode = !$scope.editmode;
-	};
-
-	$scope.togglePhantomMode = function() {
-		if ($scope.phantommode) {
-			location.reload();
-		}
-		$scope.phantommode = !$scope.phantommode;
-		averageProgressionChart.data.datasets[0].borderColor = 'rgb(234,28,137)';
-		averageProgressionChart.data.datasets[0].backgroundColor = 'rgba(234,28,137,0.3)';
-		averageProgressionChart.update();
-		for (var freqChart of charts) {
-			console.log(freqChart);
-			freqChart.data.datasets[0].borderColor = 'rgb(234,28,137)';
-			freqChart.data.datasets[0].backgroundColor = 'rgba(234,28,137,0.3)'
-			freqChart.update();
-		}
 	};
 
 	$scope.deleteExpGrade = function(j) {
@@ -1300,12 +1286,8 @@ app.controller('MainController', function ($scope) {
 });
 
 $(document).ready(function () {
-	$('#mpSelectionDropdown').dropdown();
 	$('#categorySelectionDropdown').dropdown();
 	$('.averageDropdown').dropdown();
-
-	if (window.localStorage.getItem('currentmp')) $('#mpSelectionDropdown').dropdown('set selected', window.localStorage.getItem('currentmp'));
-	else $('#mpSelectionDropdown').dropdown('set selected', '1');
 
 	$('#addGradeButton').click(function () {
 		$('#addGradeModal').modal('show');

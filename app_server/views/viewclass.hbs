@@ -8,50 +8,38 @@
 		<b><a href="/classes"><i class="left arrow icon"></i> All Classes</a></b>
 	</div>
 	<div class="ui grid" ng-show="classexists">
-		<div class="twelve wide column">
-			<div class="ui inverted center aligned segment headerSegment" ng-class="{'teal': !phantommode, 'pink': phantommode}">
+		<div class="sixteen wide column">
+			<div class="ui teal inverted center aligned segment headerSegment"">
 				<h1 style="text-transform: uppercase; font-family: 'Oswald' !important; font-weight: 700 !important; letter-spacing: 1px;">{[class.name]}</h1>
 			</div>
 		</div>
-		<div class="two wide column">
-			<div class="ui inverted center aligned segment headerSegment" ng-click="togglePhantomMode()" ng-class="{'teal': !phantommode, 'pink': phantommode}">
-				<h1>
-					<i class="x icon" ng-show="phantommode"></i>
-					<i class="gamepad icon" ng-hide="phantommode"></i>
-				</h1>
-			</div>
-		</div>
-		<div class="two wide column">
-			<div class="ui inverted center aligned segment headerSegment" ng-click="toggleEditMode()" ng-class="{'teal': !phantommode, 'pink': phantommode}">
-				<h1>
-					<i class="lock icon" ng-show="editmode"></i>
-					<i class="unlock icon" ng-hide="editmode"></i>
-				</h1>
-			</div>
-		</div>
 		<div class="twelve wide column">
-			<div class="ui six item labeled icon menu">
-				<a class="item" ng-class="{'active': tab === 1, 'teal': !phantommode, 'pink': phantommode}" ng-click="changeTab(1)">
+			<div class="ui seven item labeled icon menu">
+				<a class="teal item" ng-class="{'active': tab === 1}" ng-click="changeTab(1)">
 					<i class="table icon"></i>
 					Grades
 				</a>
-				<a class="item" ng-class="{'active': tab === 2, 'teal': !phantommode, 'pink': phantommode}" ng-click="changeTab(2)">
+				<a class="teal item" ng-class="{'active': tab === 2, 'disabled': editmode}" ng-click="changeTab(2)">
 					<i class="chart area icon"></i>
 					Category Stats
 				</a>
-				<a class="item" ng-class="{'active': tab === 3, 'teal': !phantommode, 'pink': phantommode}" ng-click="changeTab(3)">
+				<a class="teal item" ng-class="{'active': tab === 3, 'disabled': editmode}" ng-click="changeTab(3)">
 					<i class="chart line icon"></i>
 					MP Stats
 				</a>
-				<a class="item" ng-class="{'active': tab === 4, 'teal': !phantommode, 'pink': phantommode}" ng-click="changeTab(4)">
+				<a class="teal item" ng-class="{'active': tab === 4, 'disabled': editmode}" ng-click="changeTab(4)">
 					<i class="chart pie icon"></i>
 					Average Stats
 				</a>
-				<a class="item" ng-class="{'active': tab === 5, 'teal': !phantommode, 'pink': phantommode}" ng-click="changeTab(5)">
+				<a class="teal item" ng-class="{'active': tab === 5, 'disabled': editmode}" ng-click="changeTab(5)">
 					<i class="lightbulb icon"></i>
 					Insights
 				</a>
-				<a class="item" ng-class="{'active': tab === 6, 'teal': !phantommode, 'pink': phantommode}" ng-click="changeTab(6)">
+				<a class="teal item" ng-class="{'active': tab === 6, 'disabled': editmode}" ng-click="changeTab(6)">
+					<i class="list alternate icon"></i>
+					Tips
+				</a>
+				<a class="teal item" ng-class="{'active': tab === 7, 'disabled': editmode}" ng-click="changeTab(7)">
 					<i class="wrench icon"></i>
 					Tools
 				</a>
@@ -59,7 +47,7 @@
 			<div id="viewClassTabs">
 				<div class="tab" ng-show="tab === 1">
 					<div class="ui form">
-						<table class="ui compact center aligned table" ng-hide="mpGrades[search.mp-1].length === 0">
+						<table class="ui compact center aligned table" ng-hide="mpGrades[search.mp-1].length === 0" style="margin-bottom: 15px;">
 							<thead id="viewClassGradesHeader">
 								<th ng-click="sortGrades(1)">Date <i class="caret icon" ng-show="sort.field === 1" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
 								<th ng-hide="editmode" ng-click="sortGrades(2)">Letter <i class="caret icon" ng-show="sort.field === 2" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
@@ -68,10 +56,9 @@
 								<th ng-click="sortGrades(5)">Category <i class="caret icon" ng-show="sort.field === 5" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
 								<th ng-click="sortGrades(6)">Assignment Name <i class="caret icon" ng-show="sort.field === 6" ng-class="{'down': sort.dir === -1, 'up': sort.dir === 1}"></i></th>
 								<th ng-show="editmode"></th>
-								<th ng-show="phantommode"></th>
 							</thead>
 							<tbody>
-								<tr ng-repeat="grade in mpGrades[search.mp-1]" ng-show="grade.mp === search.mp" ng-class="{'gradeshown': grade.mp === search.mp, 'error': mpGrades[search.mp-1][$index].deleted}">
+								<tr ng-repeat="grade in mpGrades[search.mp-1]" ng-show="grade.mp == search.mp" ng-class="{'gradeshown': grade.mp == search.mp, 'error': mpGrades[search.mp-1][$index].deleted}">
 									<td>
 										<span ng-hide="editmode">{[grade.date | date:'EEE M/d/yy']}</span>
 										<div class="ui small input" ng-show="editmode" ng-class="{'disabled': mpGrades[search.mp-1][$index].deleted}">
@@ -112,47 +99,6 @@
 											<i class="icon" ng-class="{'trash': !mpGrades[search.mp-1][$index].deleted, 'check': mpGrades[search.mp-1][$index].deleted}"></i>
 										</div>
 									</td>
-									<td ng-show="phantommode" style="padding: 7px !important;">
-										<div class="ui mini inverted pink icon button" ng-click="deleteExpGrade($index)">
-											<i class="minus icon"></i>
-										</div>
-									</td>
-								</tr>
-								<tr ng-show="phantommode">
-									<td colspan="7">
-										<div class="six fields" style="margin: 7px 0 !important;">
-											<div class="four wide field">
-												<div class="ui small input" ng-class="{'disabled': mpGrades[search.mp-1][$index].deleted}">
-													<input type="date" ng-model="expgrade.date" placeholder="Date" />
-												</div>
-											</div>
-											<div class="two wide field">
-												<div class="ui small input" ng-class="{'disabled': mpGrades[search.mp-1][$index].deleted}">
-													<input type="text" ng-model="expgrade.ptsearned" placeholder="Pts Earned" />
-												</div>
-											</div>
-											<div class="two wide field">
-												<div class="ui small input" ng-class="{'disabled': mpGrades[search.mp-1][$index].deleted}">
-													<input type="text" ng-model="expgrade.ptstotal" placeholder="Pts Total" />
-												</div>
-											</div>
-											<div class="three wide field">
-												<select class="ui small dropdown" ng-model="expgrade.category" ng-class="{'disabled': mpGrades[search.mp-1][$index].deleted}">
-													<option ng-repeat="category in categories" value="{[category.name]}">{[category.name]}</option>
-												</select>
-											</div>
-											<div class="four wide field">
-												<div class="ui small input" ng-class="{'disabled': mpGrades[search.mp-1][$index].deleted}">
-													<input type="text" ng-model="expgrade.name" placeholder="Name" />
-												</div>
-											</div>
-											<div class="one wide field">
-												<div class="ui pink inverted icon button" ng-click="addExpGrade()">
-													<i class="plus icon"></i>
-												</div>
-											</div>
-										</div>
-									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -162,6 +108,15 @@
 							<i class="frown icon"></i>
 							No grades in this marking period yet!
 						</h2>
+					</div>
+					<div style="float: right;">
+						<div class="ui teal labeled icon button" id="addGradeButton" ng-class="{'disabled': editmode}">
+							<i class="table icon"></i>
+							Add Grades
+						</div>
+						<div class="ui teal labeled icon button" ng-click="toggleEditMode()">
+							<i class="edit icon" ng-class="{'edit': !editmode, 'save': editmode}"></i> <span ng-hide="editmode">Edit Grades</span><span ng-show="editmode">Save Changes</span>
+						</div>
 					</div>
 				</div>
 				<div class="tab" ng-show="tab === 2">
@@ -179,14 +134,19 @@
 					</div>
 					<div ng-show="gradeBrackets[search.mp-1][search.category].percents.length && search.category">					
 						<div class="ui center aligned grid" id="categoryStatsGrid">
-							<div class="sixteen wide column">
+							<div class="twelve wide column">
 								<div class="ui fluid center aligned segment" style="padding: 0.75em 0.75em !important;">
 									<h3>MP{[search.mp]} {[search.category]} Statistics</h3>
 								</div>
 							</div>
+							<div class="four wide column">
+								<select class="ui fluid dropdown" id="categorySelectionDropdown" ng-model="search.category">
+									<option ng-repeat="category in categories" value="{[category.name]}">{[category.name]}</option>
+								</select>
+							</div>
 							<div class="six wide column">
 								<div class="ui segments">
-									<div class="ui center aligned segment" ng-class="{'teal': !phantommode, 'pink': phantommode}">
+									<div class="ui teal center aligned segment">
 										<h3>Category Average</h3>
 									</div>
 									<div class="ui segment">
@@ -200,7 +160,7 @@
 									</div>
 								</div>
 								<div class="ui segments">
-									<div class="ui center aligned segment" ng-class="{'teal': !phantommode, 'pink': phantommode}">
+									<div class="ui teal center aligned segment">
 										<h3>Scores ({[gradeBrackets[search.mp-1][search.category].count]})</h3>
 									</div>
 									<div class="ui compact segment">
@@ -213,7 +173,7 @@
 							</div>
 							<div class="ten wide column">
 								<div class="ui segments">
-									<div class="ui center aligned segment" ng-class="{'teal': !phantommode, 'pink': phantommode}">
+									<div class="ui teal center aligned segment">
 										<h3>Average Progression</h3>
 									</div>
 									<div class="ui segment">
@@ -221,7 +181,7 @@
 									</div>
 								</div>
 								<div class="ui segments">
-									<div class="ui center aligned segment" ng-class="{'teal': !phantommode, 'pink': phantommode}">
+									<div class="ui teal center aligned segment">
 										<h3>Five Number Summary</h3>
 									</div>
 									<div class="ui segment">
@@ -250,7 +210,7 @@
 									</div>
 								</div>
 								<div class="ui segments">
-									<div class="ui center aligned segment" ng-class="{'teal': !phantommode, 'pink': phantommode}">
+									<div class="ui teal center aligned segment">
 										<h3>Means & Deviations</h3>
 									</div>
 									<div class="ui segment">
@@ -283,7 +243,7 @@
 									</div>
 								</div>
 								<!--<div class="ui segments">
-									<div class="ui center aligned segment" ng-class="{'teal': !phantommode, 'pink': phantommode}">
+									<div class="ui teal center aligned segment">
 										<h3>Outliers</h3>
 									</div>
 									<div class="ui segment">
@@ -365,14 +325,14 @@
 					<div class="ui center aligned five column grid">
 						<div class="column" ng-repeat="mp in [0,1,2,3]">
 							<div class="ui segment" ng-class="{'inverted grey': !class['mp' + (mp + 1)]}">
-								<div class="ui statistic" ng-class="{'teal': !phantommode && class['mp' + (mp + 1)], 'pink': phantommode && class['mp' + (mp + 1)], 'inverted': !class['mp' + (mp + 1)]}">
+								<div class="ui teal statistic" ng-class="{'inverted': !class['mp' + (mp + 1)]}">
 				 		 			<div class="value">{[mpAverages[mp].averageLetter | valueordefault]}</div>
 				 		 			<div class="label">MP{[mp+1]} AVERAGE</div>
 								</div>
 							</div>
 						</div>
 						<div class="column">
-							<div class="ui inverted segment" ng-class="{'teal': !phantommode, 'pink': phantommode}">
+							<div class="ui teal inverted segment">
 								<div class="ui inverted statistic">
 				 		 			<div class="value">{[yearAverageLetter | valueordefault]}</div>
 				 		 			<div class="label">FINAL AVERAGE</div>
@@ -383,13 +343,13 @@
 				</div>
 				<div class="tab" ng-show="tab === 5">
 					<div class="ui top attached secondary pointing large menu">
-						<a class="item" ng-class="{'active': changesTab === 3, 'teal': !phantommode, 'pink': phantommode}" ng-click="changeChangesTab(3)">
+						<a class="teal item" ng-class="{'active': changesTab === 3}" ng-click="changeChangesTab(3)">
 							Trends
 						</a>
-						<a class="item" ng-class="{'active': changesTab === 2, 'teal': !phantommode, 'pink': phantommode}" ng-click="changeChangesTab(2)">
+						<a class="teal item" ng-class="{'active': changesTab === 2}" ng-click="changeChangesTab(2)">
 							All Changes
 						</a>
-						<a class="item" ng-class="{'active': changesTab === 1, 'teal': !phantommode, 'pink': phantommode}" ng-click="changeChangesTab(1)">
+						<a class="teal item" ng-class="{'active': changesTab === 1}" ng-click="changeChangesTab(1)">
 							Greatest Changes
 						</a>
 					</div>
@@ -474,6 +434,13 @@
 					</div>
 				</div>
 				<div class="tab" ng-show="tab === 6">
+					<div class="ui three column grid">
+						<div class="column">
+
+						</div>
+					</div>
+				</div>
+				<div class="tab" ng-show="tab === 7">
 					<div class="ui segments">
 						<div class="ui segment">
 							<h3 style="font-family: Oswald !important;">Year Average Calculator</h3>
@@ -568,7 +535,7 @@
 									    </div>
 									</div>
 								</div>
-								<div class="ui statistic" ng-class="{'teal': !phantommode, 'pink': phantommode}">
+								<div class="ui teal statistic">
 									<div class="value avgF">{[expavgs.final | numequivtoletter]}</div>
 									<div class="label">Final</div>
 								</div>
@@ -712,26 +679,27 @@
 			</div>
 		</div>
 		<div class="four wide center aligned column">
-			<div class="ui large fluid labeled icon button" id="addGradeButton" ng-class="{'teal': !phantommode, 'disabled pink': phantommode}">
-				<i class="table icon"></i>
-				Add Grades
-			</div>
-			<br>
-			<select class="ui fluid dropdown" id="mpSelectionDropdown" ng-model="search.mp">
-				<option value="1">MP1</option>
+			<!--<select class="ui fluid dropdown" id="mpSelectionDropdown" ng-model="search.mp" ng-class="{'disabled': editmode}">
+				<option value="1" selected="selected">MP1</option>
 				<option value="2">MP2</option>
 				<option value="3">MP3</option>
 				<option value="4">MP4</option>
-				<!--<option value="5">Year</option>-->
-			</select>
-			<div ng-show="tab === 2">
+				<option value="5">Year</option>
+			</select>-->
+			<div class="ui four buttons">
+				<div class="ui teal button" ng-click="changeMP(1)" ng-class="{'active': search.mp === 1, 'disabled': editmode}">MP1</div>
+				<div class="ui teal button" ng-click="changeMP(2)" ng-class="{'active': search.mp === 2, 'disabled': editmode}">MP2</div>
+				<div class="ui teal button" ng-click="changeMP(3)" ng-class="{'active': search.mp === 3, 'disabled': editmode}">MP3</div>
+				<div class="ui teal button" ng-click="changeMP(4)" ng-class="{'active': search.mp === 4, 'disabled': editmode}">MP4</div>
+			</div>
+			<!--<div ng-show="tab === 2">
 				<br>
 				<select class="ui fluid dropdown" id="categorySelectionDropdown" ng-model="search.category">
 					<option ng-repeat="category in categories" value="{[category.name]}">{[category.name]}</option>
 				</select>
-			</div>
+			</div>-->
 			<div class="ui segments">
-				<div class="ui segment" ng-class="{'teal': !phantommode, 'pink': phantommode}">
+				<div class="ui teal segment">
 					<h3>Grade Categories</h3>
 				</div>
 				<div class="ui segment" ng-repeat="category in categories">
@@ -768,16 +736,15 @@
 					</tr>
 				</tbody>
 			</table>
-			<div class="ui large fluid inverted blue button" id="editClassButton">
+			<div class="ui large fluid teal button" id="editClassButton" ng-class="{'disabled': editmode}" style="margin-bottom: 15px;">
 				Edit Class
 			</div>
-			<br />
-			<div class="ui large fluid inverted red button" id="deleteClassButton">
+			<div class="ui large fluid red button" id="deleteClassButton" ng-class="{'disabled': editmode}">
 				Delete Class
 			</div>
 		</div>
 	</div>
-	<div class="ui fullscreen modal" id="addGradeModal">
+	<div class="ui large modal" id="addGradeModal">
 		<div class="header">Add Grades</div>
 		<div class="ui scrolling form content">
 			<div class="fields" ng-repeat="newgrade in newgrades">
@@ -819,10 +786,10 @@
 			</div>
 		</div>
 		<div class="actions">
-			<div class="ui black button" ng-click="createRow()">Create Row</div>
+			<div class="ui black button" ng-click="createRow()">Add New Grade</div>
 			<div class="ui teal labeled icon button" ng-click="addGrades()">
-		    	<i class="plus icon"></i>
-		    	Add Grades
+		    	<i class="save icon"></i>
+		    	Save Changes
 		    </div>
 			<div class="ui red deny button">Cancel</div>
 		</div>
