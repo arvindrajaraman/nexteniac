@@ -134,16 +134,16 @@
 					</div>
 					<div ng-show="gradeBrackets[search.mp-1][search.category].percents.length && search.category">					
 						<div class="ui center aligned grid" id="categoryStatsGrid">
-							<div class="twelve wide column">
+							<div class="sixteen wide column">
 								<div class="ui fluid center aligned segment" style="padding: 0.75em 0.75em !important;">
 									<h3>MP{[search.mp]} {[search.category]} Statistics</h3>
 								</div>
 							</div>
-							<div class="four wide column">
+							<!--<div class="four wide column">
 								<select class="ui fluid dropdown" id="categorySelectionDropdown" ng-model="search.category">
 									<option ng-repeat="category in categories" value="{[category.name]}">{[category.name]}</option>
 								</select>
-							</div>
+							</div>-->
 							<div class="six wide column">
 								<div class="ui segments">
 									<div class="ui teal center aligned segment">
@@ -436,7 +436,19 @@
 				<div class="tab" ng-show="tab === 6">
 					<div class="ui three column grid">
 						<div class="column">
-
+							<div class="ui center aligned inverted violet segment">
+								<h3>Homework</h3>
+							</div>
+						</div>
+						<div class="column">
+							<div class="ui center aligned inverted blue segment">
+								<h3>Homework</h3>
+							</div>
+						</div>
+						<div class="column">
+							<div class="ui center aligned inverted teal segment">
+								<h3>Homework</h3>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -692,12 +704,13 @@
 				<div class="ui teal button" ng-click="changeMP(3)" ng-class="{'active': search.mp === 3, 'disabled': editmode}">MP3</div>
 				<div class="ui teal button" ng-click="changeMP(4)" ng-class="{'active': search.mp === 4, 'disabled': editmode}">MP4</div>
 			</div>
-			<!--<div ng-show="tab === 2">
+			<div ng-show="tab === 2">
 				<br>
 				<select class="ui fluid dropdown" id="categorySelectionDropdown" ng-model="search.category">
+					<option></option>
 					<option ng-repeat="category in categories" value="{[category.name]}">{[category.name]}</option>
 				</select>
-			</div>-->
+			</div>
 			<div class="ui segments">
 				<div class="ui teal segment">
 					<h3>Grade Categories</h3>

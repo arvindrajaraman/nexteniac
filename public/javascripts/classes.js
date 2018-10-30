@@ -185,6 +185,7 @@ app.controller('MainController', function ($scope) {
 	  	validmps = 0;
 	  	numequiv = 0;
 	    _class = JSON.parse(window.localStorage.getItem("c" + c));
+	    if (window.localStorage.getItem("gpasettings-" + _class.grade) == "false") continue;
 	    for (var avg of JSON.parse(window.localStorage.getItem("c" + c + "-averages"))) {
 	    	if (avg) {
 	    		validmps++;
@@ -330,6 +331,10 @@ app.controller('MainController', function ($scope) {
 	};
 
 	$scope.initClasses = function() {
+		if (!window.localStorage.getItem("gpasettings-9")) window.localStorage.setItem("gpasettings-9", true);
+		if (!window.localStorage.getItem("gpasettings-10")) window.localStorage.setItem("gpasettings-10", true);
+		if (!window.localStorage.getItem("gpasettings-11")) window.localStorage.setItem("gpasettings-11", true);
+		if (!window.localStorage.getItem("gpasettings-12")) window.localStorage.setItem("gpasettings-12", true);
 		$scope.loadAverages();
 		$scope.searchClasses();
 		$scope.calculateGPA();

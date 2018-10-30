@@ -105,11 +105,12 @@ $(document).ready(function () {
 	});
 	$('#updateSettingsButton').click(function() {
 		for (var g = 9; g <= 12; g++) {
-			for (var mp = 1; mp <= 4; mp++) {
-				console.log(g + " " + mp + " " + $("#gpasettings-" + g + "-" + mp).checkbox('is checked'));
-			}
+			window.localStorage.setItem("gpasettings-" + g, $("#gpasettings-" + g).checkbox('is checked'));
 		}
 	});
+	for (var g = 9; g <= 12; g++) {
+		if (window.localStorage.getItem("gpasettings-" + g) == "true") $("#gpasettings-" + g).checkbox("set checked");
+	}
 
 	for (var c = 1; c <= parseInt(window.localStorage.getItem("classcount")); c++) {
 		var _class = JSON.parse(window.localStorage.getItem("c" + c));

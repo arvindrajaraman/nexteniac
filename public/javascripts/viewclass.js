@@ -137,6 +137,32 @@ class GradeFactory {
 	}
 }
 
+function cardinaltoOrdinal(c) {
+	switch (c) {
+		case 1: return "first";
+		case 2: return "second";
+		case 3: return "third";
+		case 4: return "fourth";
+		case 5: return "fifth";
+		case 6: return "sixth";
+		case 7: return "seventh";
+		case 8: return "eighth";
+		case 9: return "ninth";
+		case 10: return "tenth";
+		case 11: return "eleventh";
+		case 12: return "twentieth";
+		case 13: return "thirteenth";
+		case 14: return "fourteenth";
+		case 15: return "fifteenth";
+		case 16: return "sixteenth";
+		case 17: return "seventeenth";
+		case 18: return "eighteenth";
+		case 19: return "ninteenth";
+		case 20: return "twentieth";
+		default: return c;
+	}
+}
+
 var ls = window.localStorage;
 class LS {
 	static getClass(c) {
@@ -218,7 +244,7 @@ app.controller('MainController', function ($scope) {
 	$scope.achievegoalpage = 0;
 	$scope.newgrades = [{}];
 	$scope.search = {
-		mp: 1
+		mp: parseInt(window.localStorage.getItem('currentmp'))
 	};
 	$scope.sort = {
 		dir: 1, // 1 = ascemdimg, -1 = descending
@@ -641,6 +667,41 @@ app.controller('MainController', function ($scope) {
 		}
 		$scope.lowestPossibleAverage = (experimentalavg <= 10) ? experimentalavg : null;
 	};
+
+	function generateTips() {
+		var condensedgradebrackets = [];
+		var currgradebracket = $scope.gradeBrackets[$scope.currentmp-1];
+		for (var gradebracket in currgradebracket) {
+			if (!currgradebracket.hasOwnProperty(gradebracket)) continue;
+			condensedgradebrackets.push({
+				percent: currgradebracket[gradebracket].averagePercent,
+				name: gradebracket,
+				weight: currgradebracket[gradebracket].weight
+			});
+		}
+		/*condensedgradebrackets.sort(function(a, b){
+			return a.weight > b.weight;
+		});*/
+		console.log(condensedgradebrackets);
+		for (var b = 1; b <= condensedgradebrackets.length; b++) {
+			condensedgradebrackets[b-1].weighthierarchy = "This is the category with the " + cardinaltoOrdinal(b) + " most weight.";
+		}
+		condensedgradebrackets.sort(function(a, b){
+			return a.percent > b.percent;
+		});
+		console.log(condensedgradebrackets);
+		for (var b = 1; b <= condensedgradebrackets.length; b++) {
+			if (condensedgradebrackets[0].percent === null) {
+				condensedgradebrackets.push(condensedgradebrackets.shift());
+			}
+			else break;
+		}
+		for (var b = 1; b <= condensedgradebrackets.length; b++) {
+			if (condensedgradebrackets[b-1].percent !== null) condensedgradebrackets[b-1].averagehierarchy = "This is the category with the " + cardinaltoOrdinal(b) + " most lowest average.";
+			else condensedgradebrackets[b-1].averagehierarchy = "This category has no assignments in it yet.";
+		}
+		console.log(condensedgradebrackets);
+	};
 	
 	$scope.initViewClass = function() {
 		initClass();
@@ -652,6 +713,7 @@ app.controller('MainController', function ($scope) {
 		initInsights();
 		updateAverages();
 		findLowestPossibleAverage();
+		generateTips();
 		$scope.edit = {
 			name: $scope.class.name,
 			grade: $scope.class.grade,

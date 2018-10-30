@@ -12,7 +12,8 @@ app.controller('MainController', function($scope) {
 	$scope.finalaverage = 10;
 	$scope.categories = [{
 		name: '',
-		weight: ''
+		weight: '',
+		hascustomname: false
 	}];
 	$scope.existingclasses = [];
 
@@ -23,7 +24,8 @@ app.controller('MainController', function($scope) {
 	$scope.addCategory = function() {
 		$scope.categories.push({
 			name: '',
-			weight: ''
+			weight: '',
+			hascustomname: false
 		})
 	};
 
@@ -35,6 +37,13 @@ app.controller('MainController', function($scope) {
 		$scope.mpactive[mp-1] = ($scope.mpactive[mp-1]) ? false : true;
 	};
 
+	$scope.checkCustomChange = function(i) {
+		if ($scope.categories[i].name == "0") {
+			$scope.categories[i].name = "";
+			$scope.categories[i].hascustomname = true;
+		}
+	};
+	
 	$scope.createClass = function() {
 		var valid = true;
 		var fields = ["name", "credits", "type", "priority", "difficulty", "grade", "goalaverage"];
@@ -90,6 +99,7 @@ app.controller('MainController', function($scope) {
 				for (var i = 1; i <= $scope.categories.length; i++) {
 					var category = JSON.stringify($scope.categories[i-1]);
 					delete category.$$hashKey;
+					delete category.hascustomname;
 					ls.setItem('c' + ls.getItem('classcount') + '-cat' + i, category);
 				}
 				ls.setItem('c' + ls.getItem('classcount') + '-assignmentcount', 0);
