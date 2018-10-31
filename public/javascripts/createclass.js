@@ -46,8 +46,8 @@ app.controller('MainController', function($scope) {
 	
 	$scope.createClass = function() {
 		var valid = true;
-		var fields = ["name", "credits", "type", "priority", "difficulty", "grade", "goalaverage"];
-		if (!$scope.isfullfeaturedclass) fields = ["name", "credits", "type", "grade"];
+		var fields = ["name", "credits", "type", "priority", "difficulty", "grade", "goalaverage", "subject"];
+		if (!$scope.isfullfeaturedclass) fields = ["name", "credits", "type", "grade", "subject"];
 		for (var f = 0; f <= fields.length - 1; f++) {
 			var value = $scope.class[fields[f]];
 			if (value !== undefined && value !== "") {

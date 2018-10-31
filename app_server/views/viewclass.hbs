@@ -435,19 +435,63 @@
 				</div>
 				<div class="tab" ng-show="tab === 6">
 					<div class="ui three column grid">
-						<div class="column">
-							<div class="ui center aligned inverted violet segment">
-								<h3>Homework</h3>
+						<div class="column" ng-repeat="bracket in condensedgradebrackets">
+							<div class="ui center aligned inverted segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
+								<h3>{[bracket.name]}</h3>
 							</div>
-						</div>
-						<div class="column">
-							<div class="ui center aligned inverted blue segment">
-								<h3>Homework</h3>
+							<div class="ui segments">
+								<div class="ui inverted secondary segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
+									<span>{[bracket.upwardpotentialhierarchy]}</span>
+								</div>
+								<div class="ui segment">
+									<span>{[bracket.volatilityhierarchy]}</span>
+								</div>
+								<div class="ui segment">
+									<span>{[bracket.percenthierarchy]}</span>
+								</div>
+								<div class="ui segment">
+									<span>{[bracket.weighthierarchy]}</span>
+								</div>
 							</div>
-						</div>
-						<div class="column">
-							<div class="ui center aligned inverted teal segment">
-								<h3>Homework</h3>
+							<div class="ui segments">
+								<div class="ui segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
+									<h5>General Tips</h5>
+								</div>
+								<div class="ui compact segment">
+									<ul>
+										<li ng-repeat="tip in bracket.tips.general">{[tip]}</li>
+									</ul>
+								</div>
+							</div>
+							<div class="ui segments">
+								<div class="ui segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
+									<h5>Category-Specific Tips</h5>
+								</div>
+								<div class="ui compact segment">
+									<ul>
+										<li ng-repeat="tip in bracket.tips.category">{[tip]}</li>
+									</ul>
+								</div>
+							</div>
+							<div class="ui segments">
+								<div class="ui segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
+									<h5>Subject-Specific Tips</h5>
+								</div>
+								<div class="ui compact segment">
+									<ul>
+										<li ng-repeat="tip in bracket.tips.subject">{[tip]}</li>
+									</ul>
+								</div>
+							</div>
+							<div class="ui segments">
+								<div class="ui segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
+									<h5>Links</h5>
+								</div>
+								<div class="ui compact segment">
+									<ul>
+										<li ng-repeat="link in bracket.links"><a href="{[link.link]}">{[link.name]}</a></li>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</div>

@@ -107,6 +107,7 @@ $(document).ready(function () {
 		for (var g = 9; g <= 12; g++) {
 			window.localStorage.setItem("gpasettings-" + g, $("#gpasettings-" + g).checkbox('is checked'));
 		}
+		window.location.href = "/classes";
 	});
 	for (var g = 9; g <= 12; g++) {
 		if (window.localStorage.getItem("gpasettings-" + g) == "true") $("#gpasettings-" + g).checkbox("set checked");

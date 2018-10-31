@@ -238,7 +238,7 @@ function calcQuartile(data, q) {
 
 app.controller('MainController', function ($scope) {
 	// Presets
-	$scope.tab = 1;
+	$scope.tab = 6;
 	$scope.changesTab = 3;
 	$scope.distributionTab = 1;
 	$scope.achievegoalpage = 0;
@@ -270,7 +270,6 @@ app.controller('MainController', function ($scope) {
 				return;
 			}
 		}
-		$scope.classexists = false;
 	}
 	
 	function initCategoriesAndGradeBrackets() {
@@ -673,34 +672,119 @@ app.controller('MainController', function ($scope) {
 		var currgradebracket = $scope.gradeBrackets[$scope.currentmp-1];
 		for (var gradebracket in currgradebracket) {
 			if (!currgradebracket.hasOwnProperty(gradebracket)) continue;
-			condensedgradebrackets.push({
+			var bracket = {
 				percent: currgradebracket[gradebracket].averagePercent,
 				name: gradebracket,
-				weight: currgradebracket[gradebracket].weight
-			});
-		}
-		/*condensedgradebrackets.sort(function(a, b){
-			return a.weight > b.weight;
-		});*/
-		console.log(condensedgradebrackets);
-		for (var b = 1; b <= condensedgradebrackets.length; b++) {
-			condensedgradebrackets[b-1].weighthierarchy = "This is the category with the " + cardinaltoOrdinal(b) + " most weight.";
-		}
-		condensedgradebrackets.sort(function(a, b){
-			return a.percent > b.percent;
-		});
-		console.log(condensedgradebrackets);
-		for (var b = 1; b <= condensedgradebrackets.length; b++) {
-			if (condensedgradebrackets[0].percent === null) {
-				condensedgradebrackets.push(condensedgradebrackets.shift());
+				weight: currgradebracket[gradebracket].weight,
+			};
+			if (bracket.percent == null) {
+				bracket.upwardpotential = 0.00001;
+				bracket.volatility = 100;
 			}
-			else break;
+			else {
+				bracket.upwardpotential = bracket.weight - (bracket.weight * (bracket.percent / 100));
+				bracket.volatility = bracket.percent - (currgradebracket[gradebracket].ptsearned * 100 / (currgradebracket[gradebracket].ptstotal + (currgradebracket[gradebracket].ptstotal / currgradebracket[gradebracket].count)));
+			}
+			condensedgradebrackets.push(bracket);
+		}
+		condensedgradebrackets.sort((a,b) => (a.volatility < b.volatility) ? 1 : ((b.volatility < a.volatility) ? -1 : 0));
+		for (var b = 1; b <= condensedgradebrackets.length; b++) {
+			condensedgradebrackets[b-1].volatilityhierarchy = "This category has the " + cardinaltoOrdinal(b) + " most volatility.";
+		}
+		condensedgradebrackets.sort((a,b) => (a.percent < b.percent) ? 1 : ((b.percent < a.percent) ? -1 : 0));
+		for (var b = 1; b <= condensedgradebrackets.length; b++) {
+			if (condensedgradebrackets[b-1].percent !== null)
+				condensedgradebrackets[b-1].percenthierarchy = "This category has the " + cardinaltoOrdinal(b) + " most highest average.";
+			else
+				condensedgradebrackets[b-1].percenthierarchy = "This category has no assignments in it yet and no average.";
+		}
+		condensedgradebrackets.sort((a,b) => (a.weight < b.weight) ? 1 : ((b.weight < a.weight) ? -1 : 0));
+		for (var b = 1; b <= condensedgradebrackets.length; b++) {
+			condensedgradebrackets[b-1].weighthierarchy = "This category has the " + cardinaltoOrdinal(b) + " most weight.";
+		}
+		condensedgradebrackets.sort((a,b) => (a.upwardpotential < b.upwardpotential) ? 1 : ((b.upwardpotential < a.upwardpotential) ? -1 : 0));
+		for (var b = 1; b <= condensedgradebrackets.length; b++) {
+			if (condensedgradebrackets[b-1].upwardpotential > 1)
+				condensedgradebrackets[b-1].upwardpotentialhierarchy = "This category has the " + cardinaltoOrdinal(b) + " most upward potential.";
+			else
+				condensedgradebrackets[b-1].upwardpotentialhierarchy = "This category has very little upward potential.";
+		}
+		for (var b = 4; b <= condensedgradebrackets.length; b++) {
+			condensedgradebrackets.pop();
 		}
 		for (var b = 1; b <= condensedgradebrackets.length; b++) {
-			if (condensedgradebrackets[b-1].percent !== null) condensedgradebrackets[b-1].averagehierarchy = "This is the category with the " + cardinaltoOrdinal(b) + " most lowest average.";
-			else condensedgradebrackets[b-1].averagehierarchy = "This category has no assignments in it yet.";
+			//condensedgradebrackets[b-1].tips = getTips(condensedgradebrackets[b-1].name, $scope.class.subject, b);
+			if (b === 1) {
+				condensedgradebrackets[b-1].tips = {
+					general: ["Prioritize this type of assignment over others in a time crunch.",
+					"Ask for tutoring and extra help with this type of assignment."],
+					category: ["Create flashcards or a Quizlet a few days before to review for the quiz.",
+					"Write organized and detailed textbook & lecture notes with diagrams, pictures, etc.",
+					"Review key terms, people, ideas, concepts, etc. with a friend."],
+					subject: ["Understand the symbolism in the novel you are reading.",
+					"Close read important passages the day before the test.",
+					"Use process of elimination and try to look for trap answers in the questions."]
+				};
+				condensedgradebrackets[b-1].links = [{
+					link: "https://www.albert.io/blog/how-to-approach-ap-english-language-multiple-choice-questions/",
+					name: "AP English Multiple Choice Strategies - Albert.io"
+				}, {
+					link: "https://www.khanacademy.org/test-prep/sat/sat-reading-writing-practice/new-sat-reading/v/reading-literature-passage",
+					name: "How to Read & Annotate a Literature Passage - Khan Academy"
+				}, {
+					link: "http://writingcenter.fas.harvard.edu/pages/how-do-close-reading",
+					name: "How to Close Read - Harvard Writing Center"
+				}];
+			}
+			if (b === 2) {
+				condensedgradebrackets[b-1].tips = {
+					general: ["This category is still relatively important but not as much.",
+					"Ask for extra help with this type of assignment."],
+					category: ["Look at review sheets, notes, worksheets, etc. for the whole unit to study.",
+					"Create a study guide with friends to review the content on the test.",
+					"Review key terms, people, ideas, concepts, etc. with a friend."],
+					subject: ["Outline your thesis and body paragraphs before an in-class essay.",
+					"Review the summary and characters of the novel you are reading for the text",
+					"Take leadership in your group project by allocating work and tasks."]
+				};
+				condensedgradebrackets[b-1].links = [{
+					link: "https://www.albert.io/blog/how-to-approach-ap-english-language-multiple-choice-questions/",
+					name: "AP English Multiple Choice Strategies - Albert.io"
+				}, {
+					link: "https://www.khanacademy.org/test-prep/sat/sat-reading-writing-practice/new-sat-reading/v/reading-literature-passage",
+					name: "How to Read & Annotate a Literature Passage - Khan Academy"
+				}, {
+					link: "http://writingcenter.fas.harvard.edu/pages/how-do-close-reading",
+					name: "How to Close Read - Harvard Writing Center"
+				}];
+			}
+			if (b === 3) {
+				condensedgradebrackets[b-1].tips = {
+					general: ["This category is not as important as the others.",
+					"Make sure you occasionally ask questions in class to both friends and the teacher."],
+					category: ["Create flashcards or a Quizlet a few days before to review for the quiz.",
+					"Review all the concepts of the marking period by re-reading the textbook & looking at notes.",
+					"Ask your teacher for all the topics on the quarterly & personally check off each item on the list."],
+					subject: ["Review types of annotations to make on the text before the quarterly.",
+					"Find main ideas and themes in the text as you read, and underline & highlight them.",
+					"Use process of elimination and try to look for trap answers in the questions.",
+					"If you have an essay, try to highlight the main argument and points of the text and author, looking for rhetorical elements."]
+				};
+				condensedgradebrackets[b-1].links = [{
+					link: "https://www.albert.io/blog/how-to-approach-ap-english-language-multiple-choice-questions/",
+					name: "AP English Multiple Choice Strategies - Albert.io"
+				}, {
+					link: "https://www.khanacademy.org/test-prep/sat/sat-reading-writing-practice/new-sat-reading/v/reading-literature-passage",
+					name: "How to Read & Annotate a Literature Passage - Khan Academy"
+				}, {
+					link: "http://writingcenter.fas.harvard.edu/pages/how-do-close-reading",
+					name: "How to Close Read - Harvard Writing Center"
+				}];
+			}
 		}
-		console.log(condensedgradebrackets);
+		$scope.condensedgradebrackets = condensedgradebrackets;
+
+		//console.log(condensedgradebrackets);
 	};
 	
 	$scope.initViewClass = function() {
@@ -1361,3 +1445,28 @@ $(document).ready(function () {
 		$('#deleteClassModal').modal('show');
 	});
 });
+
+function getTips(category, subject, priority) {
+	var tips = {
+		general: [],
+		subject: []
+	};
+
+	// Priority specific tips
+
+	// Category specific tips
+
+	// Subject specific tips
+	/*switch (subject) {
+		case "English":
+			switch (category) {
+				case "CW & HW":
+				case "Classwork & Homework":
+				case "Classwork":
+				case "Homework":
+					tips = [];
+				case ""
+			}
+			break;
+	}*/
+}
