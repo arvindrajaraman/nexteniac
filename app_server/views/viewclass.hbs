@@ -14,10 +14,14 @@
 			</div>
 		</div>
 		<div class="twelve wide column">
-			<div class="ui seven item labeled icon menu">
+			<div class="ui six item labeled icon menu">
 				<a class="teal item" ng-class="{'active': tab === 1}" ng-click="changeTab(1)">
 					<i class="table icon"></i>
 					Grades
+				</a>
+				<a class="teal item" ng-class="{'active': tab === 6, 'disabled': editmode}" ng-click="changeTab(6)">
+					<i class="lightbulb icon"></i>
+					Insights
 				</a>
 				<a class="teal item" ng-class="{'active': tab === 2, 'disabled': editmode}" ng-click="changeTab(2)">
 					<i class="chart area icon"></i>
@@ -30,14 +34,6 @@
 				<a class="teal item" ng-class="{'active': tab === 4, 'disabled': editmode}" ng-click="changeTab(4)">
 					<i class="chart pie icon"></i>
 					Average Stats
-				</a>
-				<a class="teal item" ng-class="{'active': tab === 5, 'disabled': editmode}" ng-click="changeTab(5)">
-					<i class="lightbulb icon"></i>
-					Insights
-				</a>
-				<a class="teal item" ng-class="{'active': tab === 6, 'disabled': editmode}" ng-click="changeTab(6)">
-					<i class="list alternate icon"></i>
-					Tips
 				</a>
 				<a class="teal item" ng-class="{'active': tab === 7, 'disabled': editmode}" ng-click="changeTab(7)">
 					<i class="wrench icon"></i>
@@ -274,8 +270,99 @@
 				<div class="tab" ng-show="tab === 3">
 					<div class="ui stackable grid">
 						<div class="sixteen wide column">
-							<div class="ui segment" ng-hide="mpGrades[search.mp-1].length === 0">
-								<canvas id="averageProgressionChart" height="150"></canvas>
+							<div class="ui top attached secondary pointing large menu">
+								<a class="teal item" ng-class="{'active': changesTab === 1}" ng-click="changeChangesTab(1)">
+									Average Progression
+								</a>
+								<a class="teal item" ng-class="{'active': changesTab === 4}" ng-click="changeChangesTab(4)">
+									Trends
+								</a>
+								<a class="teal item" ng-class="{'active': changesTab === 3}" ng-click="changeChangesTab(3)">
+									Changes
+								</a>
+								<a class="teal item" ng-class="{'active': changesTab === 2}" ng-click="changeChangesTab(2)">
+									Highlights
+								</a>
+							</div>
+							<div class="ui bottom attached segment" ng-class="{'secondary': mpGrades[search.mp-1].length < 4}">
+								<div ng-show="changesTab === 2 && mpGrades[search.mp-1].length >= 4">
+									<table class="ui center aligned celled compact definition table">
+										<thead>
+											<th></th>
+											<th>Greatest Rise</th>
+											<th>Greatest Uptrend</th>
+											<th>Greatest Drop</th>
+											<th>Greatest Downtrend</th>
+										</thead>
+										<tbody>
+											<tr>
+												<th>Change</th>
+												<td class="tealText"><i class="angle up icon"></i> {[insights[search.mp - 1].biggestRise | number: 2]}%</td>
+												<td class="tealText"><i class="angle double up icon"></i> {[insights[search.mp - 1].biggestUptrend | number: 2]}%</td>
+												<td class="redText"><i class="angle down icon"></i> {[insights[search.mp - 1].biggestDrop | number: 2]}%</td>
+												<td class="redText"><i class="angle double down icon"></i> {[insights[search.mp - 1].biggestDowntrend | number: 2]}%</td>
+											</tr>
+											<tr>
+												<th>Start Date</th>
+												<td>{[insights[search.mp - 1].biggestRiseStartDate | date:'MMM d, yyyy']}</td>
+												<td>{[insights[search.mp - 1].biggestUptrendStartDate | date:'MMM d, yyyy']}</td>
+												<td>{[insights[search.mp - 1].biggestDropStartDate | date:'MMM d, yyyy']}</td>
+												<td>{[insights[search.mp - 1].biggestDowntrendStartDate | date:'MMM d, yyyy']}</td>
+											</tr>
+											<tr>
+												<th>End Date</th>
+												<td>{[insights[search.mp - 1].biggestRiseEndDate | date:'MMM d, yyyy']}</td>
+												<td>{[insights[search.mp - 1].biggestUptrendEndDate | date:'MMM d, yyyy']}</td>
+												<td>{[insights[search.mp - 1].biggestDropEndDate | date:'MMM d, yyyy']}</td>
+												<td>{[insights[search.mp - 1].biggestDowntrendEndDate | date:'MMM d, yyyy']}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div ng-show="changesTab === 3 && mpGrades[search.mp-1].length >= 4">
+									<table class="ui center aligned celled compact table">
+										<thead>
+											<th>Days</th>
+											<th>Start Date</th>
+											<th>End Date</th>
+											<th>Type</th>
+											<th>Change</th>
+										</thead>
+										<tbody>
+											<tr ng-repeat="change in averageChanges[search.mp-1]">
+												<td>{[change.days | number: 0]}</td>
+												<td>{[change.startDate | date: 'MMM d, yyyy']}</td>
+												<td>{[change.endDate | date: 'MMM d, yyyy']}</td>
+												<td>{[change.change | changetype]}</td>
+												<td ng-class="{'redText': change.change < 0, 'tealText': change.change > 0}"><i class="icon" ng-class="{'down angle': change.change < 0, 'up angle': change.change > 0, 'right angle': change.change === 0}"></i> {[change.change | number: 2]}%</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div ng-show="changesTab === 4 && mpGrades[search.mp-1].length >= 3">
+									<table class="ui center aligned celled compact table">
+										<thead>
+											<th>Days</th>
+											<th>Start Date</th>
+											<th>End Date</th>
+											<th>Trend</th>
+											<th>Net Change</th>
+										</thead>
+										<tbody>
+											<tr ng-repeat="trend in averageTrends[search.mp-1]">
+												<td>{[trend.days | number: 0]}</td>
+												<td>{[trend.startDate | date: 'MMM d, yyyy']}</td>
+												<td>{[trend.endDate | date: 'MMM d, yyyy']}</td>
+												<td>{[trend.net | trendtype]}</td>
+												<td ng-class="{'redText': trend.net < 0, 'tealText': trend.net > 0}"><i class="icon" ng-class="{'double down angle': trend.net < 0, 'double up angle': trend.net > 0, 'double right angle': trend.net === 0}"></i> {[trend.net | number: 2]}%</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<canvas id="averageProgressionChart" height="150" ng-show="changesTab === 1 && mpGrades[search.mp-1].length >= 3"></canvas>
+								<div ng-show="mpGrades[search.mp-1].length < 4" style="width: 100%; text-align: center;">
+									<h3><i class="frown icon"></i> Not enough grades in this MP to view these insights!</h3>
+								</div>
 							</div>
 						</div>
 						<div class="eight wide column">
@@ -341,103 +428,14 @@
 						</div>
 					</div>
 				</div>
-				<div class="tab" ng-show="tab === 5">
-					<div class="ui top attached secondary pointing large menu">
-						<a class="teal item" ng-class="{'active': changesTab === 3}" ng-click="changeChangesTab(3)">
-							Trends
-						</a>
-						<a class="teal item" ng-class="{'active': changesTab === 2}" ng-click="changeChangesTab(2)">
-							All Changes
-						</a>
-						<a class="teal item" ng-class="{'active': changesTab === 1}" ng-click="changeChangesTab(1)">
-							Greatest Changes
-						</a>
-					</div>
-					<div class="ui bottom attached segment" ng-class="{'secondary': mpGrades[search.mp-1].length < 4}">
-						<div ng-show="changesTab === 1 && mpGrades[search.mp-1].length >= 4">
-							<table class="ui center aligned celled compact definition table">
-								<thead>
-									<th></th>
-									<th>Greatest Rise</th>
-									<th>Greatest Uptrend</th>
-									<th>Greatest Drop</th>
-									<th>Greatest Downtrend</th>
-								</thead>
-								<tbody>
-									<tr>
-										<th>Change</th>
-										<td class="tealText"><i class="angle up icon"></i> {[insights[search.mp - 1].biggestRise | number: 2]}%</td>
-										<td class="tealText"><i class="angle double up icon"></i> {[insights[search.mp - 1].biggestUptrend | number: 2]}%</td>
-										<td class="redText"><i class="angle down icon"></i> {[insights[search.mp - 1].biggestDrop | number: 2]}%</td>
-										<td class="redText"><i class="angle double down icon"></i> {[insights[search.mp - 1].biggestDowntrend | number: 2]}%</td>
-									</tr>
-									<tr>
-										<th>Start Date</th>
-										<td>{[insights[search.mp - 1].biggestRiseStartDate | date:'MMM d, yyyy']}</td>
-										<td>{[insights[search.mp - 1].biggestUptrendStartDate | date:'MMM d, yyyy']}</td>
-										<td>{[insights[search.mp - 1].biggestDropStartDate | date:'MMM d, yyyy']}</td>
-										<td>{[insights[search.mp - 1].biggestDowntrendStartDate | date:'MMM d, yyyy']}</td>
-									</tr>
-									<tr>
-										<th>End Date</th>
-										<td>{[insights[search.mp - 1].biggestRiseEndDate | date:'MMM d, yyyy']}</td>
-										<td>{[insights[search.mp - 1].biggestUptrendEndDate | date:'MMM d, yyyy']}</td>
-										<td>{[insights[search.mp - 1].biggestDropEndDate | date:'MMM d, yyyy']}</td>
-										<td>{[insights[search.mp - 1].biggestDowntrendEndDate | date:'MMM d, yyyy']}</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div ng-show="changesTab === 2 && mpGrades[search.mp-1].length >= 4">
-							<table class="ui center aligned celled compact table">
-								<thead>
-									<th>Days</th>
-									<th>Start Date</th>
-									<th>End Date</th>
-									<th>Type</th>
-									<th>Change</th>
-								</thead>
-								<tbody>
-									<tr ng-repeat="change in averageChanges[search.mp-1]">
-										<td>{[change.days | number: 0]}</td>
-										<td>{[change.startDate | date: 'MMM d, yyyy']}</td>
-										<td>{[change.endDate | date: 'MMM d, yyyy']}</td>
-										<td>{[change.change | changetype]}</td>
-										<td ng-class="{'redText': change.change < 0, 'tealText': change.change > 0}"><i class="icon" ng-class="{'down angle': change.change < 0, 'up angle': change.change > 0, 'right angle': change.change === 0}"></i> {[change.change | number: 2]}%</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div ng-show="changesTab === 3 && mpGrades[search.mp-1].length >= 3">
-							<table class="ui center aligned celled compact table">
-								<thead>
-									<th>Days</th>
-									<th>Start Date</th>
-									<th>End Date</th>
-									<th>Trend</th>
-									<th>Net Change</th>
-								</thead>
-								<tbody>
-									<tr ng-repeat="trend in averageTrends[search.mp-1]">
-										<td>{[trend.days | number: 0]}</td>
-										<td>{[trend.startDate | date: 'MMM d, yyyy']}</td>
-										<td>{[trend.endDate | date: 'MMM d, yyyy']}</td>
-										<td>{[trend.net | trendtype]}</td>
-										<td ng-class="{'redText': trend.net < 0, 'tealText': trend.net > 0}"><i class="icon" ng-class="{'double down angle': trend.net < 0, 'double up angle': trend.net > 0, 'double right angle': trend.net === 0}"></i> {[trend.net | number: 2]}%</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div ng-show="mpGrades[search.mp-1].length < 4" style="width: 100%; text-align: center;">
-							<h3><i class="frown icon"></i> Not enough grades in this MP to view these insights!</h3>
-						</div>
-					</div>
-				</div>
 				<div class="tab" ng-show="tab === 6">
 					<div class="ui three column grid">
 						<div class="column" ng-repeat="bracket in condensedgradebrackets">
 							<div class="ui center aligned inverted segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
-								<h3>{[bracket.name]}</h3>
+								<h3 style="line-height: 1 !important;">{[bracket.name]}</h3>
+								<i class="star icon" ng-show="$index < 2"></i>
+								<i class="star icon" ng-show="$index < 1"></i>
+								<i class="star icon"></i>
 							</div>
 							<div class="ui segments">
 								<div class="ui inverted secondary segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
@@ -465,21 +463,11 @@
 							</div>
 							<div class="ui segments">
 								<div class="ui segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
-									<h5>Category-Specific Tips</h5>
+									<h5>Specific Tips</h5>
 								</div>
 								<div class="ui compact segment">
 									<ul>
-										<li ng-repeat="tip in bracket.tips.category">{[tip]}</li>
-									</ul>
-								</div>
-							</div>
-							<div class="ui segments">
-								<div class="ui segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
-									<h5>Subject-Specific Tips</h5>
-								</div>
-								<div class="ui compact segment">
-									<ul>
-										<li ng-repeat="tip in bracket.tips.subject">{[tip]}</li>
+										<li ng-repeat="tip in bracket.tips.specific">{[tip]}</li>
 									</ul>
 								</div>
 							</div>
@@ -491,6 +479,32 @@
 									<ul>
 										<li ng-repeat="link in bracket.links"><a href="{[link.link]}">{[link.name]}</a></li>
 									</ul>
+								</div>
+							</div>
+							<div class="ui segments" ng-show="$index === 0">
+								<div class="ui segment">
+									<h5>{[tutoringinfo.title]}</h5>
+								</div>
+								<div class="ui compact segment">
+									<ul>
+										<li ng-repeat="info in tutoringinfo.info">{[info]}</li>
+									</ul>
+								</div>
+							</div>
+							<div class="ui segments" ng-show="$index === 1">
+								<div class="ui segment">
+									<h5>Ask Your Teacher</h5>
+								</div>
+								<div class="ui compact segment">
+									<p>If you need more help with your class, the first person you should ask is your teacher. Explain to them (in a courteous manner) what you need help with and be as specific as possible. Often, teachers will be available to help before or after school.</p>
+								</div>
+							</div>
+							<div class="ui segments" ng-show="$index === 2">
+								<div class="ui segment">
+									<h5>Ask Your Guidance Counselor</h5>
+								</div>
+								<div class="ui compact segment">
+									<p>If you need help with schoolwork overall, ask your guidance counselor for advice. He/she may give you personalized advice on how to study, manage time, balance all your activities, etc. It is a good idea to occassionally check in with him/her.</p>
 								</div>
 							</div>
 						</div>
@@ -735,13 +749,6 @@
 			</div>
 		</div>
 		<div class="four wide center aligned column">
-			<!--<select class="ui fluid dropdown" id="mpSelectionDropdown" ng-model="search.mp" ng-class="{'disabled': editmode}">
-				<option value="1" selected="selected">MP1</option>
-				<option value="2">MP2</option>
-				<option value="3">MP3</option>
-				<option value="4">MP4</option>
-				<option value="5">Year</option>
-			</select>-->
 			<div class="ui four buttons">
 				<div class="ui teal button" ng-click="changeMP(1)" ng-class="{'active': search.mp === 1, 'disabled': editmode}">MP1</div>
 				<div class="ui teal button" ng-click="changeMP(2)" ng-class="{'active': search.mp === 2, 'disabled': editmode}">MP2</div>

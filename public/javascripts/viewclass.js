@@ -239,7 +239,7 @@ function calcQuartile(data, q) {
 app.controller('MainController', function ($scope) {
 	// Presets
 	$scope.tab = 6;
-	$scope.changesTab = 3;
+	$scope.changesTab = 1;
 	$scope.distributionTab = 1;
 	$scope.achievegoalpage = 0;
 	$scope.newgrades = [{}];
@@ -667,7 +667,7 @@ app.controller('MainController', function ($scope) {
 		$scope.lowestPossibleAverage = (experimentalavg <= 10) ? experimentalavg : null;
 	};
 
-	function generateTips() {
+	function generateTips() { // TODO MAKE TIPS SEPARATE FOR EACH MARKING PERIOD
 		var condensedgradebrackets = [];
 		var currgradebracket = $scope.gradeBrackets[$scope.currentmp-1];
 		for (var gradebracket in currgradebracket) {
@@ -709,14 +709,55 @@ app.controller('MainController', function ($scope) {
 			else
 				condensedgradebrackets[b-1].upwardpotentialhierarchy = "This category has very little upward potential.";
 		}
-		for (var b = 4; b <= condensedgradebrackets.length; b++) {
-			condensedgradebrackets.pop();
-		}
 		for (var b = 1; b <= condensedgradebrackets.length; b++) {
-			//condensedgradebrackets[b-1].tips = getTips(condensedgradebrackets[b-1].name, $scope.class.subject, b);
+			condensedgradebrackets[b-1].tips = getTips(condensedgradebrackets[b-1].name, $scope.class.subject, b);
 		}
-		$scope.condensedgradebrackets = condensedgradebrackets;
 
+		var newbrackets = [];
+		for (var b = 1; b <= 3; b++) {
+			if (condensedgradebrackets[b-1]) newbrackets.push(condensedgradebrackets[b-1]);
+		}
+		$scope.condensedgradebrackets = newbrackets;
+
+		$scope.tutoringinfo = {};
+		switch ($scope.class.subject) {
+			case "English":
+				$scope.tutoringinfo.title = "English Tutoring";
+				$scope.tutoringinfo.info = [
+					"Go after school to room 205 during these dates: Oct 17, Nov 14, Dec 12, Jan 16, Feb 27, Mar 27, Apr 10, and May 22.",
+					"Courtesy of National English Honors Society."
+				];
+				break;
+			case "Science":
+			case "Mathematics":
+				$scope.tutoringinfo.title = "Science & Math Tutoring";
+				$scope.tutoringinfo.info = [
+					"Go after school to room 230 from 2:45pm-3:45pm during Mondays & Thursdays (starting Nov 12)!",
+					"Courtesy of National Science Honors Society."
+				];
+				break;
+			case "History":
+				$scope.tutoringinfo.title = "Social Studies Tutoring";
+				$scope.tutoringinfo.info = [
+					"Go after school to room 115 during Thursdays, but contact Mr. Pierce to make sure there is a tutor for you.",
+					"Courtesy of National Social Studies Honors Society."
+				];
+				break;
+			case "World Language":
+				$scope.tutoringinfo.title = "Language Tutoring";
+				$scope.tutoringinfo.info = [
+					"Spanish HS: Go to the school library on Mondays, Wednesdays, & Thursdays, or your study hall (inform your Spanish teacher).",
+					"French HS: Contact Ms. Reusch for a tutor.",
+					"Latin HS: Contact Ms. Hasner for a tutor."
+				];
+				break;
+			default:
+				$scope.tutoringinfo.title = "Tutoring";
+				$scope.tutoringinfo.info = [
+					"Contact your guidance counselor to set up tutoring during your study hall.",
+					"Courtesy of National Honors Society."
+				];
+		}
 		//console.log(condensedgradebrackets);
 	};
 	
@@ -1382,24 +1423,131 @@ $(document).ready(function () {
 function getTips(category, subject, priority) {
 	var tips = {
 		general: [],
-		subject: []
+		specific: []
 	};
 
-	// Priority specific tips
+	// Links: Khan Academy, PrepScholar, Crash Course
 
-	// Category specific tips
+	// general tips
+	switch (category) {
+		case "Tests":
+			tips.general.push(
+				
+			); break;
+	}
 
-	// Subject specific tips
-	/*switch (subject) {
-		case "English":
+	// specific tips
+	switch (subject) {
+		case "Mathematics":
 			switch (category) {
+				case "HW":
+				case "CW":
 				case "CW & HW":
-				case "Classwork & Homework":
-				case "Classwork":
+				case "Classowrk & Homework":
+				case "Classowrk":
 				case "Homework":
-					tips = [];
-				case ""
+					tips.specific.push(
+						"Before you start your HW, go over the concepts, notes, and problems to review.",
+						"Star any problems you find difficult & go over them in class.",
+						"Keep your work organized & eventually time yourself when doing the problems.",
+						"Become very familiar with your calculator for tests and quizzes."
+					); break;
+				case "Quizzes":
+					tips.specific.push(
+						"Make sure you bring your calculator, if allowed!",
+						"Make sure your calculator is in the correct modes: Sci/Normal, Deg/Rad, etc.",
+						"Always double-check your work at the end of the quiz!",
+						"Write down relevant formulas as soon as you get your quiz so you don't forget."
+					); break;
+				case "Tests":
+				case "Assessments":
+					tips.specific.push(
+						"Make sure you bring your calculator, if allowed!",
+						"Make sure your calculator is in the correct modes: Sci/Normal, Deg/Rad, etc.",
+						"Go through all HW & CW for the past chapter and review starred problems!",
+						"Ask questions & start reviewing at least 2 days before the test!",
+						"Try to find connections between all the concepts you learned."
+					); break;
+				case "Quarterly Exam":
+				case "Quarterly":
+				case "Quarterlies":
+					tips.specific.push(
+						"At the end of the MP, skim through all your HW & CW, looking for starred problems.",
+						"Review shaky concepts with your teacher at least a week before the quarterly.",
+						"Create a graphic organizer with all the theorems, formulas, terms, etc.",
+						"Review together with friends a few days before the quarterly."
+					); break;
 			}
 			break;
-	}*/
+		case "Science":
+			switch (category) {
+				case "Labs":
+					tips.specific.push(
+						"Keep your data organized into tables and use correct units.",
+						"If allowed, take pictures & videos of your experiment for later reference.",
+						"On lab reports, describe trends in data, observations in the experiment, etc.",
+						"Do not copy answers from your lab partners! Make sure your ideas are original!"
+					); break;
+				case "Quizzes":
+					tips.specific.push(
+						"Read the textbook (and take notes) before the quiz.",
+						"Review textbook notes, handouts, lectures, etc. the day before to refresh the topics on the quiz.",
+						"Bring a calculator if allowed & familiarize yourself with it."
+					); break;
+				case "Tests":
+				case "Assessments":
+					tips.specific.push(
+						"Create a graphic organizer of all the topics, equations, processes, & vocabulary.",
+						"Ask questions with friends & review for the test together.",
+						"Clarify how to use the equations & formulas properly with your teacher.",
+						"If you are in Chemistry or Physics, be aware of significant figures!"
+					); break;
+				case "Quarterly Exam":
+				case "Quarterly":
+				case "Quarterlies":
+					tips.specific.push(
+						"Create a study guide with ALL the terms, concepts, & vocabulary from the whole MP at least a week before the quarterly!",
+						"Ask teachers & friends for clarification of topics much before the quarterly!",
+						"Review hard questions & problems from the whole MP, and redo them if possible.",
+						"When reviewing tests and quizzes, take note of what problems/questions you missed & focus on those topics."
+					); break;
+			}
+			break;
+		case "History":
+			switch (category) {
+				case "HW":
+				case "CW":
+				case "CW & HW":
+				case "Classowrk & Homework":
+				case "Classowrk":
+				case "Homework":
+					tips.specific.push(
+						
+					); break;
+				case "Quizzes":
+					tips.specific.push(
+						"Space out reading the textbook over several days, and take notes to review for the quiz.",
+						"Memorize timelines, key figures & policies, etc. by using a Quizlet or flashcards."
+					); break;
+				case "Tests":
+				case "Assessments":
+					tips.specific.push(
+						
+					); break;
+				case "Projects":
+					tips.specific.push(
+						"Take initative by allocating work, making sure deadlines are met, and requirements are met.",
+						"Look professional and be rehearsed on the day of the project."
+					); break;
+				case "Quarterly Exam":
+				case "Quarterly":
+				case "Quarterlies":
+					tips.specific.push(
+						
+					); break;
+			}
+			break;
+	}
+
+	return tips;
 }
