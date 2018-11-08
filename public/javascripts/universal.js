@@ -1,7 +1,14 @@
 $(document).ready(function () {
 	$('#settingsDropdown').dropdown();
+
+	var last = new Date(window.localStorage.getItem("lastexported")).getTime();
+	var now = new Date().getTime();
+	var difference = now - last;
+	var days = difference / (86400000);
+	console.log("Difference in milliseconds: " + days);
+
 	// Check when data was last exported
-	if (new Date(window.localStorage.getItem("lastexported")).getMilliseconds()/1000 - new Date().getMilliseconds()/1000 > 345600) {
+	if (days > 4) {
 		$("#exportDataReminder").show();
 		$("#exportDataReminder").popup({
 			position: 'top center',
@@ -37,6 +44,7 @@ $(document).ready(function () {
 		$('#exportModal').modal('show');
 	});
 	$('#downloadDataButton').click(function() {
+		window.localStorage.setItem("lastexported", new Date());
 		var data = {};
 		for (var i = 0; i <= localStorage.length - 1; i++) {
 			data[window.localStorage.key(i)] = window.localStorage.getItem(window.localStorage.key(i));
@@ -55,7 +63,6 @@ $(document).ready(function () {
 		document.body.appendChild(element);
 		element.click();
 		document.body.removeChild(element);
-		window.localStorage.setItem("lastexported", new Date());
 	});
 	$('#clearModal').modal({
 		onApprove: function() {
