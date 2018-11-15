@@ -438,47 +438,59 @@
 								<i class="star icon"></i>
 							</div>
 							<div class="ui segments">
-								<div class="ui inverted secondary segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
-									<span>{[bracket.upwardpotentialhierarchy]}</span>
-								</div>
 								<div class="ui segment">
-									<span>{[bracket.volatilityhierarchy]}</span>
-								</div>
-								<div class="ui segment">
-									<span>{[bracket.percenthierarchy]}</span>
-								</div>
-								<div class="ui segment">
-									<span>{[bracket.weighthierarchy]}</span>
+									<table>
+										<tr>
+											<td style="text-align: center;"><span class="ui large circular label" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">{[bracket.urank]}</span></td>
+											<td><h4>&nbsp;Highest Upward Potential</h4></td>
+										</tr>
+										<tr>
+											<td style="text-align: center;"><span class="ui large circular label" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">{[bracket.vrank]}</span></td>
+											<td><h4>&nbsp;Highest Volatility</h4></td>
+										</tr>
+										<tr>
+											<td style="text-align: center;"><span class="ui large circular label" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">{[bracket.prank]}</span></td>
+											<td><h4>&nbsp;<span ng-hide="bracket.prank === '-'">Highest</span><span ng-show="bracket.prank === '-'">No</span> Average</h4></td>
+										</tr>
+										<tr>
+											<td style="text-align: center;"><span class="ui large circular label" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">{[bracket.wrank]}</span></td>
+											<td><h4>&nbsp;Highest Weight</h4></td>
+										</tr>
+									</table>
 								</div>
 							</div>
 							<div class="ui segments">
 								<div class="ui segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
 									<h5>General Tips</h5>
 								</div>
-								<div class="ui compact segment">
-									<ul>
-										<li ng-repeat="tip in bracket.tips.general">{[tip]}</li>
-									</ul>
+								<div class="ui compact segment" ng-repeat="tip in bracket.tips.general" style="font-size: 16px;">
+									<table>
+										<tr>
+											<td style="vertical-align: top; padding-top: 5px;"><i class="lightbulb icon"></i></td>
+											<td><p>{[tip]}</p></td>
+										</tr>
+									</table>
 								</div>
 							</div>
 							<div class="ui segments">
 								<div class="ui segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
 									<h5>Specific Tips</h5>
 								</div>
-								<div class="ui compact segment">
-									<ul>
-										<li ng-repeat="tip in bracket.tips.specific">{[tip]}</li>
-									</ul>
+								<div class="ui compact segment" ng-repeat="tip in bracket.tips.specific" style="font-size: 16px;">
+									<table>
+										<tr>
+											<td style="vertical-align: top; padding-top: 5px;"><i class="lightbulb icon"></i></td>
+											<td><p>{[tip]}</p></td>
+										</tr>
+									</table>
 								</div>
 							</div>
-							<div class="ui segments">
-								<div class="ui segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
+							<div class="ui segments" ng-class="{'redText': $index == 0, 'orangeText': $index == 1, 'yellowText': $index == 2}">
+								<div class="ui segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}" style="color: black !important;">
 									<h5>Links</h5>
 								</div>
-								<div class="ui compact segment">
-									<ul>
-										<li ng-repeat="link in bracket.links"><a href="{[link.link]}">{[link.name]}</a></li>
-									</ul>
+								<div class="ui compact segment" ng-repeat="link in bracket.tips.links">
+									<a href="{[link.link]}" target="_blank" style="font-size: 16px !important;font-weight: bold;"><i class="linkify icon"></i> {[link.name]}</a>
 								</div>
 							</div>
 							<div class="ui segments" ng-show="$index === 0">

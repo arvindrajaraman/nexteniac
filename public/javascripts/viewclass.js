@@ -163,6 +163,15 @@ function cardinaltoOrdinal(c) {
 	}
 }
 
+function cardinalToOrdinalShort(c) {
+	switch (c) {
+		case 1: return "1st";
+		case 2: return "2nd";
+		case 3: return "3rd";
+		default: return c + "th";
+	}
+}
+
 var ls = window.localStorage;
 class LS {
 	static getClass(c) {
@@ -690,17 +699,23 @@ app.controller('MainController', function ($scope) {
 		condensedgradebrackets.sort((a,b) => (a.volatility < b.volatility) ? 1 : ((b.volatility < a.volatility) ? -1 : 0));
 		for (var b = 1; b <= condensedgradebrackets.length; b++) {
 			condensedgradebrackets[b-1].volatilityhierarchy = "This category has the " + cardinaltoOrdinal(b) + " most volatility.";
+			condensedgradebrackets[b-1].vrank = cardinalToOrdinalShort(b);
 		}
 		condensedgradebrackets.sort((a,b) => (a.percent < b.percent) ? 1 : ((b.percent < a.percent) ? -1 : 0));
 		for (var b = 1; b <= condensedgradebrackets.length; b++) {
-			if (condensedgradebrackets[b-1].percent !== null)
+			if (condensedgradebrackets[b-1].percent !== null) {
 				condensedgradebrackets[b-1].percenthierarchy = "This category has the " + cardinaltoOrdinal(b) + " most highest average.";
-			else
+				condensedgradebrackets[b-1].prank = cardinalToOrdinalShort(b);
+			}
+			else {
 				condensedgradebrackets[b-1].percenthierarchy = "This category has no assignments in it yet and no average.";
+				condensedgradebrackets[b-1].prank = "-";
+			}
 		}
 		condensedgradebrackets.sort((a,b) => (a.weight < b.weight) ? 1 : ((b.weight < a.weight) ? -1 : 0));
 		for (var b = 1; b <= condensedgradebrackets.length; b++) {
 			condensedgradebrackets[b-1].weighthierarchy = "This category has the " + cardinaltoOrdinal(b) + " most weight.";
+			condensedgradebrackets[b-1].wrank = cardinalToOrdinalShort(b);
 		}
 		condensedgradebrackets.sort((a,b) => (a.upwardpotential < b.upwardpotential) ? 1 : ((b.upwardpotential < a.upwardpotential) ? -1 : 0));
 		for (var b = 1; b <= condensedgradebrackets.length; b++) {
@@ -708,6 +723,7 @@ app.controller('MainController', function ($scope) {
 				condensedgradebrackets[b-1].upwardpotentialhierarchy = "This category has the " + cardinaltoOrdinal(b) + " most upward potential.";
 			else
 				condensedgradebrackets[b-1].upwardpotentialhierarchy = "This category has very little upward potential.";
+			condensedgradebrackets[b-1].urank = cardinalToOrdinalShort(b);
 		}
 		for (var b = 1; b <= condensedgradebrackets.length; b++) {
 			condensedgradebrackets[b-1].tips = getTips(condensedgradebrackets[b-1].name, $scope.class.subject, b);
@@ -1423,16 +1439,117 @@ $(document).ready(function () {
 function getTips(category, subject, priority) {
 	var tips = {
 		general: [],
-		specific: []
+		specific: [],
+		links: []
 	};
 
 	// Links: Khan Academy, PrepScholar, Crash Course
+	if (priority === 1) switch (subject) {
+		case "Mathematics":
+			tips.links.push(
+				{name: "Khan Academy - Math", link: "https://www.khanacademy.org/math"},
+				{name: "IXL", link: "https://www.ixl.com/"},
+				{name: "Wolfram Alpha", link: "https://www.wolframalpha.com/"},
+				{name: "Kuta Software", link: "https://www.kutasoftware.com/freeia2.html"},
+				{name: "JPS Math Dept", link: "https://www.edison.k12.nj.us/domain/348"}
+			); break;
+		case "English":
+			tips.links.push(
+				{name: "Close Reading Strategies", link: "https://www.weareteachers.com/strategies-for-close-reading/"},
+				{name: "Purdue - MLA Formatting Guide", link: "https://owl.purdue.edu/owl/research_and_citation/mla_style/mla_formatting_and_style_guide/mla_formatting_and_style_guide.html"},
+				{name: "Citation Machine", link: "http://www.citationmachine.net/mla/cite-a-website"},
+				{name: "Litcharts", link: "https://www.litcharts.com/"},
+				{name: "JPS English Dept", link: "https://www.edison.k12.nj.us/domain/347"}
+			); break;
+		case "Science":
+			tips.links.push(
+				{name: "Khan Academy - Science", link: "https://www.khanacademy.org/science"},
+				{name: "Crash Course", link: "https://www.youtube.com/user/crashcourse"},
+				{name: "Online Science Tutoring (tutor.com)", link: "https://www.tutor.com/subjects/science"},
+				{name: "Expii", link: "https://www.expii.com/"},
+				{name: "JPS Science Dept", link: "https://www.edison.k12.nj.us/domain/349"}
+			); break;
+		case "History":
+			tips.links.push(
+				{name: "Khan Academy - Arts & Humanities", link: "https://www.khanacademy.org/humanities"},
+				{name: "Crash Course", link: "https://www.youtube.com/user/crashcourse"},
+				{name: "History Help (chegg.com)", link: "https://www.chegg.com/homework-help/history"},
+				{name: "Britannica - History", link: "https://www.britannica.com/topic-browse/History"},
+				{name: "JPS Social Studies Dept", link: "https://www.edison.k12.nj.us/domain/350"}
+			); break;
+		case "World Language":
+			tips.links.push(
+				{name: "Duolingo", link: "https://www.duolingo.com/"},
+				{name: "Word Reference", link: "http://www.wordreference.com/"},
+				{name: "Quizlet", link: "https://quizlet.com/"},
+				{name: "Rosetta Stone", link: "https://www.rosettastone.com/"},
+				{name: "JPS World Languages Dept", link: "https://www.edison.k12.nj.us/domain/351"}
+			); break;
+	}
+
+	switch (category) {
+		case "Tests":
+		case "Quizzes":
+		case "Assessments":
+			// mc strategies
+			// test taking strategies
+			break;
+		case "HW":
+		case "CW":
+		case "CW & HW":
+		case "Classwork & Homework":
+		case "Classwork":
+		case "Homework":
+			// study schedule
+			// time management
+			break;
+		case "Projects":
+		case "Major Assessments":
+			// time management
+			// mla citation
+			// Slides, Emaze, Powtoon, Animoto, Wevideo, Prezi
+			break;
+		case "Programs":
+			// Eclipse, repl.it
+			// C++ Documentation
+			// Java Documentation
+			break;
+		case "Quarterly":
+			break;
+		default:
+
+	}
 
 	// general tips
 	switch (category) {
 		case "Tests":
+		case "Quizzes":
+		case "Interpersonals":
+		case "Interpretives":
+		case "Presentationals":
+		case "Major Assignments":
+		case "Projects":
 			tips.general.push(
-				
+				"If you have an assessment coming soon, spend time studying for it on Mondays & Fridays, when your workload is lower, and avoid studying for a lot of assessments on Tuesdays & Wednesdays, which tend to be the busiest days of the week.",
+				"Create a calendar for yourself and set 4-5 days of the week where you will dedicate 10-15 min studying & reviewing for this particular course.",
+				"If you have to guess on multiple choice, choose the same answer to bubble for all of the unanswered questions to maximize your score."
+			); break;
+		case "HW":
+		case "CW":
+		case "CW & HW":
+		case "Classwork & Homework":
+		case "Classwork":
+		case "Homework":
+			tips.general.push(
+				"Minimize distractions when completing your work, and do your work at the same time everyday to form a habit.",
+				"Create a to-do list/planner everyday or use an app like Reminders or Calendar to track all your assignments & assessments."
+			); break;
+		case "Quarterly Exam":
+		case "Quarterly":
+		case "Quarterlies":
+			tips.general.push(
+				"Make a graphic organizer or study guide ON YOUR OWN that is a conglomeration of all the topics of the MP, so it will be much easier to study for the quarterly.",
+				"Avoid solely studying based on shared quarterly documents, because it does not reinforce knowledge & improves your quarterly score very little."
 			); break;
 	}
 
@@ -1443,39 +1560,33 @@ function getTips(category, subject, priority) {
 				case "HW":
 				case "CW":
 				case "CW & HW":
-				case "Classowrk & Homework":
-				case "Classowrk":
+				case "Classwork & Homework":
+				case "Classwork":
 				case "Homework":
 					tips.specific.push(
-						"Before you start your HW, go over the concepts, notes, and problems to review.",
-						"Star any problems you find difficult & go over them in class.",
-						"Keep your work organized & eventually time yourself when doing the problems.",
-						"Become very familiar with your calculator for tests and quizzes."
+						"Create an organized HW & CW binder, since you most likely have Math HW/CW almost everyday.",
+						"Keep your work organized, show all steps, & star questions that you found difficult, could not answer, or took very long to solve.",
+						"Time how long it took to complete your HW so you can see if a particular topic slows you down, in preparation for an assessment."
 					); break;
 				case "Quizzes":
 					tips.specific.push(
-						"Make sure you bring your calculator, if allowed!",
-						"Make sure your calculator is in the correct modes: Sci/Normal, Deg/Rad, etc.",
-						"Always double-check your work at the end of the quiz!",
-						"Write down relevant formulas as soon as you get your quiz so you don't forget."
+						"Before taking your assessment, configure your calculator in the correct mode and familiarize yourself with it to save time during the assessment.",
+						"As soon as you get your assessment, write down all the relevant formulas and theorems If you feel you might forget them.",
+						"Always save about 5 minutes for the end of the assessment to check over all the questions by using your calculator."
 					); break;
 				case "Tests":
 				case "Assessments":
 					tips.specific.push(
-						"Make sure you bring your calculator, if allowed!",
-						"Make sure your calculator is in the correct modes: Sci/Normal, Deg/Rad, etc.",
-						"Go through all HW & CW for the past chapter and review starred problems!",
-						"Ask questions & start reviewing at least 2 days before the test!",
-						"Try to find connections between all the concepts you learned."
+						"Try to use your calculator to solve tedious calculations and complicated equations by storing numbers in variables.",
+						"Finish the easiest problems first and then tackle the hard problems to accumulate a majority of the points at the start of the assessment.",
+						"Organize your work neatly on the assessment to maximize your chances of receiving partial credit."
 					); break;
 				case "Quarterly Exam":
 				case "Quarterly":
 				case "Quarterlies":
 					tips.specific.push(
-						"At the end of the MP, skim through all your HW & CW, looking for starred problems.",
-						"Review shaky concepts with your teacher at least a week before the quarterly.",
-						"Create a graphic organizer with all the theorems, formulas, terms, etc.",
-						"Review together with friends a few days before the quarterly."
+						"Create a review guide with all of the formulas, theorems, and topics of the MP, and look back at all the starred problems on your HW from the past MP.",
+						"Find more practice online for the topics you find you are weak at, using the links below."
 					); break;
 			}
 			break;
@@ -1483,33 +1594,28 @@ function getTips(category, subject, priority) {
 			switch (category) {
 				case "Labs":
 					tips.specific.push(
-						"Keep your data organized into tables and use correct units.",
-						"If allowed, take pictures & videos of your experiment for later reference.",
-						"On lab reports, describe trends in data, observations in the experiment, etc.",
-						"Do not copy answers from your lab partners! Make sure your ideas are original!"
+						"Before the lab day, read through the procedures & directions, potentially watching a video of the procedure also, to be prepared.",
+						"Create a clean and organized table for data and observations, so when you are in the haste of the lab, you don't confuse yourself.",
+						"If allowed, take pictures & videos of your experiment for later reference, when you have to answer questions or write a lab report."
 					); break;
 				case "Quizzes":
 					tips.specific.push(
-						"Read the textbook (and take notes) before the quiz.",
-						"Review textbook notes, handouts, lectures, etc. the day before to refresh the topics on the quiz.",
-						"Bring a calculator if allowed & familiarize yourself with it."
+						"Always create a Quizlet or flashcards for vocab and formulas, since science is a vocab-intensive & formula-intensive subject.",
+						"For processes, reactions, etc., make a graphic organizer that highlights the order of the events and the steps for each.",
+						"Write textbook notes throughout the course of the chapter, highlighting key concepts & terms, and underlining confusing parts."
 					); break;
 				case "Tests":
 				case "Assessments":
 					tips.specific.push(
-						"Create a graphic organizer of all the topics, equations, processes, & vocabulary.",
-						"Ask questions with friends & review for the test together.",
-						"Clarify how to use the equations & formulas properly with your teacher.",
-						"If you are in Chemistry or Physics, be aware of significant figures!"
+						"Have your calculator configured before the assessment to the correct mode (degrees or radians)!",
+						"If one word in an answer choice is wrong, then the whole answer choice is wrong.",
+						"Look over all the worksheets for the whole chapter to review, and ask the teacher a few days before the test about confusing concepts."
 					); break;
 				case "Quarterly Exam":
 				case "Quarterly":
 				case "Quarterlies":
 					tips.specific.push(
-						"Create a study guide with ALL the terms, concepts, & vocabulary from the whole MP at least a week before the quarterly!",
-						"Ask teachers & friends for clarification of topics much before the quarterly!",
-						"Review hard questions & problems from the whole MP, and redo them if possible.",
-						"When reviewing tests and quizzes, take note of what problems/questions you missed & focus on those topics."
+						"Near the end of the MP, go through all of your notes and worksheets and add all starred items to a document. These are your identified weak concepts and the ones you need to work the most on."
 					); break;
 			}
 			break;
@@ -1518,36 +1624,116 @@ function getTips(category, subject, priority) {
 				case "HW":
 				case "CW":
 				case "CW & HW":
-				case "Classowrk & Homework":
-				case "Classowrk":
+				case "Classwork & Homework":
+				case "Classwork":
 				case "Homework":
 					tips.specific.push(
-						
+						"Try to use historical reasoning skills in your homework (continuity & changes over time, comparison & contrast, cause & effect, etc.) to practice for assessments.",
+						"Finish your history HW over multiple days, because it usually involves incorporating a lot of information."
 					); break;
 				case "Quizzes":
 					tips.specific.push(
-						"Space out reading the textbook over several days, and take notes to review for the quiz.",
-						"Memorize timelines, key figures & policies, etc. by using a Quizlet or flashcards."
+						"Create a Quizlet or flashcards of the key people, terms, and events in the chapter(s).",
+						"Spread out the reading of the textbook over multiple days. For example, read 4-5 pages a night; this helps to increase information retention and make it much less stressful to prepare for the assessment.",
+						"You can often get more insight on a difficult question by answering other questions first, since all the questions cover the same chapter(s)."
 					); break;
 				case "Tests":
 				case "Assessments":
 					tips.specific.push(
-						
+						"Before the assessment, create or find a timeline of the major events of the time period and understand the connections between them.",
+						"Try to watch a review video on Crash Course, Khan Academy, or some other source to review information for the assessment.",
+						"Eliminate extreme phrases and words, such as answer choices with “always” and “never”, if you are ever unsure of the answer."
 					); break;
 				case "Projects":
 					tips.specific.push(
-						"Take initative by allocating work, making sure deadlines are met, and requirements are met.",
-						"Look professional and be rehearsed on the day of the project."
+						"Start planning for the project as early as you can and allocate work, making sure your group members complete their work.",
+						"Read the directions carefully to see if all the requirements of the project are met, since many people lose points in this way.",
+						"Maintain eye contact with the audience, rehearse what you will say, and bring index cards or references if necessary and allowed."
 					); break;
 				case "Quarterly Exam":
 				case "Quarterly":
 				case "Quarterlies":
 					tips.specific.push(
-						
+						"Start pre-writing your prompts as soon as you get them, because giving yourself multiple days to do this will allow you to incorporate more information & new ideas.",
+						"When you plan each prompt, outline the thesis, evidence, and lines of reasoning. Don't copy off of other people because you won't remember the ideas as well as you would doing them by yourself.",
+						"Time yourself during the writing of the quarterly and cut body paragraphs short if you feel like you might miss other paragraphs."
+					); break;
+			}
+			break;
+		case "English":
+			switch (category) {
+				case "HW":
+				case "CW":
+				case "CW & HW":
+				case "Classwork & Homework":
+				case "Classwork":
+				case "Homework":
+					tips.specific.push(
+						"Try to maintain a style/tone that pertains to the assignment: use formal & elevated language in most cases.",
+						"If you are reading a novel, read a set amount of pages each day to prevent cramming hundreds of pages before an assessment. For example, spend 15 mins on all days except Tuesday and Wednesday reading your book."
+					); break;
+				case "Quizzes":
+					tips.specific.push(
+						"If you are stuck between a few answer choices, eliminate answers with extreme words & phrases.",
+						"If you have an assessment on a novel, read summaries, look at your annotations, and look at you worksheets when reviewing the day before.",
+						"Create a Quizlet for all your vocab words, synonyms, & antonyms, and use this in conjunction with your completed vocab activities to study for a vocab quiz."
+					); break;
+				case "Tests":
+				case "Assessments":
+				case "Major Assignments":
+					tips.specific.push(
+						"Use process of elimination to quickly eliminate answers you know are wrong and increase your chances of selecting the correct answer.",
+						"Before you write an essay, outline all the points of the essay, the thesis, the topic, etc. to consolidate your knowledge."
+					); break;
+				case "Quarterly Exam":
+				case "Quarterly":
+				case "Quarterlies":
+					tips.specific.push(
+						"For multiple choice questions, ALWAYS look back at the text, because the questions are designed to trick you into choosing a trap answer.",
+						"Try to get as many questions correct as early as possible by solving the easier questions first!"
+					); break;
+			}
+			break;
+		case "World Language":
+			switch (category) {
+				case "HW":
+				case "CW":
+				case "CW & HW":
+				case "Classwork & Homework":
+				case "Classwork":
+				case "Homework":
+					tips.specific.push(
+						"If you need help with your homework, look back at your vocabulary sheets, worksheets, etc. Don't translate because HW is good for practice.",
+						"When studying words, tenses, & endings, organize your worksheets and create a running list of all the new vocab you encounter."
+					); break;
+				case "Presentationals":
+					tips.specific.push(
+						"For essays, remember the translations for words that are very common to make your essay as coherent as possible: e.g. prepositions, articles, common phrases, etc.",
+						"Create a Quizlet or use flashcards if you have a quiz on vocabulary; know the gender of the words and the part of speech.",
+						"For presentationals, use accents when appropriate, describe the ideas in detail, use visuals, and rehearse for it before you present."
+					); break;
+				case "Interpersonals":
+					tips.specific.push(
+						"For interpersonals, avoid speaking in English, if you don’t know how to say a word/phrase. Instead, describe the idea you are trying to portray, so the listener understands what you are talking about.",
+						"Before you write an essay, outline all the points of the essay, the thesis, the topic, etc. to consolidate your knowledge.",
+						"For interpersonals and presentationals, learn to develop your accent by knowing which syllables to pronounce and which to not, how to connect words, and speaking at a correct pace."
+					); break;
+				case "Interpretives":
+					tips.specific.push(
+						"For interpretives, try to figure out what the passage is talking about from visuals, cognates & other words you already know, and titles & headings.",
+						"For interpretives, try to figure out the meanings of unknown words by looking at the root of the word, what they may mean in English, & use this in the context of the passage to figure out the word’s meaning."
+					); break;
+				case "Participation":
+					tips.specific.push(
+						"Try to participate 2-3 times for each class period; try restating the question or statement to develop your speech in the language."
 					); break;
 			}
 			break;
 	}
+
+	tips.general.sort(function(a, b){return 0.5 - Math.random()});
+	tips.specific.sort(function(a, b){return 0.5 - Math.random()});
+	tips.links.sort(function(a, b){return 0.5 - Math.random()});
 
 	return tips;
 }
