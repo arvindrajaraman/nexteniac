@@ -39,4 +39,10 @@
 .tealText {
   color: #00B5AE !important; }
 
+.footerLink {
+  color: white !important; }
+
+.footerLink:hover {
+  text-decoration: underline !important; }
+
 /*# sourceMappingURL=universal.css.map */

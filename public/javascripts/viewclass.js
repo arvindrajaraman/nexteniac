@@ -1456,7 +1456,7 @@ function getTips(category, subject, priority) {
 		case "English":
 			tips.links.push(
 				{name: "Close Reading Strategies", link: "https://www.weareteachers.com/strategies-for-close-reading/"},
-				{name: "Purdue - MLA Formatting Guide", link: "https://owl.purdue.edu/owl/research_and_citation/mla_style/mla_formatting_and_style_guide/mla_formatting_and_style_guide.html"},
+				{name: "Purdue - MLA Guide", link: "https://owl.purdue.edu/owl/research_and_citation/mla_style/mla_formatting_and_style_guide/mla_formatting_and_style_guide.html"},
 				{name: "Citation Machine", link: "http://www.citationmachine.net/mla/cite-a-website"},
 				{name: "Litcharts", link: "https://www.litcharts.com/"},
 				{name: "JPS English Dept", link: "https://www.edison.k12.nj.us/domain/347"}

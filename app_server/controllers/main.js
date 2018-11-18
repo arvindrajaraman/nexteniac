@@ -35,3 +35,17 @@ module.exports.createclass = function(req, res, next) {
 		scripts: ['createclass']
 	});;
 };
+
+module.exports.termsofuse = function(req, res, next) {
+	res.render('termsofuse', {
+		title: 'Terms of Use'
+	});;
+	//res.redirect("https://app.termly.io/document/terms-of-use-for-website/3e6dc8cf-2db9-4c60-aac7-7723f0ac6462");
+};
+
+module.exports.privacypolicy = function(req, res, next) {
+	/*res.render('privacypolicy', {
+		title: 'Privacy Policy'
+	});;*/
+	res.redirect("https://app.termly.io/document/privacy-policy/54d467d1-f459-4b6a-b440-93b861de8eae");
+};

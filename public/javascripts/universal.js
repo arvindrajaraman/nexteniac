@@ -5,7 +5,6 @@ $(document).ready(function () {
 	var now = new Date().getTime();
 	var difference = now - last;
 	var days = difference / (86400000);
-	console.log("Difference in milliseconds: " + days);
 
 	// Check when data was last exported
 	if (days > 4) {

@@ -270,17 +270,17 @@
 				<div class="tab" ng-show="tab === 3">
 					<div class="ui stackable grid">
 						<div class="sixteen wide column">
-							<div class="ui top attached secondary pointing large menu">
-								<a class="teal item" ng-class="{'active': changesTab === 1}" ng-click="changeChangesTab(1)">
+							<div class="ui top attached tabular large menu">
+								<a class="item" ng-class="{'active': changesTab === 1}" ng-click="changeChangesTab(1)">
 									Average Progression
 								</a>
-								<a class="teal item" ng-class="{'active': changesTab === 4}" ng-click="changeChangesTab(4)">
+								<a class="item" ng-class="{'active': changesTab === 4}" ng-click="changeChangesTab(4)">
 									Trends
 								</a>
-								<a class="teal item" ng-class="{'active': changesTab === 3}" ng-click="changeChangesTab(3)">
+								<a class="item" ng-class="{'active': changesTab === 3}" ng-click="changeChangesTab(3)">
 									Changes
 								</a>
-								<a class="teal item" ng-class="{'active': changesTab === 2}" ng-click="changeChangesTab(2)">
+								<a class="item" ng-class="{'active': changesTab === 2}" ng-click="changeChangesTab(2)">
 									Highlights
 								</a>
 							</div>
@@ -461,7 +461,7 @@
 							</div>
 							<div class="ui segments">
 								<div class="ui segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
-									<h5>General Tips</h5>
+									<h5><i class="pen square icon"></i> General Tips</h5>
 								</div>
 								<div class="ui compact segment" ng-repeat="tip in bracket.tips.general" style="font-size: 16px;">
 									<table>
@@ -474,7 +474,7 @@
 							</div>
 							<div class="ui segments">
 								<div class="ui segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}">
-									<h5>Specific Tips</h5>
+									<h5><i class="pen square icon"></i> Specific Tips</h5>
 								</div>
 								<div class="ui compact segment" ng-repeat="tip in bracket.tips.specific" style="font-size: 16px;">
 									<table>
@@ -485,17 +485,17 @@
 									</table>
 								</div>
 							</div>
-							<div class="ui segments" ng-class="{'redText': $index == 0, 'orangeText': $index == 1, 'yellowText': $index == 2}">
-								<div class="ui segment" ng-class="{'red': $index == 0, 'orange': $index == 1, 'yellow': $index == 2}" style="color: black !important;">
-									<h5>Links</h5>
+							<div class="ui redText segments" ng-show="$index === 0">
+								<div class="ui red segment" style="color: black !important;">
+									<h5><i class="linkify icon"></i> Links</h5>
 								</div>
 								<div class="ui compact segment" ng-repeat="link in bracket.tips.links">
 									<a href="{[link.link]}" target="_blank" style="font-size: 16px !important;font-weight: bold;"><i class="linkify icon"></i> {[link.name]}</a>
 								</div>
 							</div>
-							<div class="ui segments" ng-show="$index === 0">
+							<div class="ui segments" ng-show="$index === 1">
 								<div class="ui segment">
-									<h5>{[tutoringinfo.title]}</h5>
+									<h5><i class="user icon"></i> {[tutoringinfo.title]}</h5>
 								</div>
 								<div class="ui compact segment">
 									<ul>
@@ -505,7 +505,7 @@
 							</div>
 							<div class="ui segments" ng-show="$index === 1">
 								<div class="ui segment">
-									<h5>Ask Your Teacher</h5>
+									<h5><i class="user icon"></i> Ask Your Teacher</h5>
 								</div>
 								<div class="ui compact segment">
 									<p>If you need more help with your class, the first person you should ask is your teacher. Explain to them (in a courteous manner) what you need help with and be as specific as possible. Often, teachers will be available to help before or after school.</p>
@@ -513,10 +513,40 @@
 							</div>
 							<div class="ui segments" ng-show="$index === 2">
 								<div class="ui segment">
-									<h5>Ask Your Guidance Counselor</h5>
+									<h5><i class="user icon"></i> Ask Your Guidance Counselor</h5>
 								</div>
 								<div class="ui compact segment">
 									<p>If you need help with schoolwork overall, ask your guidance counselor for advice. He/she may give you personalized advice on how to study, manage time, balance all your activities, etc. It is a good idea to occassionally check in with him/her.</p>
+								</div>
+							</div>
+							<div class="ui segments" ng-show="$index === 2">
+								<div class="ui segment">
+									<h5><i class="child icon"></i> Healthy Lifestyle</h5>
+								</div>
+								<div class="ui compact segment">
+									<p>Succeeding in your courses requires you to be at your optimal state:</p>
+									<table>
+										<tr>
+											<td style="vertical-align: top; padding-top: 3px;"><i class="moon icon"></i></td>
+											<td><p>Try to get ~7-8 hours of sleep by going to bed around 9-11 pm and waking up at 6am.</p></td>
+										</tr>
+										<tr>
+											<td style="vertical-align: top; padding-top: 4px;"><i class="utensils icon"></i></td>
+											<td><p>Try to eat a hearty breakfast everyday.</p></td>
+										</tr>
+										<tr>
+											<td style="vertical-align: top; padding-top: 3px;"><i class="blind icon"></i></td>
+											<td><p>Exercise everyday after school: at the minimum, try walking outside or on the treadmill.</p></td>
+										</tr>
+										<tr>
+											<td style="vertical-align: top; padding-top: 3px;"><i class="shower icon"></i></td>
+											<td><p>Take a shower every morning and/or night to feel refreshed and clean.</p></td>
+										</tr>
+										<tr>
+											<td style="vertical-align: top; padding-top: 2px;"><i class="check icon"></i></td>
+											<td><p>Finish schoolwork as soon as you get home so you can relax during the later hours.</p></td>
+										</tr>
+									</table>
 								</div>
 							</div>
 						</div>
