@@ -330,6 +330,13 @@ app.controller('MainController', function ($scope) {
 		});
 	};
 
+	$scope.calculateColleges = function() {
+		var gpa = Math.round($scope.unweightedgpa * 10) / 10;
+		if (gpa % 1 === 0) $scope.collegeslink = "https://www.collegesimply.com/guides/" + gpa + ".0-gpa-colleges/";
+		else if (gpa > 4) $scope.collegeslink = "https://www.collegesimply.com/guides/4.0-gpa-colleges/";
+		else $scope.collegeslink = "https://www.collegesimply.com/guides/" + gpa + "-gpa-colleges/";
+	};
+
 	$scope.initClasses = function() {
 		if (!window.localStorage.getItem("gpasettings-9")) window.localStorage.setItem("gpasettings-9", true);
 		if (!window.localStorage.getItem("gpasettings-10")) window.localStorage.setItem("gpasettings-10", true);
@@ -339,6 +346,7 @@ app.controller('MainController', function ($scope) {
 		$scope.searchClasses();
 		$scope.calculateGPA();
 		$scope.calculateGPAProgression();
+		$scope.calculateColleges();
 	};
 });
 

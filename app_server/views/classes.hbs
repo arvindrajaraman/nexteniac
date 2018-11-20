@@ -187,10 +187,25 @@
 		<div class="ui grid" ng-hide="unweightedgpa === '-'">
 			<div class="ui ten wide column">
 				<div class="ui segment">
-					<canvas id="unweightedGPAProgressionChart" height="150"></canvas>
+					<canvas id="unweightedGPAProgressionChart" height="140"></canvas>
 				</div>
 				<div class="ui segment">
-					<canvas id="weightedGPAProgressionChart" height="150"></canvas>
+					<canvas id="weightedGPAProgressionChart" height="140"></canvas>
+				</div>
+				<br>
+				<div class="ui two column grid">
+					<div class="ui column">
+						<div class="ui segments">
+							<div class="ui segment">
+								<span class="ui header">See colleges that accept your GPA</span>
+								<br>
+								<span>Click below to discover your chances of getting in</span>
+							</div>
+							<div class="ui segment" style="background: #ccfffc !important; text-align: center !important;">
+								<a href="{[collegeslink]}" target="_blank" style="color: black !important; font-size: 24px !important; display: inline-block !important; padding: 30px 0 !important;">Click Me</a>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="ui six wide column">
