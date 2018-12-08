@@ -84,6 +84,15 @@ app.filter('numequivtoletter', function() {
 	}
 });
 
+app.filter('truncate', function() {
+	return function(value) {
+		if (value.length < 20) {
+			
+		}
+		else return value;
+	}
+});
+
 /*function returnWithDir(v, d) {
 	if (d === 1) return v;
 	else return (v === 1) ? -1 : 1;
@@ -170,6 +179,24 @@ function cardinalToOrdinalShort(c) {
 		case 3: return "3rd";
 		default: return c + "th";
 	}
+}
+
+function guessDate(month, day, weekday) {
+  var y = new Date().getFullYear();
+  var years = [y, y-1, y+1, y-2, y+2];
+  switch (weekday) {
+    case "Sun": weekday = 0; break;
+    case "Mon": weekday = 1; break;
+    case "Tue": weekday = 2; break;
+    case "Wed": weekday = 3; break;
+    case "Thu": weekday = 4; break;
+    case "Fri": weekday = 5; break;
+    case "Sat": weekday = 6; break;
+  }
+  for (var year of years) {
+    var date = new Date(year, month-1, day);
+    if (date.getDay() == weekday) return date;
+  }
 }
 
 var ls = window.localStorage;
@@ -1419,6 +1446,59 @@ app.controller('MainController', function ($scope) {
 		}
 		$scope.mpaveragecalcavg = totalaverage;
 	}
+
+	$scope.parseGenesisGrades = function() {
+		/* Repeat same code X times for a certain number of lines */
+	    /* delete a line starting with x (e.g. x0.0), skip an assignment that is missing (MI), incomplete (INC), or exempt (EX) */
+	    /* skip the line that contains the course */
+	    var lines = $("#enterGradesTextarea").val().split("\n");
+	    $scope.newgrades = [];
+	    for (var i = 0; i <= (lines.length/5) - 1; i++) {
+	      var mp = lines[i*5][2];
+	      var assignment = lines[(i*5)+3].split("\t");
+	      var pts = assignment[3].split(" / ");
+	      var datecomp = lines[(i*5)+2].split("/");
+
+	      var category = assignment[1];
+	      var name = assignment[2];
+	      var ptsearned = pts[0];
+	      var ptstotal = pts[1];
+	      var date = guessDate(parseInt(datecomp[0]), parseInt(datecomp[1]), lines[(i*5)+1]);
+	      
+	      $scope.newgrades.push({
+	        mp: mp,
+	        name: name,
+	        category: category,
+	        ptsearned: parseInt(ptsearned),
+	        ptstotal: parseInt(ptstotal),
+	        date: date
+	      });
+	    }
+
+	    lines = $("#enterGradesTextarea").val().split("\n");
+	    var categoriesfound = {};
+	    for (var i = 0; i <= (lines.length/5) - 1; i++) {
+	      var mp = lines[i*5][2];
+	      var assignment = lines[(i*5)+3].split("\t");
+	      var category = assignment[1];
+	      categoriesfound[category] = {
+	        old: category,
+	        mapto: ""
+	      };
+	    }
+	    $scope.categoriesfound = categoriesfound;
+	    $scope.simplecategories = [];
+	    for (var category of $scope.categories) {
+	    	$scope.simplecategories.push(category.name);
+	    }
+	}
+
+  	$scope.mapGenesisCategories = function() {
+	    for (var grade of $scope.newgrades) {
+	      grade.category = $scope.categoriesfound[grade.category].mapto;
+	    }
+	    console.log($scope.newgrades);
+  	};
 });
 
 $(document).ready(function () {
@@ -1428,11 +1508,23 @@ $(document).ready(function () {
 	$('#addGradeButton').click(function () {
 		$('#addGradeModal').modal('show');
 	});
+	$('#enterGradesNextButton').click(function () {
+		$('#mapGenesisCategoriesModal').modal('show');
+	});
+	$('#mapCategoriesNextButton').click(function () {
+		$('#addGradeModal').modal('show');
+	});
 	$('#editClassButton').click(function () {
 		$('#editModal').modal('show');
 	});
 	$('#deleteClassButton').click(function () {
 		$('#deleteClassModal').modal('show');
+	});
+	$('#importFromGenesisButton').click(function () {
+		$('#importFromGenesisModal').modal('show');
+	});
+	$('#enterGradesForImportButton').click(function () {
+		$('#enterGradesForImportModal').modal('show');
 	});
 });
 

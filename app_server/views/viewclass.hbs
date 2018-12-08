@@ -106,6 +106,10 @@
 						</h2>
 					</div>
 					<div style="float: right;">
+						<div class="ui teal labeled icon button" id="importFromGenesisButton" ng-class="{'disabled': editmode}">
+							<i class="download icon"></i>
+							Import From Genesis
+						</div>
 						<div class="ui teal labeled icon button" id="addGradeButton" ng-class="{'disabled': editmode}">
 							<i class="table icon"></i>
 							Add Grades
@@ -848,6 +852,67 @@
 			<div class="ui large fluid red button" id="deleteClassButton" ng-class="{'disabled': editmode}">
 				Delete Class
 			</div>
+		</div>
+	</div>
+	<div class="ui small modal" id="importFromGenesisModal">
+		<div class="header">Import From Genesis</div>
+		<div class="content">
+			<p>Instead of entering your grades manually, you can copy and paste them from Genesis. Note:</p>
+			<ul>
+				<li>You must remove the lines of text from the columns: <b>"COMMENT", "PREV", "DOCS"</b>, etc., if they exist.</li>
+				<li>
+					If an assignment does not have a weekday/date, you have to add a weekday/date in separate lines after the MP line for each assignment, like this:
+					<ul>
+						<li>Wed</li>
+						<li>11/28</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="actions">
+			<div class="ui teal labeled icon button" id="enterGradesForImportButton">
+		    	<i class="right arrow icon"></i>
+		    	Next
+		    </div>
+			<div class="ui red deny button">Cancel</div>
+		</div>
+	</div>
+	<div class="ui small modal" id="enterGradesForImportModal">
+		<div class="header">Enter Grades</div>
+		<div class="ui form content">
+			<div class="field">
+				<textarea placeholder="Enter Grades Here" id="enterGradesTextarea"></textarea>
+			</div>
+		</div>
+		<div class="actions">
+			<div class="ui teal labeled icon button" id="enterGradesNextButton" ng-click="parseGenesisGrades()">
+		    	<i class="right arrow icon"></i>
+		    	Next
+		    </div>
+			<div class="ui red deny button">Cancel</div>
+		</div>
+	</div>
+	<div class="ui small modal" id="mapGenesisCategoriesModal">
+		<div class="header">Map Categories</div>
+		<div class="ui form content">
+			<div class="two fields" ng-repeat="cat in categoriesfound">
+				<div class="disabled field">
+					<input type="text" ng-model="cat.old" readonly="true" />
+				</div>
+				<div class="field">
+					<!--<input type="text" ng-model="cat.mapto" />-->
+					<select ng-model="cat.mapto" ng-options="category for category in simplecategories track by category">
+
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="actions">
+			<div class="ui teal labeled icon button" id="mapCategoriesNextButton" ng-click="mapGenesisCategories()">
+		    	<i class="right arrow icon"></i>
+		    	Next
+		    </div>
+			<div class="ui red deny button">Cancel</div>
 		</div>
 	</div>
 	<div class="ui large modal" id="addGradeModal">
