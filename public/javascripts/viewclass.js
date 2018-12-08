@@ -87,7 +87,7 @@ app.filter('numequivtoletter', function() {
 app.filter('truncate', function() {
 	return function(value) {
 		if (value.length < 20) {
-			
+
 		}
 		else return value;
 	}
@@ -1376,13 +1376,13 @@ app.controller('MainController', function ($scope) {
 		for (var stat of $scope.achievegoalstats) {
 			if (stat.weight === 0 || stat.asgnleft === 0) continue;
 			catwhitelist[stat.category] = true;
-			totaldifficulty += parseInt(stat.difficulty);
+			totaldifficulty += parseFloat(stat.difficulty);
 		}
 		// Step 2A
 		var categoricalptsaway = {};
 		for (var stat of $scope.achievegoalstats) {
 			if (stat.weight === 0 || stat.asgnleft === 0) continue;
-			categoricalptsaway[stat.category] = ptsaway * parseInt(stat.difficulty) / totaldifficulty;
+			categoricalptsaway[stat.category] = ptsaway * parseFloat(stat.difficulty) / totaldifficulty;
 		}
 		// Step 2B
 		$scope.nextscores = [];
@@ -1404,7 +1404,7 @@ app.controller('MainController', function ($scope) {
 				}
 				for (var stat2 of $scope.achievegoalstats) {
 					if (!catwhitelist[stat2.category]) continue;
-					categoricalptsaway[stat2.category] += (parseInt(stat2.difficulty) * ptsleft / newtotaldifficulty);
+					categoricalptsaway[stat2.category] += (parseFloat(stat2.difficulty) * ptsleft / newtotaldifficulty);
 				}
 				categoricalptsaway[stat.category] = 0;
 			}
@@ -1469,8 +1469,8 @@ app.controller('MainController', function ($scope) {
 	        mp: mp,
 	        name: name,
 	        category: category,
-	        ptsearned: parseInt(ptsearned),
-	        ptstotal: parseInt(ptstotal),
+	        ptsearned: parseFloat(ptsearned),
+	        ptstotal: parseFloat(ptstotal),
 	        date: date
 	      });
 	    }
@@ -1616,6 +1616,7 @@ function getTips(category, subject, priority) {
 	switch (category) {
 		case "Tests":
 		case "Quizzes":
+		case "Tests & Quizzes":
 		case "Interpersonals":
 		case "Interpretives":
 		case "Presentationals":
