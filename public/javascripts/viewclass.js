@@ -274,7 +274,7 @@ function calcQuartile(data, q) {
 
 app.controller('MainController', function ($scope) {
 	// Presets
-	$scope.tab = 6;
+	$scope.tab = 1;
 	$scope.changesTab = 1;
 	$scope.distributionTab = 1;
 	$scope.achievegoalpage = 0;
@@ -350,6 +350,7 @@ app.controller('MainController', function ($scope) {
 			grade.date = new Date(grade.date);
 			grade.key = g;
 			grade.deleted = false;
+			grade.googleURI = encodeURIComponent(grade.name + " " + $scope.class.name);
 			$scope.grades.push(grade);
 			$scope.mpGrades[grade.mp-1].push(grade);
 			
@@ -1333,6 +1334,7 @@ app.controller('MainController', function ($scope) {
 		_class.credits = $scope.edit.credits;
 		_class.type = $scope.edit.type;
 		_class.grade = $scope.edit.grade;
+		_class.subject = $scope.edit.subject;
 		window.localStorage.setItem("c" + $scope.classlsid, JSON.stringify(_class));
 		window.location.href = "/classes/" + _class.name;
 	};

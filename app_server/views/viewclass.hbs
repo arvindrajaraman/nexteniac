@@ -54,7 +54,7 @@
 								<th ng-show="editmode"></th>
 							</thead>
 							<tbody>
-								<tr ng-repeat="grade in mpGrades[search.mp-1]" ng-show="grade.mp == search.mp" ng-class="{'gradeshown': grade.mp == search.mp, 'error': mpGrades[search.mp-1][$index].deleted}">
+								<tr class="assignmentRow" ng-repeat="grade in mpGrades[search.mp-1]" ng-show="grade.mp == search.mp" ng-class="{'gradeshown': grade.mp == search.mp, 'error': mpGrades[search.mp-1][$index].deleted}">
 									<td>
 										<span ng-hide="editmode">{[grade.date | date:'EEE M/d/yy']}</span>
 										<div class="ui small input" ng-show="editmode" ng-class="{'disabled': mpGrades[search.mp-1][$index].deleted}">
@@ -84,11 +84,12 @@
 											<option ng-repeat="category in categories" value="{[category.name]}">{[category.name]}</option>
 										</select>
 									</td>
-									<td>
+									<td class="assignmentNameCell">
 										<span ng-hide="editmode" style="font-size: 16px !important;">{[grade.name]}</span>
 										<div class="ui small input" ng-show="editmode" ng-class="{'disabled': mpGrades[search.mp-1][$index].deleted}">
 											<input type="text" ng-model="mpGrades[search.mp-1][$index].name" />
 										</div>
+										<a class="assignmentGoogleLink" href="https://www.google.com/search?q={[mpGrades[search.mp-1][$index].googleURI]}" target="_blank"><i class="google icon"></i></a>
 									</td>
 									<td ng-show="editmode">
 										<div class="ui inverted icon button" ng-class="{'red': !mpGrades[search.mp-1][$index].deleted, 'blue': mpGrades[search.mp-1][$index].deleted}" ng-click="toggleDeleted(search.mp-1, $index)">
@@ -1017,6 +1018,20 @@
 						<option value="9">Grade 9</option>
 					</select>
 				</div>
+			</div>
+			<div class="field">
+				<label>Subject</label>
+				<select id="editclasssubject" ng-model="edit.subject">
+					<option value="English">English</option>
+					<option value="Mathematics">Mathematics</option>
+					<option value="Science">Science</option>
+					<option value="History">History</option>
+					<option value="World Language">World Language</option>
+					<option value="Elective">Elective</option>
+					<option value="Physical Education">Physical Education</option>
+					<option value="Health">Health</option>
+					<option value="Other">Other</option>
+				</select>
 			</div>
 		</div>
 		<div class="actions">

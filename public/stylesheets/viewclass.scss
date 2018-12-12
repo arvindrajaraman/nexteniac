@@ -96,3 +96,20 @@
 .yellowText a {
 	color: #FEBA35 !important;
 }
+.assignmentNameCell {
+	position: relative !important;
+}
+.assignmentGoogleLink {
+	position: absolute !important;
+	top: 25%;
+	right: 10px;
+	cursor: pointer;
+	color: #dedede !important;
+	transition: 0.2s ease all;
+}
+.assignmentRow:hover .assignmentGoogleLink {
+	color: #00B5AD !important;
+}
+.assignmentRow:hover .assignmentGoogleLink:hover {
+	color: #008079 !important;
+}
