@@ -867,7 +867,8 @@ app.controller('MainController', function ($scope) {
 			    		fill: true,
 			    		borderColor: 'rgb(0,181,174)',
 			    		backgroundColor: 'rgba(0,181,174,0.3)',
-			    		pointRadius: 3
+			    		pointRadius: 3,
+			    		lineTension: 0
 			    	}]
 		    	},
 			    options: {

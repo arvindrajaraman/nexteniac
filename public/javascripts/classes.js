@@ -132,7 +132,7 @@ class GradeFactory {
 	}
 }
 
-app.controller('MainController', function ($scope) {
+app.controller('MainController', function ($scope, $interval) {
 	$scope.tab = 1;
 	$scope.average = 0;
 	$scope.mps = 0;
@@ -348,6 +348,12 @@ app.controller('MainController', function ($scope) {
 		$scope.calculateGPAProgression();
 		$scope.calculateColleges();
 	};
+	
+	var tick = function () {
+		$scope.currentdate = Date.now();
+	};
+	tick();
+	$interval(tick, 900);
 });
 
 $(document).ready(function () {

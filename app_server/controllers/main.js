@@ -25,7 +25,7 @@ module.exports.viewclass = function(req, res, next) {
 		classname: req.params.classname,
 		styles: ['viewclass'],
 		scripts: ['viewclass']
-	});;
+	});
 };
 
 module.exports.createclass = function(req, res, next) {
@@ -33,13 +33,13 @@ module.exports.createclass = function(req, res, next) {
 		title: 'Create Class',
 		styles: ['createclass'],
 		scripts: ['createclass']
-	});;
+	});
 };
 
 module.exports.termsofuse = function(req, res, next) {
 	res.render('termsofuse', {
 		title: 'Terms of Use'
-	});;
+	});
 	//res.redirect("https://app.termly.io/document/terms-of-use-for-website/3e6dc8cf-2db9-4c60-aac7-7723f0ac6462");
 };
 
