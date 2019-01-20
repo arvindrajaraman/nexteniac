@@ -353,7 +353,7 @@ app.controller('MainController', function ($scope, $interval) {
 		$scope.currentdate = Date.now();
 	};
 	tick();
-	$interval(tick, 900);
+	$interval(tick, 1000);
 });
 
 $(document).ready(function () {

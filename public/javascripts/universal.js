@@ -1,7 +1,7 @@
 $(document).ready(function () {
 	$('#settingsDropdown').dropdown();
 
-	var last = (window.localStorage.getItem("classcount") == 0) ? new Date(9999, 12, 31) : new Date(window.localStorage.getItem("lastexported")).getTime();
+	var last = (!window.localStorage.getItem("classcount")) ? new Date(9999, 12, 31) : new Date(window.localStorage.getItem("lastexported")).getTime();
 	var now = new Date().getTime();
 	var difference = now - last;
 	var days = difference / (86400000);
