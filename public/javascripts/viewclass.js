@@ -1503,6 +1503,17 @@ app.controller('MainController', function ($scope) {
 	    }
 	    console.log($scope.newgrades);
   	};
+
+  	/*$scope.lastAssignment = function() {
+  		var A = $scope.gradeBrackets[$scope.currentmp-1][$scope.lastAsgnCategory].ptsearned;
+  		var B = $scope.gradeBrackets[$scope.currentmp-1][$scope.lastAsgnCategory].ptstotal;
+  		var C = parseFloat($scope.lastAsgnPtsTotal);
+  		var W = $scope.gradeBrackets[$scope.currentmp-1][$scope.lastAsgnCategory].weight;
+  		var G = parseFloat($scope.lastAsgnGoal);
+  		var R = $scope.mpAverages[$scope.currentmp-1].averagePercent;
+  		var X = (((A/B)*W)+(G-R))*(B+C)/W;
+  		$scope.lastAsgnX = X;
+  	};*/
 });
 
 $(document).ready(function () {
