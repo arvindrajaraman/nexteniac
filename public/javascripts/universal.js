@@ -119,11 +119,33 @@ $(document).ready(function () {
 		if (window.localStorage.getItem("gpasettings-" + g) == "true") $("#gpasettings-" + g).checkbox("set checked");
 	}
 
+	var sortedclasses = [[], [], [], []];
 	for (var c = 1; c <= parseInt(window.localStorage.getItem("classcount")); c++) {
 		var _class = JSON.parse(window.localStorage.getItem("c" + c));
-		if (parseInt(_class.grade) !== parseInt(window.localStorage.getItem("currentgrade"))) continue;
-		var elem = '<a href="/classes/' + encodeURIComponent(_class.name) + '" class="item"><i class="book icon"></i>' + _class.name + '</a>';
-		$('#classesDropdown .menu').append(elem);
+		sortedclasses[parseInt(_class.grade)-9].push(_class.name);
+	}
+	var gradesWithClasses = 0;
+	for (var g = 9; g <= 12; g++)
+		if (sortedclasses[g-9].length !== 0) gradesWithClasses++;
+	if (gradesWithClasses !== 0) $('#classesDropdown .menu').append("<div class='divider'></div>");
+	for (var g = 1; g <= 4; g++) {
+		if (sortedclasses[g-1].length === 0) continue;
+		$('#classesDropdown .menu').append("<div class='header'>Grade " + (g+8) + "</div>");
+		for (var c = 1; c <= sortedclasses[g-1].length; c++) {
+			var elem = '<a href="/classes/' + encodeURIComponent(sortedclasses[g-1][c-1]) + '" class="item"><i class="book icon"></i>' + sortedclasses[g-1][c-1] + '</a>';
+			$('#classesDropdown .menu').append(elem);
+		}
+		if (g < gradesWithClasses) $('#classesDropdown .menu').append("<div class='divider'></div>");
 	}
 	$('#classesDropdown').dropdown();
 });
+
+/*
+for (var c = 1; c <= parseInt(window.localStorage.getItem("classcount")); c++) {
+	var _class = JSON.parse(window.localStorage.getItem("c" + c));
+	if (parseInt(_class.grade) !== parseInt(window.localStorage.getItem("currentgrade"))) continue;
+	var elem = '<a href="/classes/' + encodeURIComponent(_class.name) + '" class="item"><i class="book icon"></i>' + _class.name + '</a>';
+	$('#classesDropdown .menu').append(elem);
+}
+$('#classesDropdown').dropdown();
+*/

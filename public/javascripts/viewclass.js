@@ -820,6 +820,7 @@ app.controller('MainController', function ($scope) {
 			name: $scope.class.name,
 			grade: $scope.class.grade,
 			type: $scope.class.type,
+			subject: $scope.class.subject,
 			credits: $scope.class.credits
 		};
 		console.log($scope);
