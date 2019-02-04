@@ -1,0 +1,242 @@
+<div class="ui container" ng-app="nexteniac-createclass" ng-controller="MainController">
+	<br>
+	<div class="ui stackable grid">
+		<div class="twelve wide column">
+			<div class="ui center aligned segment headerSegment">
+				<h1>Create Class</h1>
+			</div>
+		</div>
+		<div class="four wide column">
+			<div class="ui massive fluid teal labeled icon button" ng-click="createClass()">
+				<i class="book icon"></i>
+				Create
+			</div>
+		</div>
+		<div class="eight wide column">
+			<div class="ui stacked segment" ng-class="{'inverted teal': isfullfeaturedclass}" ng-click="isfullfeaturedclass = true" style="cursor: pointer;">
+				<h2>
+					<i class="circle icon"></i>
+					I am currently taking this class.
+				</h2>
+			</div>
+		</div>
+		<div class="eight wide column">
+			<div class="ui stacked segment" ng-class="{'inverted teal': !isfullfeaturedclass}" ng-click="isfullfeaturedclass = false" style="cursor: pointer;">
+				<h2>
+					<i class="circle icon"></i>
+					I have already taken this class.
+				</h2>
+			</div>
+		</div>
+		<div class="eight wide column">
+			<div class="ui segments">
+				<div class="ui teal segment">
+					<span class="ui header">Basic Information</span>
+					<br>
+					<span>Basic information about this class</span>
+				</div>
+				<div class="ui form segment">
+					<div class="two fields">
+						<div class="field" id="CCFname">
+							<label>Class Name</label>
+	    					<input type="text" name="name" placeholder="Class Name" ng-model="class.name">
+						</div>
+						<div class="field" id="CCFcredits">
+							<label>Credits</label>
+	    					<input type="number" name="credits" placeholder="Credits" min="0" max="10" step="0.25" ng-model="class.credits">
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field" id="CCFgrade">
+							<label>Grade</label>
+	    					<select name="grade" ng-model="class.grade">
+	    						<option value="12">Grade 12</option>
+	    						<option value="11">Grade 11</option>
+	    						<option value="10">Grade 10</option>
+	    						<option value="9">Grade 9</option>
+							</select>
+						</div>
+						<div class="field" id="CCFtype">
+							<label>Class Level</label>
+	    					<select name="type" ng-model="class.type">
+								<option value="2" selected>Level 2</option>
+								<option value="1">Level 1</option>
+								<option value="0">Honors</option>
+					        </select>
+						</div>
+					</div>
+					<div class="field" id="CCFsubject">
+						<label>Subject</label>
+    					<select name="subject" ng-model="class.subject">
+							<option value="English">English</option>
+							<option value="Mathematics">Mathematics</option>
+							<option value="Science">Science</option>
+							<option value="History">History</option>
+							<option value="World Language">World Language</option>
+							<option value="Elective">Elective</option>
+							<option value="Physical Education">Physical Education</option>
+							<option value="Health">Health</option>
+							<option value="Other">Other</option>
+				        </select>
+					</div>
+				</div>
+			</div>
+			<div class="ui segments" ng-show="isfullfeaturedclass">
+				<div class="ui teal segment">
+					<span class="ui header">Personalization</span>
+					<br>
+					<span>Your experience with this class</span>
+				</div>
+				<div class="ui form segment">
+					<div class="two fields">
+						<div class="field" id="CCFpriority">
+							<label>Priority</label>
+	    					<select name="priority" ng-model="class.priority">
+								<option value="5">Very High</option>
+								<option value="4">High</option>
+								<option value="3">Medium</option>
+								<option value="2">Low</option>
+								<option value="1">Very Low</option>
+					        </select>
+						</div>
+						<div class="field" id="CCFgoalaverage">
+							<label>Goal Average</label>
+	    					<select name="goalaverage" ng-model="class.goalaverage">
+								<option value="10">A+</option>
+								<option value="9">A</option>
+								<option value="8">A-</option>
+								<option value="7">B+</option>
+								<option value="6">B</option>
+								<option value="5">B-</option>
+								<option value="4">C+</option>
+								<option value="3">C</option>
+								<option value="2">C-</option>
+								<option value="1">D</option>
+					        </select>
+						</div>
+					</div>
+					<div class="field" id="CCFdifficulty">
+						<label>Difficulty</label>
+    					<select name="difficulty" ng-model="class.difficulty">
+							<option value="1">Very Easy</option>
+							<option value="2">Easy</option>
+							<option value="3">Medium</option>
+							<option value="4">Hard</option>
+							<option value="5">Very Hard</option>
+				        </select>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="eight wide column">
+			<div class="ui segments">
+				<div class="ui teal segment">
+					<span class="ui header">
+						Marking Periods
+					</span>
+					<br>
+					<span>Select which marking periods this class is active</span>
+				</div>
+				<div class="ui form segment">
+					<div class="four fields">
+						<div class="field">
+							<div class="ui fluid toggle button" ng-class="{'teal': mpactive[0]}" ng-click="toggleMP(1)"><i class="check icon" ng-show="mpactive[0]"></i> MP1</div>
+						</div>
+						<div class="field">
+							<div class="ui fluid toggle button" ng-class="{'teal': mpactive[1]}" ng-click="toggleMP(2)"><i class="check icon" ng-show="mpactive[1]"></i> MP2</div>
+						</div>
+						<div class="field">
+							<div class="ui fluid toggle button" ng-class="{'teal': mpactive[2]}" ng-click="toggleMP(3)"><i class="check icon" ng-show="mpactive[2]"></i> MP3</div>
+						</div>
+						<div class="field">
+							<div class="ui fluid toggle button" ng-class="{'teal': mpactive[3]}" ng-click="toggleMP(4)"><i class="check icon" ng-show="mpactive[3]"></i> MP4</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui segments" ng-show="isfullfeaturedclass">
+				<div class="ui teal segment">
+					<span class="ui header">
+						Assignment Categories
+					</span>
+					<br>
+					<span>Types of assignments in your class and their weights</span>
+				</div>
+				<div class="ui form segment">
+					<div class="fields" ng-repeat="category in categories">
+						<div class="seven wide tablet eight wide small screen nine wide large screen field" id="CCFcategoryname{[$index]}">
+							<label ng-show="$index === 0">Category Name</label>
+							<input type="text" placeholder="Enter Custom Name" ng-model="category.name" ng-show="category.hascustomname" />
+							<select ng-model="category.name" ng-hide="category.hascustomname" ng-change="checkCustomChange({[$index]})">
+								<option value="Homework">Homework</option>
+								<option value="Classwork">Classwork</option>
+								<option value="Classwork & Homework">Classwork & Homework</option>
+								<option value="Tests">Tests</option>
+								<option value="Quizzes">Quizzes</option>
+								<option value="Projects">Projects</option>
+								<option value="Major Assignments">Major Assignments</option>
+								<option value="Quarterly">Quarterly</option>
+								<option value="Assessments">Assessments</option>
+								<option value="Interpretives">Interpretives</option>
+								<option value="Interpersonals">Interpersonals</option>
+								<option value="Presentationals">Presentationals</option>
+								<option value="Participation">Participation</option>
+								<option value="Performance">Performance</option>
+								<option value="Preparation">Preparation</option>
+								<option value="Programs">Programs</option>
+								<option value="0">Custom</option>
+							</select>
+						</div>
+						<div class="six wide field" id="CCFcategoryweight{[$index]}">
+							<label ng-show="$index === 0">Weight</label>
+							<input type="number" placeholder="Weight" ng-model="category.weight">
+						</div>
+						<div class="three wide tablet two wide small screen one wide large screen field">
+							<label ng-show="$index === 0" style="visibility: hidden;">Delete</label>
+							<div class="ui fluid inverted red icon button" ng-class="{'disabled': categories.length === 1}" ng-click="deleteCategory($index)"><i class="trash icon"></i></div>
+						</div>
+					</div>
+					<div class="fields">
+						<div class="five wide field"></div>
+						<div class="six wide field">
+							<div class="ui fluid teal button" ng-click="addCategory()">
+								<i class="plus icon"></i>
+								Add <span class="hidden-sm">Category</span>
+							</div>
+						</div>
+						<div class="five wide field"></div>
+					</div>
+				</div>
+			</div>
+			<div class="ui segments" ng-show="!isfullfeaturedclass">
+				<div class="ui teal segment">
+					<span class="ui header">
+						Final Average
+					</span>
+					<br>
+					<span>Select the final average you received for this class</span>
+				</div>
+				<div class="ui form segment">
+					<div class="ui four column center aligned grid" id="finalAverageGrid">
+						<div class="column"><div class="ui segment" ng-click="finalaverage = 10" ng-class="{'inverted teal': finalaverage == 10}"><h2>A+</h2></div></div>
+						<div class="column"><div class="ui segment" ng-click="finalaverage = 9" ng-class="{'inverted teal': finalaverage == 9}"><h2>A</h2></div></div>
+						<div class="column"><div class="ui segment" ng-click="finalaverage = 8" ng-class="{'inverted teal': finalaverage == 8}"><h2>A-</h2></div></div>
+						<div class="column"><div class="ui segment" ng-click="finalaverage = 7" ng-class="{'inverted teal': finalaverage == 7}"><h2>B+</h2></div></div>
+						<div class="column"><div class="ui segment" ng-click="finalaverage = 6" ng-class="{'inverted teal': finalaverage == 6}"><h2>B</h2></div></div>
+						<div class="column"><div class="ui segment" ng-click="finalaverage = 5" ng-class="{'inverted teal': finalaverage == 5}"><h2>B-</h2></div></div>
+						<div class="column"><div class="ui segment" ng-click="finalaverage = 4" ng-class="{'inverted teal': finalaverage == 4}"><h2>C+</h2></div></div>
+						<div class="column"><div class="ui segment" ng-click="finalaverage = 3" ng-class="{'inverted teal': finalaverage == 3}"><h2>C</h2></div></div>
+						<div class="column"><div class="ui segment" ng-click="finalaverage = 2" ng-class="{'inverted teal': finalaverage == 2}"><h2>C-</h2></div></div>
+						<div class="column"><div class="ui segment" ng-click="finalaverage = 1" ng-class="{'inverted teal': finalaverage == 1}"><h2>D</h2></div></div>
+						<div class="column"><div class="ui segment" ng-click="finalaverage = 0" ng-class="{'inverted teal': finalaverage == 0}"><h2>F</h2></div></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="color: #ccc !important; margin-top: 10px;">
+		Copyright © 2019 NextEniac, or its affiliates. All rights reserved.
+		<a href="/policies/termsofuse" style="color: #bbb !important;">Terms of Use</a> |
+		<a href="/policies/privacypolicy" style="color: #bbb !important;" target="_blank">Privacy Policy</a>
+	</div>
+</div>

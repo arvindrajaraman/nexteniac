@@ -6,122 +6,89 @@ app.config(function($interpolateProvider) {
 });
 
 app.controller('MainController', function($scope) {
-	$scope.class = {};
-	$scope.mpactive = [true, true, true, true];
-	$scope.isfullfeaturedclass = true;
 	$scope.finalaverage = 10;
-	$scope.categories = [{
-		name: '',
-		weight: '',
-		hascustomname: false
-	}];
 	$scope.existingclasses = [];
+	$scope.newclasses = [];
 
+	$scope.addCurrentClass = function() {
+		$scope.newclasses.push({isfullfeaturedclass: true,categories:[{}]});
+	};
+	$scope.addPastClass = function() {
+		$scope.newclasses.push({isfullfeaturedclass: false,finalAverage: 10});
+	};
+	$scope.deleteClass = function(i) {
+		$scope.newclasses.splice(i, 1);
+	};
+	$scope.addCategory = function(i) {
+		$scope.newclasses[i].categories.push({});
+	};
+	$scope.deleteCategory = function(a,b) {
+		$scope.newclasses[a].categories.splice(b, 1);
+	};
+	$scope.setFinalAverage = function(i, avg) {
+		$scope.newclasses[i].finalAverage = avg;
+	};
 	for (var i = 1; i <= parseInt(window.localStorage.getItem("classcount")); i++) {
 		$scope.existingclasses.push(JSON.parse(window.localStorage.getItem("c" + i)).name);
 	}
 
-	$scope.addCategory = function() {
+	/*$scope.addCategory = function() {
 		$scope.categories.push({
 			name: '',
 			weight: '',
 			hascustomname: false
 		})
-	};
+	};*/
 
-	$scope.deleteCategory = function(index) {
+	/*$scope.deleteCategory = function(index) {
 		$scope.categories.splice(index, 1);
-	};
+	};*/
 
 	$scope.toggleMP = function(mp) {
 		$scope.mpactive[mp-1] = ($scope.mpactive[mp-1]) ? false : true;
 	};
-
-	$scope.checkCustomChange = function(i) {
-		if ($scope.categories[i].name == "0") {
-			$scope.categories[i].name = "";
-			$scope.categories[i].hascustomname = true;
-		}
-	};
 	
-	$scope.createClass = function() {
-		var valid = true;
-		var fields = ["name", "credits", "type", "priority", "difficulty", "grade", "goalaverage", "subject"];
-		if (!$scope.isfullfeaturedclass) fields = ["name", "credits", "type", "grade", "subject"];
-		for (var f = 0; f <= fields.length - 1; f++) {
-			var value = $scope.class[fields[f]];
-			if (value !== undefined && value !== "") {
-				document.getElementById('CCF' + fields[f]).classList.remove('error');
-			}
-			else {
-				valid = false;
-				document.getElementById('CCF' + fields[f]).classList.add('error');
-			}
-			// Checks if class name has already been used
-			if (fields[f] === "name") {
-				for (var i = 0; i <= $scope.existingclasses.length - 1; i++) {
-					if ($scope.existingclasses[i] === value) {
-						valid = false;
-						document.getElementById('CCF' + fields[f]).classList.add('error');
-					}
-				}
-			}
-		}
-		if ($scope.isfullfeaturedclass) {
-			var catfields = ["name", "weight"];
-			for (var c = 0; c <= $scope.categories.length - 1; c++) {
-				for (var f = 0; f <= catfields.length - 1; f++) {
-					var value = $scope.categories[c][catfields[f]];
-					if (value !== undefined && value !== "") {
-						document.getElementById('CCFcategory' + catfields[f] + c).classList.remove('error');
-					}
-					else {
-						valid = false;
-						document.getElementById('CCFcategory' + catfields[f] + c).classList.add('error');
-					}
-				}
-			}
-		}
-		if (valid) {
-			$scope.class.mp1 = $scope.mpactive[0];
-			$scope.class.mp2 = $scope.mpactive[1];
-			$scope.class.mp3 = $scope.mpactive[2];
-			$scope.class.mp4 = $scope.mpactive[3];
+	$scope.addClasses = function() {
+		for (var i = 0; i <= $scope.newclasses.length - 1; i++) {
+			$scope.class = $scope.newclasses[i];
+			$scope.class.credits = parseFloat($scope.class.credits);
+			$scope.class.mp1 = $scope.class.activemps.includes("1");
+			$scope.class.mp2 = $scope.class.activemps.includes("2");
+			$scope.class.mp3 = $scope.class.activemps.includes("3");
+			$scope.class.mp4 = $scope.class.activemps.includes("4");
+			delete $scope.class.activemps;
+			delete $scope.class.$$hashKey;
 			$scope.class.id = new Date().getTime();
-			$scope.class.isfullfeaturedclass = $scope.isfullfeaturedclass;
 
 			var ls = window.localStorage;
 			if (!ls.getItem('classcount')) ls.setItem('classcount', 1);
 			else ls.setItem('classcount', parseInt(ls.getItem('classcount')) + 1);
-			if ($scope.isfullfeaturedclass) {
+			if ($scope.class.isfullfeaturedclass) {
+				$scope.categories = $scope.class.categories;
+				delete $scope.class.categories;
 				ls.setItem('c' + ls.getItem('classcount'), JSON.stringify($scope.class));
 				ls.setItem('c' + ls.getItem('classcount') + '-catcount', $scope.categories.length);
-				for (var i = 1; i <= $scope.categories.length; i++) {
-					var category = JSON.stringify($scope.categories[i-1]);
+				for (var j = 1; j <= $scope.categories.length; j++) {
+					var category = JSON.stringify($scope.categories[j-1]);
 					delete category.$$hashKey;
 					delete category.hascustomname;
-					ls.setItem('c' + ls.getItem('classcount') + '-cat' + i, category);
+					ls.setItem('c' + ls.getItem('classcount') + '-cat' + j, category);
 				}
 				ls.setItem('c' + ls.getItem('classcount') + '-assignmentcount', 0);
 			}
 			else {
 				var _class = $scope.class;
+				$scope.finalAverage = _class.finalAverage;
+				delete _class.finalAverage;
 				var averages = [];
-				delete _class.difficulty;
-				delete _class.goalaverage;
-				delete _class.priority;
 				ls.setItem('c' + ls.getItem('classcount'), JSON.stringify(_class));
-				for (var i = 1; i <= 4; i++) {
-					if ($scope.class['mp' + i]) averages.push($scope.finalaverage);
+				for (var j = 1; j <= 4; j++) {
+					if ($scope.class['mp' + j]) averages.push($scope.finalAverage);
 					else averages.push(null);
 				}
 				ls.setItem('c' + ls.getItem('classcount') + '-averages', JSON.stringify(averages));
 			}
-			window.location.href = '/classes/' + $scope.class.name;
 		}
+		window.location.href = '/classes';
 	};
-});
-
-$(document).ready(function() {
-	$('.dropdown').dropdown();
 });
