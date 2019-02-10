@@ -303,6 +303,14 @@ app.controller('MainController', function ($scope) {
 				$scope.classlsid = c;
 				$scope.classexists = true;
 				$scope.class = LS.getClass(c);
+
+				if (!$scope.class.isfullfeaturedclass) {
+					$scope.averages = JSON.parse(LS.getItem("c" + c + "-averages"));
+					for (var a=1; a<=4; a++) {
+						if ($scope.averages[a-1] !== null) $scope.average = $scope.averages[a-1];
+					}
+				}
+
 				return;
 			}
 		}
@@ -821,7 +829,8 @@ app.controller('MainController', function ($scope) {
 			grade: $scope.class.grade,
 			type: $scope.class.type,
 			subject: $scope.class.subject,
-			credits: $scope.class.credits
+			credits: $scope.class.credits,
+			finalAverage: $scope.average
 		};
 		console.log($scope);
 	};
@@ -1338,6 +1347,16 @@ app.controller('MainController', function ($scope) {
 		_class.grade = $scope.edit.grade;
 		_class.subject = $scope.edit.subject;
 		window.localStorage.setItem("c" + $scope.classlsid, JSON.stringify(_class));
+
+		if (!$scope.class.isfullfeaturedclass) {
+			var average = $scope.edit.finalAverage;
+			var averages = JSON.parse(window.localStorage.getItem("c" + $scope.classlsid + "-averages"));
+			for (var a = 1; a <= 4; a++) {
+				if (averages[a-1] !== null) averages[a-1] = average;
+			}
+			window.localStorage.setItem("c" + $scope.classlsid + "-averages", JSON.stringify(averages));
+		}
+
 		window.location.href = "/classes/" + _class.name;
 	};
 
@@ -1502,6 +1521,10 @@ app.controller('MainController', function ($scope) {
 	      grade.category = $scope.categoriesfound[grade.category].mapto;
 	    }
 	    console.log($scope.newgrades);
+  	};
+
+  	$scope.setFinalAverage = function(a) {
+  		$scope.edit.finalAverage = a;
   	};
 
   	/*$scope.lastAssignment = function() {

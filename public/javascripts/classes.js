@@ -28,6 +28,7 @@ app.filter('type', function() {
 app.filter('numequivtoletter', function() {
 	return function(n) {
 		n = parseFloat(n);
+		if (n === 0) return 'F';
 		if (n < 1) return 'F';
 		else n = Math.round(n);
 		
@@ -186,6 +187,7 @@ app.controller('MainController', function ($scope, $interval) {
 	  	numequiv = 0;
 	    _class = JSON.parse(window.localStorage.getItem("c" + c));
 	    if (window.localStorage.getItem("gpasettings-" + _class.grade) == "false") continue;
+	    if (parseInt(window.localStorage.getItem("c" + c + "-assignmentcount")) === 0) continue;
 	    for (var avg of JSON.parse(window.localStorage.getItem("c" + c + "-averages"))) {
 	    	if (avg) {
 	    		validmps++;

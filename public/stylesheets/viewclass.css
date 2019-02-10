@@ -121,4 +121,7 @@
 .assignmentRow:hover .assignmentGoogleLink:hover {
   color: #008079 !important; }
 
+.pullUp {
+  margin-top: 0 !important; }
+
 /*# sourceMappingURL=viewclass.css.map */

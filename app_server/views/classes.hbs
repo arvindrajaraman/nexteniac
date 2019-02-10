@@ -23,7 +23,7 @@
 		<div class="four wide column">
 			<div class="ui center aligned segment">
 				<div class="ui statistic">
-					<div class="value">{[unweightedgpa]}</div>
+					<div class="value">{[unweightedgpa | number:2]}</div>
 					<div class="label">Unweighted GPA</div>
 				</div>
 			</div>
@@ -31,7 +31,7 @@
 		<div class="four wide column">
 			<div class="ui center aligned segment">
 				<div class="ui statistic">
-					<div class="value">{[weightedgpa]}</div>
+					<div class="value">{[weightedgpa | number:2]}</div>
 					<div class="label">Weighted GPA</div>
 				</div>
 			</div>
@@ -90,20 +90,20 @@
 						<td><h2 class="ui header">{[class.credits | number:2]}</h2></td>
 						<td><h3 class="ui header">{[class.type | type]}</h3></td>
 						<td style="font-size: 18px !important;" ng-class="{'highlightedMP': currentmp === 1 && search.grade == currentgrade}">
-							<span class="ui header" ng-show="class.letterAvg[0]">{[class.letterAvg[0] | numequivtoletter]}</span>
-							<span class="ui header" ng-hide="class.letterAvg[0]">-</span>
+							<span class="ui header" ng-show="class.letterAvg[0] !== null">{[class.letterAvg[0] | numequivtoletter]}</span>
+							<span class="ui header" ng-hide="class.letterAvg[0] !== null">-</span>
 						</td>
 						<td style="font-size: 18px !important;" ng-class="{'highlightedMP': currentmp === 2 && search.grade == currentgrade}">
-							<span class="ui header" ng-show="class.letterAvg[1]">{[class.letterAvg[1] | numequivtoletter]}</span>
-							<span class="ui header" ng-hide="class.letterAvg[1]">-</span>
+							<span class="ui header" ng-show="class.letterAvg[1] !== null">{[class.letterAvg[1] | numequivtoletter]}</span>
+							<span class="ui header" ng-hide="class.letterAvg[1] !== null">-</span>
 						</td>
 						<td style="font-size: 18px !important;" ng-class="{'highlightedMP': currentmp === 3 && search.grade == currentgrade}">
-							<span class="ui header" ng-show="class.letterAvg[2]">{[class.letterAvg[2] | numequivtoletter]}</span>
-							<span class="ui header" ng-hide="class.letterAvg[2]">-</span>
+							<span class="ui header" ng-show="class.letterAvg[2] !== null">{[class.letterAvg[2] | numequivtoletter]}</span>
+							<span class="ui header" ng-hide="class.letterAvg[2] !== null">-</span>
 						</td>
 						<td style="font-size: 18px !important;" ng-class="{'highlightedMP': currentmp === 4 && search.grade == currentgrade}">
-							<span class="ui header" ng-show="class.letterAvg[3]">{[class.letterAvg[3] | numequivtoletter]}</span>
-							<span class="ui header" ng-hide="class.letterAvg[3]">-</span>
+							<span class="ui header" ng-show="class.letterAvg[3] !== null">{[class.letterAvg[3] | numequivtoletter]}</span>
+							<span class="ui header" ng-hide="class.letterAvg[3] !== null">-</span>
 						</td>
 					</tr>
 					<tr class="backupRow" ng-hide="classcounts[search.grade-9] > 0 || search.query">

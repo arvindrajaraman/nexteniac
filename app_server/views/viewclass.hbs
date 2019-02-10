@@ -14,7 +14,10 @@
 			</div>
 		</div>
 		<div class="twelve wide column">
-			<div class="ui six item labeled icon menu">
+			<div class="ui center aligned segment" ng-hide="class.isfullfeaturedclass">
+				<h2>You ended with an {[average | numequivtoletter]} in this class!</h2>
+			</div>
+			<div class="ui six item labeled icon menu" ng-show="class.isfullfeaturedclass">
 				<a class="teal item" ng-class="{'active': tab === 1}" ng-click="changeTab(1)">
 					<i class="table icon"></i>
 					Grades
@@ -40,7 +43,7 @@
 					Tools
 				</a>
 			</div>
-			<div id="viewClassTabs">
+			<div id="viewClassTabs" ng-show="class.isfullfeaturedclass">
 				<div class="tab" ng-show="tab === 1">
 					<div class="ui form">
 						<table class="ui compact center aligned table" ng-hide="mpGrades[search.mp-1].length === 0" style="margin-bottom: 15px;">
@@ -820,9 +823,10 @@
 					</div>-->
 				</div>
 			</div>
+			<div style="font-size: 96px !important; color: #ddd; width: 100%; text-align: center; margin-top: 50px;" ng-hide ="class.isfullfeaturedclass">{[average | numequivtoletter]}</div>
 		</div>
 		<div class="four wide center aligned column">
-			<div class="ui four buttons">
+			<div class="ui four buttons" ng-show="class.isfullfeaturedclass">
 				<div class="ui teal button" ng-click="changeMP(1)" ng-class="{'active': search.mp === 1, 'disabled': editmode}">MP1</div>
 				<div class="ui teal button" ng-click="changeMP(2)" ng-class="{'active': search.mp === 2, 'disabled': editmode}">MP2</div>
 				<div class="ui teal button" ng-click="changeMP(3)" ng-class="{'active': search.mp === 3, 'disabled': editmode}">MP3</div>
@@ -835,7 +839,7 @@
 					<option ng-repeat="category in categories" value="{[category.name]}">{[category.name]}</option>
 				</select>
 			</div>
-			<div class="ui segments">
+			<div class="ui segments" ng-show="class.isfullfeaturedclass">
 				<div class="ui teal segment">
 					<h3>Grade Categories</h3>
 				</div>
@@ -844,7 +848,7 @@
 					<span> {[category.weight]}%</span>
 				</div>
 			</div>
-			<div class="ui segments">
+			<div class="ui segments" ng-class="{'pullUp': !class.isfullfeaturedclass}">
 				<div class="ui secondary segment">
 					<h3>{[class.credits | number:2]} Credits</h3>
 				</div>
@@ -1063,6 +1067,22 @@
 					<option value="Health">Health</option>
 					<option value="Other">Other</option>
 				</select>
+			</div>
+			<div class="field" ng-hide="class.isfullfeaturedclass">
+				<label>Final Average</label>
+				<div class="ui fluid teal large buttons">
+			  		<div class="ui button" ng-class="{'active': edit.finalAverage === 10}" ng-click="setFinalAverage(10)">A+</div>
+			  		<div class="ui button" ng-class="{'active': edit.finalAverage === 9}" ng-click="setFinalAverage(9)">A</div>
+			  		<div class="ui button" ng-class="{'active': edit.finalAverage === 8}" ng-click="setFinalAverage(8)">A-</div>
+			  		<div class="ui button" ng-class="{'active': edit.finalAverage === 7}" ng-click="setFinalAverage(7)">B+</div>
+			  		<div class="ui button" ng-class="{'active': edit.finalAverage === 6}" ng-click="setFinalAverage(6)">B</div>
+			  		<div class="ui button" ng-class="{'active': edit.finalAverage === 5}" ng-click="setFinalAverage(5)">B-</div>
+			  		<div class="ui button" ng-class="{'active': edit.finalAverage === 4}" ng-click="setFinalAverage(4)">C+</div>
+			  		<div class="ui button" ng-class="{'active': edit.finalAverage === 3}" ng-click="setFinalAverage(3)">C</div>
+			  		<div class="ui button" ng-class="{'active': edit.finalAverage === 2}" ng-click="setFinalAverage(2)">C-</div>
+			  		<div class="ui button" ng-class="{'active': edit.finalAverage === 1}" ng-click="setFinalAverage(1)">D</div>
+			  		<div class="ui button" ng-class="{'active': edit.finalAverage === 0}" ng-click="setFinalAverage(0)">F</div>
+				</div>
 			</div>
 		</div>
 		<div class="actions">
