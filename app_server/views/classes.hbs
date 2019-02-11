@@ -20,7 +20,15 @@
 	</div>
 	<br>
 	<div class="ui stackable grid" ng-show="tab === 1">
-		<div class="four wide column">
+		<div class="sixteen wide column" ng-show="noclasses">
+			<div class="ui secondary center aligned segment">
+				<h2>You do not have any classes yet.</h2>
+				<span>You can either:</span><br>
+				<span>1. <a href="/createclass">Add Your Classes</a></span><br>
+				<span>2. <a href="/NextEniac Test Data.json" download>Download sample data</a> and import it (Actions > Import).</span>
+			</div>
+		</div>
+		<div class="four wide column" ng-hide="noclasses">
 			<div class="ui center aligned segment">
 				<div class="ui statistic">
 					<div class="value">{[unweightedgpa | number:2]}</div>
@@ -28,7 +36,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="four wide column">
+		<div class="four wide column" ng-hide="noclasses">
 			<div class="ui center aligned segment">
 				<div class="ui statistic">
 					<div class="value">{[weightedgpa | number:2]}</div>
@@ -36,7 +44,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="four wide column">
+		<div class="four wide column" ng-hide="noclasses">
 			<div class="ui center aligned segment">
 				<div class="ui statistic">
 					<div class="value">{[average]}</div>
@@ -44,7 +52,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="four wide column">
+		<div class="four wide column" ng-hide="noclasses">
 			<div class="ui center aligned segment">
 				<div class="ui statistic">
 					<div class="value">{[classes.length]}</div>
@@ -52,7 +60,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="thirteen wide column">
+		<div class="thirteen wide column" ng-hide="noclasses">
 			<!--<div class="ui fluid input">
 				<input type="text" placeholder="Search for classes..." ng-model="search.query">
 			</div>-->
@@ -60,7 +68,7 @@
 				{[currentdate | date:"EEEE, MMMM d, yyyy h:mm:ss a" ]}
 			</div>
 		</div>
-		<div class="three wide column">
+		<div class="three wide column" ng-hide="noclasses">
 			<select class="ui fluid dropdown" id="gradeSelectionDropdown" ng-model="search.grade">
 				<option value="">Grade</option>
 				<option value="12">Grade 12</option>
@@ -69,7 +77,7 @@
 				<option value="9">Grade 9</option>
 			</select>
 		</div>
-		<div class="sixteen wide column">
+		<div class="sixteen wide column" ng-hide="noclasses">
 			<table class="ui center aligned compact celled table" id="classesTable">
 				<thead>
 					<tr>

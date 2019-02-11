@@ -172,6 +172,8 @@ app.controller('MainController', function ($scope, $interval) {
 			$scope.classcounts[_class.grade-9]++;
 			$scope.classes.push(_class);
 		}
+		if (parseInt(window.localStorage.getItem('classcount')) === 0 || !window.localStorage.getItem('classcount')) $scope.noclasses = true;
+		else $scope.noclasses = false;
 	};
 
 	$scope.redirect = function(link) {
