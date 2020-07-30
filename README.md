@@ -1,6 +1,6 @@
 # NextEniac
 
-NextEniac is an app that provides the ability for students to connect with high school counselors and administrators at their educational institution to put them on a track for college readiness.  
+NextEniac (http://www.nexteniac.com) is an app that provides the ability for students to connect with high school counselors and administrators at their educational institution to put them on a track for college readiness.  
   
 Particularly, NextEniac contains optimization algorithms that reads a student's academic profile to determine the types of assignments and subjects that they need most help with (e.g. essays in English class). After this weakness is identified, the student's counselor is notified, and he/she can directly communicate with the student on how to improve.  
   
@@ -8,7 +8,7 @@ In order to increase student cognizance of their own progress, NextEniac is full
 
 This app was released in November 2018, and it has continually been receiving updates, as per the students', counselors', and administrators' needs.
 
-Tech Stack:
+## Tech Stack
 - Frontend: Angular
 - Backend: Node
 - Templating engine: Handlebars, SCSS
